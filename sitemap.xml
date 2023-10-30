@@ -2,16 +2,58 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://Bin-lin-rgb.github.io/posts/tech/</loc>
-    <lastmod>2022-11-30T15:55:23+08:00</lastmod>
+    <loc>https://Bin-lin-rgb.github.io/posts/go/base/</loc>
+    <lastmod>2021-11-30T15:55:23+08:00</lastmod>
+  </url><url>
+    <loc>https://Bin-lin-rgb.github.io/posts/basics/</loc>
+    <lastmod>2023-10-29T16:34:43+08:00</lastmod>
   </url><url>
     <loc>https://Bin-lin-rgb.github.io/posts/</loc>
-    <lastmod>2022-11-30T15:55:23+08:00</lastmod>
+    <lastmod>2023-10-29T16:34:43+08:00</lastmod>
+  </url><url>
+    <loc>https://Bin-lin-rgb.github.io/categories/basics/</loc>
+    <lastmod>2023-10-29T16:34:43+08:00</lastmod>
   </url><url>
     <loc>https://Bin-lin-rgb.github.io/</loc>
-    <lastmod>2022-11-30T15:55:23+08:00</lastmod>
+    <lastmod>2023-10-29T16:34:43+08:00</lastmod>
   </url><url>
     <loc>https://Bin-lin-rgb.github.io/categories/</loc>
+    <lastmod>2023-10-29T16:34:43+08:00</lastmod>
+  </url><url>
+    <loc>https://Bin-lin-rgb.github.io/tags/</loc>
+    <lastmod>2023-10-29T16:34:43+08:00</lastmod>
+  </url><url>
+    <loc>https://Bin-lin-rgb.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/</loc>
+    <lastmod>2023-10-29T16:34:43+08:00</lastmod>
+  </url><url>
+    <loc>https://Bin-lin-rgb.github.io/posts/basics/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80%E7%AF%87/</loc>
+    <lastmod>2023-10-29T16:34:43+08:00</lastmod>
+  </url><url>
+    <loc>https://Bin-lin-rgb.github.io/posts/leetcode/</loc>
+    <lastmod>2023-10-28T21:53:51+08:00</lastmod>
+  </url><url>
+    <loc>https://Bin-lin-rgb.github.io/categories/leetcode/</loc>
+    <lastmod>2023-10-28T21:53:51+08:00</lastmod>
+  </url><url>
+    <loc>https://Bin-lin-rgb.github.io/tags/top150/</loc>
+    <lastmod>2023-10-28T21:53:51+08:00</lastmod>
+  </url><url>
+    <loc>https://Bin-lin-rgb.github.io/posts/leetcode/top150/</loc>
+    <lastmod>2023-10-28T21:53:51+08:00</lastmod>
+  </url><url>
+    <loc>https://Bin-lin-rgb.github.io/posts/deploy/</loc>
+    <lastmod>2023-10-28T18:35:29+08:00</lastmod>
+  </url><url>
+    <loc>https://Bin-lin-rgb.github.io/categories/deploy/</loc>
+    <lastmod>2023-10-28T18:35:29+08:00</lastmod>
+  </url><url>
+    <loc>https://Bin-lin-rgb.github.io/tags/docker/</loc>
+    <lastmod>2023-10-28T18:35:29+08:00</lastmod>
+  </url><url>
+    <loc>https://Bin-lin-rgb.github.io/posts/deploy/docker/</loc>
+    <lastmod>2023-10-28T18:35:29+08:00</lastmod>
+  </url><url>
+    <loc>https://Bin-lin-rgb.github.io/posts/tech/</loc>
     <lastmod>2022-11-30T15:55:23+08:00</lastmod>
   </url><url>
     <loc>https://Bin-lin-rgb.github.io/tags/redis/</loc>
@@ -20,23 +62,23 @@
     <loc>https://Bin-lin-rgb.github.io/categories/redis/</loc>
     <lastmod>2022-11-30T15:55:23+08:00</lastmod>
   </url><url>
-    <loc>https://Bin-lin-rgb.github.io/posts/tech/tech1/</loc>
+    <loc>https://Bin-lin-rgb.github.io/posts/tech/tech/</loc>
     <lastmod>2022-11-30T15:55:23+08:00</lastmod>
   </url><url>
     <loc>https://Bin-lin-rgb.github.io/tags/tech/</loc>
     <lastmod>2022-11-30T15:55:23+08:00</lastmod>
   </url><url>
-    <loc>https://Bin-lin-rgb.github.io/tags/</loc>
-    <lastmod>2022-11-30T15:55:23+08:00</lastmod>
+    <loc>https://Bin-lin-rgb.github.io/tags/go/</loc>
+    <lastmod>2022-10-29T16:00:07+08:00</lastmod>
   </url><url>
-    <loc>https://Bin-lin-rgb.github.io/tags/blog/</loc>
-    <lastmod>2022-05-05T00:18:23+08:00</lastmod>
+    <loc>https://Bin-lin-rgb.github.io/categories/golang/</loc>
+    <lastmod>2022-10-29T16:00:07+08:00</lastmod>
   </url><url>
-    <loc>https://Bin-lin-rgb.github.io/posts/blog/blog/</loc>
-    <lastmod>2022-05-05T00:18:23+08:00</lastmod>
+    <loc>https://Bin-lin-rgb.github.io/posts/go/omitempty/</loc>
+    <lastmod>2022-10-29T16:00:07+08:00</lastmod>
   </url><url>
-    <loc>https://Bin-lin-rgb.github.io/posts/blog/</loc>
-    <lastmod>2022-05-05T00:18:23+08:00</lastmod>
+    <loc>https://Bin-lin-rgb.github.io/posts/go/</loc>
+    <lastmod>2022-10-29T16:00:07+08:00</lastmod>
   </url><url>
     <loc>https://Bin-lin-rgb.github.io/tags/life/</loc>
     <lastmod>2022-05-05T00:18:15+08:00</lastmod>
@@ -47,23 +89,20 @@
     <loc>https://Bin-lin-rgb.github.io/posts/life/</loc>
     <lastmod>2022-05-05T00:18:15+08:00</lastmod>
   </url><url>
-    <loc>https://Bin-lin-rgb.github.io/posts/read/</loc>
-    <lastmod>2022-05-05T00:18:06+08:00</lastmod>
-  </url><url>
-    <loc>https://Bin-lin-rgb.github.io/tags/read/</loc>
-    <lastmod>2022-05-05T00:18:06+08:00</lastmod>
-  </url><url>
-    <loc>https://Bin-lin-rgb.github.io/posts/read/read/</loc>
-    <lastmod>2022-05-05T00:18:06+08:00</lastmod>
-  </url><url>
-    <loc>https://Bin-lin-rgb.github.io/posts/tech/tech/</loc>
-    <lastmod>2022-05-05T00:17:58+08:00</lastmod>
+    <loc>https://Bin-lin-rgb.github.io/tags/golang/</loc>
+    <lastmod>2021-11-30T15:55:23+08:00</lastmod>
   </url><url>
     <loc>https://Bin-lin-rgb.github.io/links/</loc>
     <lastmod>2021-11-06T15:15:53+08:00</lastmod>
   </url><url>
     <loc>https://Bin-lin-rgb.github.io/about/</loc>
     <lastmod>2021-11-06T14:57:28+08:00</lastmod>
+  </url><url>
+    <loc>https://Bin-lin-rgb.github.io/tags/blog/</loc>
+    <lastmod>2020-11-05T00:18:23+08:00</lastmod>
+  </url><url>
+    <loc>https://Bin-lin-rgb.github.io/posts/tech/blog/</loc>
+    <lastmod>2020-11-05T00:18:23+08:00</lastmod>
   </url><url>
     <loc>https://Bin-lin-rgb.github.io/archives/</loc>
   </url><url>

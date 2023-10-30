@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="zh" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>omitempty 关键字 | Blaine&#39;s Blog</title>
+<meta name="keywords" content="omitempty go">
+<meta name="description" content="Golang 的 “omitempty” 关键字略解">
+<meta name="author" content="Blaine">
+<link rel="canonical" href="https://Bin-lin-rgb.github.io/posts/go/omitempty/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.css" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.js" onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://Bin-lin-rgb.github.io/img/icon.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://Bin-lin-rgb.github.io/img/icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://Bin-lin-rgb.github.io/img/icon.png">
+<link rel="apple-touch-icon" href="https://Bin-lin-rgb.github.io/img/icon.png">
+<link rel="mask-icon" href="https://Bin-lin-rgb.github.io/img/icon.png">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+<script defer src="https://unpkg.com/mermaid@8.8.1/dist/mermaid.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+<script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.3/dist/jquery.min.js"></script>
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = ""; 
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<meta property="og:title" content="omitempty 关键字" />
+<meta property="og:description" content="Golang 的 “omitempty” 关键字略解" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://Bin-lin-rgb.github.io/posts/go/omitempty/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-10-29T16:00:07+08:00" />
+<meta property="article:modified_time" content="2022-10-29T16:00:07+08:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="omitempty 关键字"/>
+<meta name="twitter:description" content="Golang 的 “omitempty” 关键字略解"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+
+        {
+          "@type": "ListItem",
+          "position":  1 ,
+          "name": "📚文章",
+          "item": "https://Bin-lin-rgb.github.io/posts/"
+        },
+
+        {
+          "@type": "ListItem",
+          "position":  2 ,
+          "name": "🥇 Golang",
+          "item": "https://Bin-lin-rgb.github.io/posts/go/"
+        }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "omitempty 关键字",
+      "item": "https://Bin-lin-rgb.github.io/posts/go/omitempty/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "omitempty 关键字",
+  "name": "omitempty 关键字",
+  "description": "Golang 的 “omitempty” 关键字略解",
+  "keywords": [
+    "omitempty go"
+  ],
+  "articleBody": "omitempty 关键字 用法 熟悉 Golang 的朋友对于 json 和 struct 之间的转换一定不陌生，为了将代码中的结构体与 json 数据解耦，通常我们会在结构体的 field 类型后加上解释说明，例如在表示一个地址的时候， json 数据如下所示\n{ \"street\": \"200 Larkin St\", \"city\": \"San Francisco\", \"state\": \"CA\", \"zipcode\": \"94102\" } 与之相对应的 Golang 结构体表示定义如下\ntype address struct { Street string `json:\"street\"` // 街道 Ste string `json:\"suite\"` // 单元（可以不存在） City string `json:\"city\"` // 城市 State string `json:\"state\"` // 州/省 Zipcode string `json:\"zipcode\"` // 邮编 } 这样无论代码中的变量如何改变，我们都能成功将 json 数据解析出来，获得正确的街道，城市等信息，到目前为止一切正常。但如果我们想要将地址结构体恢复成 json 格式时，问题就来了。比方说我们用下面这段代码读取了地址 json ，然后根据业务逻辑处理了之后恢复成正常的 json 打印出来\nfunc main() { data := `{ \"street\": \"200 Larkin St\", \"city\": \"San Francisco\", \"state\": \"CA\", \"zipcode\": \"94102\" }` addr := new(address) json.Unmarshal([]byte(data), \u0026addr) // 处理了一番 addr 变量... addressBytes, _ := json.MarshalIndent(addr, \"\", \" \") fmt.Printf(\"%s\\n\", string(addressBytes)) } 可以得到运行结果\n{ \"street\": \"200 Larkin St\", \"suite\": \"\", \"city\": \"San Francisco\", \"state\": \"CA\", \"zipcode\": \"94102\" } 多了一行 \"suite\": \"\", ，而这则信息在原本的 json 数据中是没有的（在美国的地址中，如果不是群租公寓或者共享办公楼， suite 这一条不存在很正常，人们直接用街道门牌号来表示地址就足够了），但我们更希望的是，在一个地址有 suite 号码的时候输出，不存在 suite 的时候就不输出，幸运的是，我们可以在 Golang 的结构体定义中添加 omitempty 关键字，来表示这条信息如果没有提供，在序列化成 json 的时候就不要包含其默认值。稍作修改，地址结构体就变成了\ntype address struct { Street string `json:\"street\"` Ste string `json:\"suite,omitempty\"` City string `json:\"city\"` State string `json:\"state\"` Zipcode string `json:\"zipcode\"` } 重新运行，即可得到正确的结果。\n陷阱 带来方便的同时，使用 omitempty 也有些小陷阱，一个是该关键字无法忽略掉嵌套结构体。还是拿地址类型说事，这回我们想要往地址结构体中加一个新 field 来表示经纬度，如果缺乏相关的数据，暂时可以忽略。新的结构体定义如下所示\ntype address struct { Street string `json:\"street\"` Ste string `json:\"suite,omitempty\"` City string `json:\"city\"` State string `json:\"state\"` Zipcode string `json:\"zipcode\"` Coordinate coordinate `json:\"coordinate,omitempty\"` } type coordinate struct { Lat float64 `json:\"latitude\"` Lng float64 `json:\"longitude\"` } 读入原来的地址数据，处理后序列化输出，我们就会发现即使加上了 omitempty 关键字，输出的 json 还是带上了一个空的坐标信息\n{ \"street\": \"200 Larkin St\", \"city\": \"San Francisco\", \"state\": \"CA\", \"zipcode\": \"94102\", \"coordinate\": { \"latitude\": 0, \"longitude\": 0 } } 为了达到我们想要的效果，可以把坐标定义为指针类型，这样 Golang 就能知道一个指针的“空值”是多少了，否则面对一个我们自定义的结构， Golang 是猜不出我们想要的空值的。于是有了如下的结构体定义\ntype address struct { Street string `json:\"street\"` Ste string `json:\"suite,omitempty\"` City string `json:\"city\"` State string `json:\"state\"` Zipcode string `json:\"zipcode\"` Coordinate *coordinate `json:\"coordinate,omitempty\"` } type coordinate struct { Lat float64 `json:\"latitude\"` Lng float64 `json:\"longitude\"` } 相应的输出为\n{ \"street\": \"200 Larkin St\", \"city\": \"San Francisco\", \"state\": \"CA\", \"zipcode\": \"94102\" } 另一个“陷阱”是，对于用 omitempty 定义的 field ，如果给它赋的值恰好等于默认空值的话，在转为 json 之后也不会输出这个 field 。比如说上面定义的经纬度坐标结构体，如果我们将经纬度两个 field 都加上 omitempty\ntype coordinate struct { Lat float64 `json:\"latitude,omitempty\"` Lng float64 `json:\"longitude,omitempty\"` } 然后我们对非洲几内亚湾的“原点坐标”非常感兴趣，于是编写了如下代码\nfunc main() { cData := `{ \"latitude\": 0.0, \"longitude\": 0.0 }` c := new(coordinate) json.Unmarshal([]byte(cData), \u0026c) // 具体处理逻辑... coordinateBytes, _ := json.MarshalIndent(c, \"\", \" \") fmt.Printf(\"%s\\n\", string(coordinateBytes)) } 最终我们得到了一个\n{} 这个坐标消失不见了！但我们的设想是，如果一个地点没有经纬度信息，则悬空，这没有问题，但对于“原点坐标”，我们在确切知道它的经纬度的情况下，（0.0, 0.0）仍然被忽略了。正确的写法也是将结构体内的定义改为指针\ntype coordinate struct { Lat *float64 `json:\"latitude,omitempty\"` Lng *float64 `json:\"longitude,omitempty\"` } 这样空值就从 float64 的 0.0 变为了指针类型的 nil ，我们就能看到正确的经纬度输出。\n{ \"latitude\": 0, \"longitude\": 0 } ",
+  "wordCount" : "1249",
+  "inLanguage": "zh",
+  "datePublished": "2022-10-29T16:00:07+08:00",
+  "dateModified": "2022-10-29T16:00:07+08:00",
+  "author":[{
+    "@type": "Person",
+    "name": "Blaine"
+  }],
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://Bin-lin-rgb.github.io/posts/go/omitempty/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Blaine's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://Bin-lin-rgb.github.io/img/icon.png"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    (function () {
+        let  arr,reg = new RegExp("(^| )"+"change-themes"+"=([^;]*)(;|$)");
+        if(arr = document.cookie.match(reg)) {
+        } else {
+            if (new Date().getHours() >= 19 || new Date().getHours() < 6) {
+                document.body.classList.add('dark');
+                localStorage.setItem("pref-theme", 'dark');
+            } else {
+                document.body.classList.remove('dark');
+                localStorage.setItem("pref-theme", 'light');
+            }
+        }
+    })()
+
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://Bin-lin-rgb.github.io/" accesskey="h" title="Blaine&#39;s Blog (Alt + H)">
+            <img src="https://Bin-lin-rgb.github.io/img/icon.png" alt="logo" aria-label="logo"
+                 height="35">Blaine&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://Bin-lin-rgb.github.io/" title="🏠 主页">
+                <span>🏠 主页</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://Bin-lin-rgb.github.io/posts" title="📚 文章">
+                <span>📚 文章</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://Bin-lin-rgb.github.io/search" title="🔍 搜索 (Alt &#43; /)" accesskey=/>
+                <span>🔍 搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://Bin-lin-rgb.github.io/tags" title="🧩 标签">
+                <span>🧩 标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://Bin-lin-rgb.github.io/archives/" title="⏱️ 时间轴">
+                <span>⏱️ 时间轴</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://Bin-lin-rgb.github.io/about" title="🙋🏻‍♂️ 关于">
+                <span>🙋🏻‍♂️ 关于</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://Bin-lin-rgb.github.io/links" title="🤝 友链">
+                <span>🤝 友链</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main page">
+<style>
+    i[id*="post_meta_style"] {
+        display: flex;
+        align-items: center;
+        margin: 0 0 10px 0;
+    }
+</style>
+
+<article class="post-single">
+    <div id="single-content">
+        <header class="post-header">
+            <div class="breadcrumbs"><a href="https://Bin-lin-rgb.github.io/">🏠 主页</a>&nbsp;»&nbsp;<a href="https://Bin-lin-rgb.github.io/posts/">📚文章</a>&nbsp;»&nbsp;<a href="https://Bin-lin-rgb.github.io/posts/go/">🥇 Golang</a></div>
+            <h1 class="post-title">
+                omitempty 关键字
+            </h1>
+            <div class="post-description">
+                Golang 的 “omitempty” 关键字略解
+            </div>
+            <div class="post-meta">
+
+<style>
+    i[id*="post_meta_style"] {
+        display: flex;
+        align-items: center;
+        margin: 0 0 10px 0;
+    }
+
+    .parent-post-meta {
+        display: flex;
+        flex-wrap: wrap;
+        opacity: 0.8;
+    }
+</style>
+
+<span class="parent-post-meta">
+    <span id="post_meta_style_1">
+        <span class="fa fa-calendar-check-o"></span>
+        <span>2022-10-29
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    
+    
+    
+    
+    
+    
+    
+    <span id="post_meta_style_3">
+        <span class="fa fa-file-word-o"></span>
+        <span>1249字
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_4">
+        <span class="fa fa-clock-o"></span>
+        <span>3分钟
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_5">
+        <span class="fa fa-user-o"></span>
+        <span>Blaine
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_6">
+        <span class="fa fa-tags" style="opacity: 0.8"></span>
+        <span>
+            <span class="post-tags-meta">
+                <a href="https://Bin-lin-rgb.github.io/tags/go/" style="color: var(--secondary)!important;">go</a>
+            </span>
+        </span>
+    </span>
+</span>
+<span style="opacity: 0.8;">
+                    <span id="post_meta_style_7">
+                        &nbsp;&nbsp;
+                        <span class="fa fa-eye" ></span>
+                        <span>
+                            <span id="busuanzi_container_page_pv"><span id="busuanzi_value_page_pv"></span></span>
+                            &nbsp;&nbsp;
+                        </span>
+                    </span>
+                    <span id="post_meta_style_8">
+                        <span class="fa fa-commenting-o"></span>
+                        <span>
+                            <script src="https://cdn.staticfile.org/twikoo/1.5.8/twikoo.all.min.js"></script>
+                            <script>
+                                let url = document.documentURI
+                                
+                                let dnsUrl = "https://Bin-lin-rgb.github.io/"
+                                let urlSplit = url.split(dnsUrl)
+                                let finalUrl = urlSplit[1]
+                                if (finalUrl[0] !== '/') {
+                                    finalUrl = '/'+finalUrl
+                                }
+                                twikoo.getCommentsCount({
+                                    envId: "https://twikoo-api-nine-silk.vercel.app/", 
+                                region: "ap-guangzhou", 
+                                urls: [ 
+                                    
+                                    finalUrl,
+                                ],
+                                    includeReply: false 
+                                }).then(function (res) {
+                                    let count = res[0].count
+                                    const obj = document.getElementById("comment_count");
+                                    obj.innerText = count
+                                    
+                                    
+                                    
+                                }).catch(function (err) {
+                                    
+                                    console.error(err);
+                                });
+                            </script>
+                            <span id="comment_count"></span>
+                        </span>
+                    </span>
+                </span>
+
+</div>
+        </header> <aside id="toc-container" class="toc-container wide">
+    <div class="toc">
+        <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">目录</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#omitempty-%e5%85%b3%e9%94%ae%e5%ad%97" aria-label="omitempty 关键字">omitempty 关键字</a><ul>
+                        
+                <li>
+                    <a href="#%e7%94%a8%e6%b3%95" aria-label="用法">用法</a></li>
+                <li>
+                    <a href="#%e9%99%b7%e9%98%b1" aria-label="陷阱">陷阱</a>
+                </li>
+            </ul>
+            </li>
+            </ul>
+        </div>
+        </details>
+    </div>
+</aside>
+<script>
+    let activeElement;
+    let elements;
+    window.addEventListener('DOMContentLoaded', function (event) {
+        checkTocPosition();
+
+        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+        
+        activeElement = elements[0];
+        const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
+        document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+    }, false);
+
+    window.addEventListener('resize', function(event) {
+        checkTocPosition();
+    }, false);
+
+    window.addEventListener('scroll', () => {
+        
+        if (elements) {
+            activeElement = Array.from(elements).find((element) => {
+                if ((getOffsetTop(element) - window.pageYOffset) > 0 &&
+                    (getOffsetTop(element) - window.pageYOffset) < window.innerHeight/2) {
+                    return element;
+                }
+            }) || activeElement
+
+            elements.forEach(element => {
+                const id = encodeURI(element.getAttribute('id')).toLowerCase();
+                if (element === activeElement){
+                    document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+                } else {
+                    document.querySelector(`.inner ul li a[href="#${id}"]`).classList.remove('active');
+                }
+            })
+        }
+    }, false);
+
+    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
+    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
+    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
+
+    function checkTocPosition() {
+        const width = document.body.scrollWidth;
+        if (width - main - (toc * 2) - (gap * 4) > 0) {
+            document.getElementById("toc-container").classList.add("wide");
+        } else {
+            document.getElementById("toc-container").classList.remove("wide");
+        }
+    }
+
+    function getOffsetTop(element) {
+        if (!element.getClientRects().length) {
+            return 0;
+        }
+        let rect = element.getBoundingClientRect();
+        let win = element.ownerDocument.defaultView;
+        return rect.top + win.pageYOffset;
+    }
+</script>
+        <div class="post-content"><h2 id="omitempty-关键字">omitempty 关键字<a hidden class="anchor" aria-hidden="true" href="#omitempty-关键字">#</a></h2>
+<h3 id="用法">用法<a hidden class="anchor" aria-hidden="true" href="#用法">#</a></h3>
+<p>熟悉 Golang 的朋友对于 json 和 struct 之间的转换一定不陌生，为了将代码中的结构体与 json 数据解耦，通常我们会在结构体的 field 类型后加上解释说明，例如在表示一个地址的时候， json 数据如下所示</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">&#34;street&#34;</span>: <span style="color:#5af78e">&#34;200 Larkin St&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">&#34;city&#34;</span>: <span style="color:#5af78e">&#34;San Francisco&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">&#34;state&#34;</span>: <span style="color:#5af78e">&#34;CA&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">&#34;zipcode&#34;</span>: <span style="color:#5af78e">&#34;94102&#34;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>与之相对应的 Golang 结构体表示定义如下</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff5c57">type</span> address <span style="color:#ff5c57">struct</span> {
+</span></span><span style="display:flex;"><span>	Street  <span style="color:#9aedfe">string</span> <span style="color:#5af78e">`json:&#34;street&#34;`</span>  <span style="color:#78787e">// 街道
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>	Ste     <span style="color:#9aedfe">string</span> <span style="color:#5af78e">`json:&#34;suite&#34;`</span>   <span style="color:#78787e">// 单元（可以不存在）
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>	City    <span style="color:#9aedfe">string</span> <span style="color:#5af78e">`json:&#34;city&#34;`</span>    <span style="color:#78787e">// 城市
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>	State   <span style="color:#9aedfe">string</span> <span style="color:#5af78e">`json:&#34;state&#34;`</span>   <span style="color:#78787e">// 州/省
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>	Zipcode <span style="color:#9aedfe">string</span> <span style="color:#5af78e">`json:&#34;zipcode&#34;`</span> <span style="color:#78787e">// 邮编
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>}
+</span></span></code></pre></div><p>这样无论代码中的变量如何改变，我们都能成功将 json 数据解析出来，获得正确的街道，城市等信息，到目前为止一切正常。但如果我们想要将地址结构体恢复成 json 格式时，问题就来了。比方说我们用下面这段代码读取了地址 json ，然后根据业务逻辑处理了之后恢复成正常的 json 打印出来</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">main</span>() {
+</span></span><span style="display:flex;"><span>  data <span style="color:#ff6ac1">:=</span> <span style="color:#5af78e">`{
+</span></span></span><span style="display:flex;"><span><span style="color:#5af78e">		&#34;street&#34;: &#34;200 Larkin St&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#5af78e">		&#34;city&#34;: &#34;San Francisco&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#5af78e">		&#34;state&#34;: &#34;CA&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#5af78e">		&#34;zipcode&#34;: &#34;94102&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#5af78e">	}`</span>
+</span></span><span style="display:flex;"><span>	addr <span style="color:#ff6ac1">:=</span> <span style="color:#ff5c57">new</span>(address)
+</span></span><span style="display:flex;"><span>	json.<span style="color:#57c7ff">Unmarshal</span>([]<span style="color:#ff5c57">byte</span>(data), <span style="color:#ff6ac1">&amp;</span>addr)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#78787e">// 处理了一番 addr 变量...
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>
+</span></span><span style="display:flex;"><span>	addressBytes, _ <span style="color:#ff6ac1">:=</span> json.<span style="color:#57c7ff">MarshalIndent</span>(addr, <span style="color:#5af78e">&#34;&#34;</span>, <span style="color:#5af78e">&#34;    &#34;</span>)
+</span></span><span style="display:flex;"><span>	fmt.<span style="color:#57c7ff">Printf</span>(<span style="color:#5af78e">&#34;%s\n&#34;</span>, <span style="color:#ff5c57">string</span>(addressBytes))
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>可以得到运行结果</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">&#34;street&#34;</span>: <span style="color:#5af78e">&#34;200 Larkin St&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">&#34;suite&#34;</span>: <span style="color:#5af78e">&#34;&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">&#34;city&#34;</span>: <span style="color:#5af78e">&#34;San Francisco&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">&#34;state&#34;</span>: <span style="color:#5af78e">&#34;CA&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">&#34;zipcode&#34;</span>: <span style="color:#5af78e">&#34;94102&#34;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>多了一行 <code>&quot;suite&quot;: &quot;&quot;,</code> ，而这则信息在原本的 json 数据中是没有的（在美国的地址中，如果不是群租公寓或者共享办公楼， suite 这一条不存在很正常，人们直接用街道门牌号来表示地址就足够了），但我们更希望的是，在一个地址有 suite 号码的时候输出，不存在 suite 的时候就不输出，幸运的是，我们可以在 Golang 的结构体定义中添加 <code>omitempty</code> 关键字，来表示这条信息如果没有提供，在序列化成 json 的时候就不要包含其默认值。稍作修改，地址结构体就变成了</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff5c57">type</span> address <span style="color:#ff5c57">struct</span> {
+</span></span><span style="display:flex;"><span>	Street  <span style="color:#9aedfe">string</span> <span style="color:#5af78e">`json:&#34;street&#34;`</span>
+</span></span><span style="display:flex;"><span>	Ste     <span style="color:#9aedfe">string</span> <span style="color:#5af78e">`json:&#34;suite,omitempty&#34;`</span>
+</span></span><span style="display:flex;"><span>	City    <span style="color:#9aedfe">string</span> <span style="color:#5af78e">`json:&#34;city&#34;`</span>
+</span></span><span style="display:flex;"><span>	State   <span style="color:#9aedfe">string</span> <span style="color:#5af78e">`json:&#34;state&#34;`</span>
+</span></span><span style="display:flex;"><span>	Zipcode <span style="color:#9aedfe">string</span> <span style="color:#5af78e">`json:&#34;zipcode&#34;`</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>重新运行，即可得到正确的结果。</p>
+<h3 id="陷阱">陷阱<a hidden class="anchor" aria-hidden="true" href="#陷阱">#</a></h3>
+<p>带来方便的同时，使用 <code>omitempty</code> 也有些小陷阱，一个是该关键字无法忽略掉嵌套结构体。还是拿地址类型说事，这回我们想要往地址结构体中加一个新 field 来表示经纬度，如果缺乏相关的数据，暂时可以忽略。新的结构体定义如下所示</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff5c57">type</span> address <span style="color:#ff5c57">struct</span> {
+</span></span><span style="display:flex;"><span>	Street     <span style="color:#9aedfe">string</span>     <span style="color:#5af78e">`json:&#34;street&#34;`</span>
+</span></span><span style="display:flex;"><span>	Ste        <span style="color:#9aedfe">string</span>     <span style="color:#5af78e">`json:&#34;suite,omitempty&#34;`</span>
+</span></span><span style="display:flex;"><span>	City       <span style="color:#9aedfe">string</span>     <span style="color:#5af78e">`json:&#34;city&#34;`</span>
+</span></span><span style="display:flex;"><span>	State      <span style="color:#9aedfe">string</span>     <span style="color:#5af78e">`json:&#34;state&#34;`</span>
+</span></span><span style="display:flex;"><span>	Zipcode    <span style="color:#9aedfe">string</span>     <span style="color:#5af78e">`json:&#34;zipcode&#34;`</span>
+</span></span><span style="display:flex;"><span>	Coordinate coordinate <span style="color:#5af78e">`json:&#34;coordinate,omitempty&#34;`</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff5c57">type</span> coordinate <span style="color:#ff5c57">struct</span> {
+</span></span><span style="display:flex;"><span>	Lat <span style="color:#9aedfe">float64</span> <span style="color:#5af78e">`json:&#34;latitude&#34;`</span>
+</span></span><span style="display:flex;"><span>	Lng <span style="color:#9aedfe">float64</span> <span style="color:#5af78e">`json:&#34;longitude&#34;`</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>读入原来的地址数据，处理后序列化输出，我们就会发现即使加上了 <code>omitempty</code> 关键字，输出的 json 还是带上了一个空的坐标信息</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">&#34;street&#34;</span>: <span style="color:#5af78e">&#34;200 Larkin St&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">&#34;city&#34;</span>: <span style="color:#5af78e">&#34;San Francisco&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">&#34;state&#34;</span>: <span style="color:#5af78e">&#34;CA&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">&#34;zipcode&#34;</span>: <span style="color:#5af78e">&#34;94102&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">&#34;coordinate&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#ff6ac1">&#34;latitude&#34;</span>: <span style="color:#ff9f43">0</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#ff6ac1">&#34;longitude&#34;</span>: <span style="color:#ff9f43">0</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>为了达到我们想要的效果，可以把坐标定义为指针类型，这样 Golang 就能知道一个指针的“空值”是多少了，否则面对一个我们自定义的结构， Golang 是猜不出我们想要的空值的。于是有了如下的结构体定义</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff5c57">type</span> address <span style="color:#ff5c57">struct</span> {
+</span></span><span style="display:flex;"><span>	Street     <span style="color:#9aedfe">string</span>      <span style="color:#5af78e">`json:&#34;street&#34;`</span>
+</span></span><span style="display:flex;"><span>	Ste        <span style="color:#9aedfe">string</span>      <span style="color:#5af78e">`json:&#34;suite,omitempty&#34;`</span>
+</span></span><span style="display:flex;"><span>	City       <span style="color:#9aedfe">string</span>      <span style="color:#5af78e">`json:&#34;city&#34;`</span>
+</span></span><span style="display:flex;"><span>	State      <span style="color:#9aedfe">string</span>      <span style="color:#5af78e">`json:&#34;state&#34;`</span>
+</span></span><span style="display:flex;"><span>	Zipcode    <span style="color:#9aedfe">string</span>      <span style="color:#5af78e">`json:&#34;zipcode&#34;`</span>
+</span></span><span style="display:flex;"><span>	Coordinate <span style="color:#ff6ac1">*</span>coordinate <span style="color:#5af78e">`json:&#34;coordinate,omitempty&#34;`</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff5c57">type</span> coordinate <span style="color:#ff5c57">struct</span> {
+</span></span><span style="display:flex;"><span>	Lat <span style="color:#9aedfe">float64</span> <span style="color:#5af78e">`json:&#34;latitude&#34;`</span>
+</span></span><span style="display:flex;"><span>	Lng <span style="color:#9aedfe">float64</span> <span style="color:#5af78e">`json:&#34;longitude&#34;`</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>相应的输出为</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">&#34;street&#34;</span>: <span style="color:#5af78e">&#34;200 Larkin St&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">&#34;city&#34;</span>: <span style="color:#5af78e">&#34;San Francisco&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">&#34;state&#34;</span>: <span style="color:#5af78e">&#34;CA&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">&#34;zipcode&#34;</span>: <span style="color:#5af78e">&#34;94102&#34;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>另一个“陷阱”是，对于用 <code>omitempty</code> 定义的 field ，如果给它赋的值恰好等于默认空值的话，在转为 json 之后也不会输出这个 field 。比如说上面定义的经纬度坐标结构体，如果我们将经纬度两个 field 都加上 <code>omitempty</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff5c57">type</span> coordinate <span style="color:#ff5c57">struct</span> {
+</span></span><span style="display:flex;"><span>	Lat <span style="color:#9aedfe">float64</span> <span style="color:#5af78e">`json:&#34;latitude,omitempty&#34;`</span>
+</span></span><span style="display:flex;"><span>	Lng <span style="color:#9aedfe">float64</span> <span style="color:#5af78e">`json:&#34;longitude,omitempty&#34;`</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>然后我们对非洲几内亚湾的“原点坐标”非常感兴趣，于是编写了如下代码</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">main</span>() {
+</span></span><span style="display:flex;"><span>	cData <span style="color:#ff6ac1">:=</span> <span style="color:#5af78e">`{
+</span></span></span><span style="display:flex;"><span><span style="color:#5af78e">		&#34;latitude&#34;: 0.0,
+</span></span></span><span style="display:flex;"><span><span style="color:#5af78e">		&#34;longitude&#34;: 0.0
+</span></span></span><span style="display:flex;"><span><span style="color:#5af78e">	}`</span>
+</span></span><span style="display:flex;"><span>	c <span style="color:#ff6ac1">:=</span> <span style="color:#ff5c57">new</span>(coordinate)
+</span></span><span style="display:flex;"><span>	json.<span style="color:#57c7ff">Unmarshal</span>([]<span style="color:#ff5c57">byte</span>(cData), <span style="color:#ff6ac1">&amp;</span>c)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#78787e">// 具体处理逻辑...
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>
+</span></span><span style="display:flex;"><span>	coordinateBytes, _ <span style="color:#ff6ac1">:=</span> json.<span style="color:#57c7ff">MarshalIndent</span>(c, <span style="color:#5af78e">&#34;&#34;</span>, <span style="color:#5af78e">&#34;    &#34;</span>)
+</span></span><span style="display:flex;"><span>	fmt.<span style="color:#57c7ff">Printf</span>(<span style="color:#5af78e">&#34;%s\n&#34;</span>, <span style="color:#ff5c57">string</span>(coordinateBytes))
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>最终我们得到了一个</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{}
+</span></span></code></pre></div><p>这个坐标消失不见了！但我们的设想是，如果一个地点没有经纬度信息，则悬空，这没有问题，但对于“原点坐标”，我们在确切知道它的经纬度的情况下，（0.0, 0.0）仍然被忽略了。正确的写法也是将结构体内的定义改为指针</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff5c57">type</span> coordinate <span style="color:#ff5c57">struct</span> {
+</span></span><span style="display:flex;"><span>	Lat <span style="color:#ff6ac1">*</span><span style="color:#9aedfe">float64</span> <span style="color:#5af78e">`json:&#34;latitude,omitempty&#34;`</span>
+</span></span><span style="display:flex;"><span>	Lng <span style="color:#ff6ac1">*</span><span style="color:#9aedfe">float64</span> <span style="color:#5af78e">`json:&#34;longitude,omitempty&#34;`</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>这样空值就从 <code>float64</code> 的 0.0 变为了指针类型的 <code>nil</code> ，我们就能看到正确的经纬度输出。</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">&#34;latitude&#34;</span>: <span style="color:#ff9f43">0</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">&#34;longitude&#34;</span>: <span style="color:#ff9f43">0</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div>
+
+        </div>
+        <div class="post-reward">
+            <div style="padding: 0 0 0 0; margin: 0 0 0 0; width: 100%; font-size:16px; text-align: center;">
+                <div id="QR" style="opacity: 0;">
+                    <div id="wechat" style="display: inline-block">
+                        <a class="fancybox" rel="group">
+                            <img id="wechat_qr" src="https://Bin-lin-rgb.github.io/img/wechat_pay.png" alt="wechat_pay"></a>
+                        <p>微信</p>
+                    </div>
+                    <div id="alipay" style="display: inline-block">
+                        <a class="fancybox" rel="group">
+                            <img id="alipay_qr" src="https://Bin-lin-rgb.github.io/img/alipay.png" alt="alipay"></a>
+                        <p>支付宝</p>
+                    </div>
+                </div>
+                <button id="rewardButton"
+                        onclick="
+                    var qr = document.getElementById('QR');
+                    if (qr.style.opacity === '0') {
+                        qr.style.opacity='1';
+                    } else {
+                        qr.style.opacity='0'
+                    }"
+                >
+                    <span>🧧 鼓励</span>
+                </button>
+            </div>
+        </div>
+
+        <footer class="post-footer">
+            
+<nav class="paginav">
+  <a class="prev" href="https://Bin-lin-rgb.github.io/posts/tech/tech/">
+    <span class="title">« 上一页</span>
+    <br>
+    <span>Redis scan命令学习</span>
+  </a>
+  <a class="next" href="https://Bin-lin-rgb.github.io/posts/life/life/">
+    <span class="title">下一页 »</span>
+    <br>
+    <span>Life</span>
+  </a>
+</nav>
+
+        </footer>
+    </div>
+
+<style>
+    .comments_details summary::marker {
+        font-size: 20px;
+        content: '👉展开评论';
+        color: var(--content);
+    }
+    .comments_details[open] summary::marker{
+        font-size: 20px;
+        content: '👇关闭评论';
+        color: var(--content);
+    }
+</style>
+
+
+<div>
+    <details class="comments_details">
+        <summary style="cursor: pointer; margin: 50px 0 20px 0;width: 130px;">
+            <span style="font-size: 20px;color: var(--content);">...</span>
+        </summary>
+        <div id="tcomment"></div>
+    </details>
+    <script src="https://cdn.staticfile.org/twikoo/1.5.8/twikoo.all.min.js">
+    </script>
+    <script>
+        twikoo.init({
+            envId: 'https://twikoo-api-nine-silk.vercel.app/',
+            el: "#tcomment",
+            lang: 'zh-CN',
+            region: 'ap-guangzhou',
+            path: window.TWIKOO_MAGIC_PATH||window.location.pathname,
+        })
+    
+    
+    
+    
+    
+    
+    
+    </script>
+</div>
+</article>
+</main>
+
+<footer class="footer">
+    <span>
+        Copyright
+        &copy;
+        2021-2023
+        <a href="https://Bin-lin-rgb.github.io/" style="color:#939393;">Blaine&#39;s Blog</a>
+        All Rights Reserved
+    </span>
+    <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;">备案号</a>&nbsp;
+    <span>
+        <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=null"
+           style="display:inline-block;text-decoration:none;height:20px;color:#939393;">
+            <img src="%e5%85%ac%e5%ae%89%e5%9b%be%e6%a0%87%e9%93%be%e6%8e%a5" style="float:left;margin: 0px 5px 0px 0px;"/>
+            公网安备
+        </a>
+    </span>
+    <span id="busuanzi_container">
+        <span class="fa fa-user"></span> <span id="busuanzi_value_site_uv"></span>
+        <span class="fa fa-eye"></span> <span id="busuanzi_value_site_pv"></span>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <span class="topInner">
+        <svg class="topSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z"/>
+        </svg>
+        <span id="read_progress"></span>
+    </span>
+</a>
+
+<script>
+    document.addEventListener('scroll', function (e) {
+        const readProgress = document.getElementById("read_progress");
+        const scrollHeight = document.documentElement.scrollHeight;
+        const clientHeight = document.documentElement.clientHeight;
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        readProgress.innerText = ((scrollTop / (scrollHeight - clientHeight)).toFixed(2) * 100).toFixed(0);
+    })
+</script>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+</script>
+<script>
+    let mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        (function() {
+            document.cookie = "change-themes" + "="+ escape ("false");
+        })()
+
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    });
+</script>
+
+<script>
+    document.body.addEventListener('copy', function (e) {
+        if (window.getSelection().toString() && window.getSelection().toString().length > 50) {
+            let clipboardData = e.clipboardData || window.clipboardData;
+            if (clipboardData) {
+                e.preventDefault();
+                let htmlData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Blaine's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                let textData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Blaine's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                clipboardData.setData('text/html', htmlData);
+                clipboardData.setData('text/plain', textData);
+            }
+        }
+    });
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerText = '复制';
+
+        function copyingDone() {
+            copybutton.innerText = '已复制！';
+            setTimeout(() => {
+                copybutton.innerText = '复制';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                let text = codeblock.textContent +
+                    '\r\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Blaine's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                navigator.clipboard.writeText(text);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) {}
+            selection.removeRange(range);
+        });
+
+        let language = codeblock.className.replaceAll("language-", "")
+        let macTool = document.createElement("div")
+        let macTool1 = document.createElement("div")
+        let macTool2 = document.createElement("div")
+        let macTool3 = document.createElement("div")
+        let languageType = document.createElement("div")
+        languageType.innerText = language
+        macTool.setAttribute('class', 'mac-tool')
+        macTool1.setAttribute('class', 'mac bb1')
+        macTool2.setAttribute('class', 'mac bb2')
+        macTool3.setAttribute('class', 'mac bb3')
+        languageType.setAttribute('class', 'language-type')
+        macTool.appendChild(macTool1)
+        macTool.appendChild(macTool2)
+        macTool.appendChild(macTool3)
+        macTool.appendChild(languageType)
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        }
+    });
+</script>
+</body>
+
+</html>

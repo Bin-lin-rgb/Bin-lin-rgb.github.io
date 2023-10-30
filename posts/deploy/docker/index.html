@@ -1,0 +1,1584 @@
+<!DOCTYPE html>
+<html lang="zh" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Docker 基础 | Blaine&#39;s Blog</title>
+<meta name="keywords" content="docker">
+<meta name="description" content="Docker 为什么使用Docker 企业环境中存在的某个痛点 企业使用一项技术是为了解决当前企业环境中存在的某个痛点。 目前整个软件行业存在着以下几个痛点。 1.软件更新发布及部署低效，过程烦琐且需要人工介入。 2.环境一致性难以保证。 3.不同环境之间迁移成本太高。 Docker能解决的问题 首先，Do">
+<meta name="author" content="Blaine">
+<link rel="canonical" href="https://Bin-lin-rgb.github.io/posts/deploy/docker/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.css" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.js" onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://Bin-lin-rgb.github.io/img/icon.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://Bin-lin-rgb.github.io/img/icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://Bin-lin-rgb.github.io/img/icon.png">
+<link rel="apple-touch-icon" href="https://Bin-lin-rgb.github.io/img/icon.png">
+<link rel="mask-icon" href="https://Bin-lin-rgb.github.io/img/icon.png">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+<script defer src="https://unpkg.com/mermaid@8.8.1/dist/mermaid.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+<script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.3/dist/jquery.min.js"></script>
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = ""; 
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<meta property="og:title" content="Docker 基础" />
+<meta property="og:description" content="Docker 为什么使用Docker 企业环境中存在的某个痛点 企业使用一项技术是为了解决当前企业环境中存在的某个痛点。 目前整个软件行业存在着以下几个痛点。 1.软件更新发布及部署低效，过程烦琐且需要人工介入。 2.环境一致性难以保证。 3.不同环境之间迁移成本太高。 Docker能解决的问题 首先，Do" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://Bin-lin-rgb.github.io/posts/deploy/docker/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-10-28T18:35:29+08:00" />
+<meta property="article:modified_time" content="2023-10-28T18:35:29+08:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Docker 基础"/>
+<meta name="twitter:description" content="Docker 为什么使用Docker 企业环境中存在的某个痛点 企业使用一项技术是为了解决当前企业环境中存在的某个痛点。 目前整个软件行业存在着以下几个痛点。 1.软件更新发布及部署低效，过程烦琐且需要人工介入。 2.环境一致性难以保证。 3.不同环境之间迁移成本太高。 Docker能解决的问题 首先，Do"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+
+        {
+          "@type": "ListItem",
+          "position":  1 ,
+          "name": "📚文章",
+          "item": "https://Bin-lin-rgb.github.io/posts/"
+        },
+
+        {
+          "@type": "ListItem",
+          "position":  2 ,
+          "name": "⏬ Deploy",
+          "item": "https://Bin-lin-rgb.github.io/posts/deploy/"
+        }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "Docker 基础",
+      "item": "https://Bin-lin-rgb.github.io/posts/deploy/docker/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Docker 基础",
+  "name": "Docker 基础",
+  "description": "Docker 为什么使用Docker 企业环境中存在的某个痛点 企业使用一项技术是为了解决当前企业环境中存在的某个痛点。 目前整个软件行业存在着以下几个痛点。 1.软件更新发布及部署低效，过程烦琐且需要人工介入。 2.环境一致性难以保证。 3.不同环境之间迁移成本太高。 Docker能解决的问题 首先，Do",
+  "keywords": [
+    "docker"
+  ],
+  "articleBody": "Docker 为什么使用Docker\n企业环境中存在的某个痛点 企业使用一项技术是为了解决当前企业环境中存在的某个痛点。\n目前整个软件行业存在着以下几个痛点。\n1.软件更新发布及部署低效，过程烦琐且需要人工介入。\n2.环境一致性难以保证。\n3.不同环境之间迁移成本太高。\nDocker能解决的问题 首先，Docker的使用十分简单，\n从开发的角度来看就是“三步走\"：构建、运输、运行。\n其中，关键步骤是构建环节，即打包镜像文件。\n但是从测试和运维的角度来看，那就只有两步：复制、运行。\n有了这个镜像文件，想复制到哪里运行都可以，完全和平台无关。\nDocker这种容器技术隔离出了独立的运行空间，不会和其他应用争用系统资源，不需要考虑应用之间的相互影响。\n其次，因为在构建镜像时就处理完了服务程序对于系统的所有依赖，所以在使用时，可以忽略原本程序的依赖以及开发语言。对测试和运维人员而言，可以更专注于自己的业务内容。\n最后，Docker为开发者提供了一种开发环境的管理办法，帮助测试人员保证环境的同步，为运维人员提供了可移植的标准化部署流程。\n类 –\u003e 对象\n镜像 –\u003e 容器\n安装 centos uname -r yum update yum makecache fast yum install docker-ce docker version systemctl status docker systemctl start docker // 测试 docker pull hello-world docker run hello-world Ubuntu curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun 常用命令 https://www.bilibili.com/video/BV1gr4y1U7CY?p=18\u0026spm_id_from=pageDriver\u0026vd_source=6168fe2db91f9a8c4c41d41f39d1703e\n启动docker:\tsystemctl start docker 停止docker:\tsystemctl stop docker 重启docker:\tsystemctl restart docker 查看docker状态:\tsystemctl status docker 开机启动:\tsystemctl enable docker 查看docker概要信息:\tdocker info 查看docker 总体帮助文档:\tdocker-help 查看docker 命令帮助文档:\tdocker具体命令-help docker 中央仓库 存放镜像的网站\n官网：https://hub.docker.com/\ndaocloud：http://hub.daocloud.io/\ndocker 镜像操作 拉取到本地 docker pull daocloud.io/library/tomcat:8.0.45 查看本地所有镜像 docker images 删除 // 查看正在运行的 docker ps -a docker rm a66 docker rmi 镜像标识 镜像导出导入 docker save -o 路径 镜像id\u003c前两位即可\u003e docker load -i 镜像文件 修改镜像名称 docker tag 镜像id 新镜像名称:版本 docker tag fa tomcat:8.0 docker 容器操作 1、运行容器 基本操作\ndocker run 镜像的标识镜像名称[:tag] 常用的参数\ndocker run -d -p 宿主机端口:容器端口 --name 容器名称 镜像的标识镜像名称[:tag] docker run -d -p 8080:8080 --name tomcat fa 跑起来后直接访问即可 -d: 代表后台运行容器 -p 宿主机端口：容器端口：为了映射当前Liux的端口和容器的端口 –name 容器名称：指定容器的名称 2、查看正在运行的容器 docker ps [-qa] -a：查看全部的容器，包括没有运行 -q：只查看容器得到标识 3、查看容器的日志 docker logs -f 容器id [root@localhost linbin]# docker ps CONTAINER ID IMAGE COMMAND CREATED STATUS b01afd80c224 fa \"catalina.sh run\" 5 minutes ago Up 5 minutes [root@localhost linbin]# docker logs -f b0 08-Sep-2022 00:49:48.918 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server version: Apache Tomcat/8.0.45 08-Sep-2022 00:49:48.921 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server built: Jun 26 2017 20:06:07 UTC 8.0.45.0 08-Sep-2022 00:49:48.921 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log OS Name: Linux 4、进入到容器内部 docker exec -it 容器id bash [root@localhost linbin]# docker exec -it b0 bash root@b01afd80c224:/usr/local/tomcat# pwd /usr/local/tomcat root@b01afd80c224:/usr/local/tomcat# ls LICENSE NOTICE RELEASE-NOTES\tRUNNING.txt bin conf\tinclude lib logs native-jni-lib temp webapps work root@b01afd80c224:/usr/local/tomcat# cd webapps root@b01afd80c224:/usr/local/tomcat/webapps# ls ROOT docs examples host-manager manager root@b01afd80c224:/usr/local/tomcat/webapps# exit exit 5、删除容器 (删除容器前，需要先停止容器)\n#停止指定的容器 docker stop 容器id #停止全部容器 docker stop $(docker ps -qa) #删除指定容器 docker rm 容器id #删除全部容器 docker rm $(docker ps -qa) #启动容器 docker start 容器id 创建 mysql 容器 创建MySQL镜像\ndocker pull daocloud.io/library/mysq1:5.7.5-m15 查看MySQL镜像\ndocker images 创建MySQL容器\ndocker run -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=root --name msyql 镜像tag eg： docker run -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=Admin666 --name mysql 644 然后使用连接工具 Navicat 测试。\n坑1–中文字符 查看里面的字符集，好家伙，Latin1\nmysql\u003e SHOW VARIABLES LIKE 'character%'; +--------------------------+----------------------------+ | Variable_name | Value | +--------------------------+----------------------------+ | character_set_client | latin1 | | character_set_connection | latin1 | | character_set_database | utf8 | | character_set_filesystem | binary | | character_set_results | latin1 | | character_set_server | latin1 | | character_set_system | utf8 | | character_sets_dir | /usr/share/mysql/charsets/ | +--------------------------+----------------------------+ 8 rows in set (0.00 sec) 关键点2–开启数据卷 删除容器后，里面的mysql数据如何办 容器实例一删除，啥数据也没了！\n解决办法 1、新增数据卷\ndocker run -d -p 3306:3306 --privileged=true -v /zzyyuse/mysql/log:/var/log/mysql -v /zzyyuse/mysql/data:/var/lib/mysql -v /zzyyuse/mysql/conf:/etc/mysql/conf.d -e MYSQL_ROOT_PASSWORD=123456 --name mysql mysql:5.7 2、/zzyyuse/mysql/conf 下新增 my.cnf\n[client] default_character_set=utf8 [mysqld] collation_server = utf8_general_ci character_set_server = utf8 然后restart一下\n之前的DB 无效\n修改字符集操作+重启mysql容器实例\n之后的DB 有效，需要新建\n结论：docker安装完MySQL并run出容器后，建议请先修改完字符集编码后再新建mysql库-表-插数据\n将项目部署到Tomcat 上传项目 上传项目\n进入容器目录 docker exec -it 容器tag bash\n将项目拷贝到tomcat:容器的webapps目录下面 docker cp demo a17:/usr/local/tomcat/webapps\n查看tomcat运行日志 docker logs -f 容器tag\ndocker 数据卷 为了部署我们的demo工程，需要使用到 cp 的命令将宿主机内的 demo文件复制到容器内部\n数据卷：将宿主机的一个目录，映射到容器的一个目录中，可以在宿主机中操作目录中的内容，那么容器内部映射的文件，也会跟着一起改变。\n在挂载目录后多加一个参数 --privileged=true\n1.创建数据卷 docker volume create 数据卷名称 #创建数据卷之后，默认会存放在一个目录下/var/Tb/docker/volumes./数据卷名称/_data 2.查看数据卷的详细信息 docker volume inspect 数据卷名称 3.查看全部数据卷 docker volume ls 4.删除数据卷 docker volume rm 数据卷名称 5.应用数据卷 当你映射数据卷时，如果数据卷不存在。Docker会帮你自动创建，会将容器内部自带的文件，存储在默认的存放路径中。\ndocker run -v 数据卷名称:容器内部的路径镜像id #直接指定一个路径作为数据卷的存放位置。这个路径下是空的。 docker run -V 宿主机路径:容器内部的路径 镜像id docker run -d -p 8080:8080 -v /home/tomcat_webapps:/usr/local/tomcat/webapps/ --name tomcat fa6 测试 docker run -d --privileged=true -v /tmp/host_data/:/tmp/docker_data/ --name u1 ubuntu [root@iZwz982ksp86xdjeeirtsdZ tmp]# cd /tmp/host_data/ [root@iZwz982ksp86xdjeeirtsdZ host_data]# touch test.txt [root@iZwz982ksp86xdjeeirtsdZ host_data]# ls test.txt [root@iZwz982ksp86xdjeeirtsdZ host_data]# docker exec -it afb bash root@afb5e67ee3d4:/# cd /tmp/docker_data/ root@afb5e67ee3d4:/tmp/docker_data# ls test.txt root@afb5e67ee3d4:/tmp/docker_data# 查看是否挂载成功\n[root@iZwz982ksp86xdjeeirtsdZ host_data]# docker inspect af \"Mounts\": [ { \"Type\": \"bind\", \"Source\": \"/tmp/host_data\", \"Destination\": \"/tmp/docker_data\", \"Mode\": \"\", \"RW\": true, \"Propagation\": \"rprivate\" } ], 如果 docker stop 了，然后在宿主机绑定的目录新增了一个文件，然后在 start 一下，发现会同步过来。\n是共享的意思。\n只读 上面默认rw\ndocker run -it -privileged=true -v /宿主机绝对路径目录:/容器内目录:ro 镜像名 /容器目录:ro 镜像名 就能完成功能，此时容器自己只能读取不能写\nro = read only\n此时如果宿主机写入内容，可以同步给容器内，容器可以读取到。\n继承 容器1完成和宿主机的映射 容器2继承容器1的卷规则 一\ndocker run -it --privileged=true --volumes-from 父亲 --name u2 ubuntu Dockerfile 什么是Dockerfile? DockerFile详解\nDockerfile是一个包含用于组合映像的命令的文本文档。可以使用在命令行中调用的任何命令。\nDocker通过读取Dockerfile中的指令自动生成映像。\ndocker build 命令用于从 Dockerfile 构建映像。\n可以在docker buiId命令中使用-f标志指向文件系统中任何位置的Dockerfile。\n例：\ndocker build -f /path/to/a/Dockerfile Dockerfile的基本结构 Dockerfile一般分为四部分：\n1.基础镜像信息\n2.维护者信息\n3.镜像操作指令\n4.容器启动时执行指令\nDockerfile文件说明 Docker以从上到下的顺序运行 Dockerfile 的指令。为了指定基本映像，第一条指令必须是FROM。一个声明以#字符开头则被视为注释。可以在Docker文件中使用RUN,CMD,FROM,EXPOSE,ENV等指令。\n在这里列出了一些堂用的指令.\n指令 FROM 指定基础镜像，必须为第一个命令\n格式： FROM FROM : FROM @ 示例： FROM mysq1:5.6 注：tag或digest是可选的，如果不使用这两个值时，会使用jlatest版本的基础镜像\nMAINTAINER 维护者信息\n格式： MAINTAINER 示例： MAINTAINER Jasper Xu MAINTAINER sorex@163.com MAINTAINER Jasper Xu RUN 构建镜像时执行的命令\nRUN用于在镜像容器中执行命令，其有以下两种命令执行方式： shell执行 格式： RUN exec执行 格式： RUN [\"executable\",\"paraml\",\"param2\"] 示例： RUN [\"executable\",\"param1\",\"param2\"] RUN apk update RUN [\"/etc/execfile\",\"arg1\",\"arg1\"] 注：RUN指令创建的中间镜像会被缓存，并会在下次构建中使用。如果不想使用这些缓存镜像，可以在构建时指定–no-cache参数，如：docker build –no-cache\nADD ADD 指令和 COPY 的使用格类似（同样需求下，官方推荐使用 COPY）。功能也类似，不同之处如下：\nADD 的优点：在执行 \u003c源文件\u003e 为 tar 压缩文件的话，压缩格式为 gzip, bzip2 以及 xz 的情况下，会自动复制并解压到 \u003c目标路径\u003e。 ADD 的缺点：在不解压的前提下，无法复制 tar 压缩文件。会令镜像构建缓存失效，从而可能会令镜像构建变得比较缓慢。具体是否使用，可以根据是否需要自动解压来决定。 格式： ADD \u003csrc\u003e...\u003cdest\u003e ADD[\"\",...\"\" 用于支持包含空格的路径 示例： ADD hom* /mydir/\t#添加所有以\"hom\"开头的文件 ADD hom?.txt /mydir/\t#?替代一个单字符，例如：\"home.txt\" ADD test relativeDir/\t#添加\"test\"到`WORKDIR`/relativeDir/ ADD test /absoluteDir/\t#添加\"test\"到/absoluteDir/ CMD 类似于 RUN 指令，用于运行程序，但二者运行的时间点不同:\nCMD 在docker run 时运行。 RUN 是在 docker build。 作用：为启动的容器指定默认要运行的程序，程序运行结束，容器也就结束。CMD 指令指定的程序可被 docker run 命令行参数中指定要运行的程序所覆盖。\n注意：如果 Dockerfile 中如果存在多个 CMD 指令，仅最后一个生效。\n格式：\nCMD CMD [\"\u003c可执行文件或命令\u003e\",\"\",\"\",...] CMD [\"\",\"\",...] # 该写法是为 ENTRYPOINT 指令指定的程序提供默认参数 推荐使用第二种格式，执行过程比较明确。第一种格式实际上在运行的过程中也会自动转换成第二种格式运行，并且默认可执行文件是 sh。\nCOPY 复制指令，从上下文目录中复制文件或者目录到容器里指定路径。\n格式：\nCOPY [--chown=:] \u003c源路径1\u003e... \u003c目标路径\u003e COPY [--chown=:] [\"\u003c源路径1\u003e\",... \"\u003c目标路径\u003e\"] [–chown=:]：可选参数，用户改变复制到容器内文件的拥有者和属组。\n\u003c源路径\u003e：源文件或者源目录，这里可以是通配符表达式，其通配符规则要满足 Go 的 filepath.Match 规则。例如：\nCOPY hom* /mydir/ COPY hom?.txt /mydir/ \u003c目标路径\u003e：容器内的指定路径，该路径不用事先建好，路径不存在的话，会自动创建。\nFROM centos # 添加文件到目录下 COPY test.txt /mydir/ # 将文件内容写入 mytest COPY test.txt /mytest # 压缩文件,自动解压 COPY jmeter.log.zip /myzipdir/ # 添加目录 COPY TeamFile / # 其他文件 COPY jmeter.log /mydir/ # 多个文件 COPY test1.txt test2.txt /mydir/ # 通配符,dest 不存在自动创建 COPY test*.txt /mydir/test/ # 特殊字符串 COPY COPY[[]0].txt /mydir/ WORKDIR /data # 相对路径 COPY test.txt test/ VOLUME 定义匿名数据卷。在启动容器时忘记挂载数据卷，会自动挂载到匿名卷。\n作用：\n避免重要的数据，因容器重启而丢失，这是非常致命的。 避免容器不断变大。 格式：\nVOLUME [\"\u003c路径1\u003e\", \"\u003c路径2\u003e\"...] VOLUME \u003c路径\u003e 尚 docker 自定义镜像 自定义镜像\ndocker-compose 需求\n之前运行一个镜像，需要添加大量的参数。\n可以通过Docker-Compose编写这些参数。\nDocker-Compose可以帮助我们批量的管理容器。\n只需要通过一个docker-compose.yml文件去维护即可。\n下载安装\n1.去github官网搜索docker-compose,下载Docker-Compose\ndocker-compose-Linux-x86_64\n2.将下载好的文件，拖拽到Liux操作系统中\n3.需要将DockerCompose文件的名称修改一下，基于DockerCompose文件一个可执行的权限\n[root@localhost compose]# mv docker-compose-linux-x86_64 docker-compose [root@localhost compose]# mv docker-compose /usr/local/bin //放到路径中 [root@localhost compose]# cd /usr/local/bin [root@localhost bin]# ls docker-compose [root@localhost bin]# chmod 777 docker-compose //可执行权限 [root@localhost bin]# ls -al total 3000 drwxr-xr-x. 2 root root 28 Sep 7 23:23 . drwxr-xr-x. 12 root root 131 Aug 14 01:15 .. -rwxrwxrwx. 1 linbin linbin 3072000 Sep 7 23:19 docker-compose [root@localhost bin]# 4.方便后期操作，配置一个环境变量，让在其他目录也可以执行\nvi /etc/profile yml 文件 Jenkins gitlab Jenkins sh docker stop jenkins \u003e /dev/null 2\u003e /dev/null || : docker container rm jenkins \u003e /dev/null 2\u003e /dev/null || : docker run \\ --name jenkins \\ -d \\ -p 8080:8080 \\ -p 50000:50000 \\ -v jenkins_home:/var/jenkins_home:z \\ --env=\"JENKINS_OPTS=--prefix=/jenkins\" \\ -v deploy:/var/deploy:z \\ --network bridge \\ jenkins:1.0 gitlab sh docker pull gitlab/gitlab-ce:15.4.0-ce.0\ndocker stop gitlab \u003e /dev/null 2\u003e /dev/null || : docker container rm gitlab \u003e /dev/null 2\u003e /dev/null || : docker run -d \\ --name gitlab \\ --hostname my-gitlab \\ --publish 19080:80 --publish 19022:22 \\ --restart always \\ --volume /gitLabs/config:/etc/gitlab:Z \\ --volume /gitLabs/logs:/var/log/gitlab:Z \\ --volume /gitLabs/data:/var/opt/gitlab:Z \\ gitlab/gitlab-ce:15.4.0-ce.0 https://www.cnblogs.com/diaomina/p/12830449.html\n修改 hostname\nvi /opt/gitlab/embedded/service/gitlab-rails/config/gitlab.yml Windows 编译后部署 [juejin] server windows 编译\n// 注意 --\u003e 使用 cmd 而不是 powershell SET GOOS=linux SET GOARCH=amd64 go build ./main.go 将编译形成的二进制文件\ndockerfile\nFROM alpine:latest RUN mkdir \"/app\" RUN mkdir \"/app/config\" WORKDIR \"/app\" COPY main /app/ COPY config.ini /app/config/ ENTRYPOINT [\"./main\"] 在 Linux 下的 docker 打包构建镜像\nsudo docker image build --platform linux/amd64 -t juejin_blog:v2.2 . docker image ls sudo docker run -it -p 9000:9000 juejin_blog:v2.2 nginx docker pull nginx ;新建目录结构：nginx文件夹下新建conf.d文件夹，html文件夹 /docker |---juejin |----nginx |----conf.d |----html default.conf\nserver { listen 80; server_name 49.109.50.48; location / { root /usr/share/nginx/html; try_files $uri $uri/ /index.html; index index.html index.htm; } location /api/ { proxy_pass http://49.109.50.48:9000; proxy_redirect default; rewrite ^/api/(.*) /$1 break; } error_page 500 502 503 504 /50x.html; location = /50x.html { root html; } } run.sh\nsudo docker run -d -p 80:80 \\ --name nginx_v1.3 \\ -v /docker/juejin/nginx/conf.d:/etc/nginx/conf.d \\ -v /docker/juejin/nginx/html/dist:/usr/share/nginx/html \\ nginx:latest 先用 builder 构建再 run [sms] go dockerfile FROM golang:alpine as builder ENV GOPROXY=https://goproxy.cn,direct WORKDIR /home COPY . . RUN go mod tidy RUN go build -o sms main.go FROM alpine as runner ENV WORKDIR=/home WORKDIR $WORKDIR RUN apk add tzdata --no-cache \\ \u0026\u0026 cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \\ \u0026\u0026 echo \"Asia/Shanghai\" \u003e /etc/timezone \\ \u0026\u0026 apk del tzdata COPY --from=builder $WORKDIR/sms $WORKDIR CMD [\"./sms\"] nginx dockerfile └─frontend ├─conf.d └─html └─dist └─assets nginx.conf\nserver { listen 80; server_name 43.139.40.48; location / { root /usr/share/nginx/html; try_files $uri $uri/ /index.html; index index.html index.htm; } location /api/ { proxy_pass http://43.139.40.48:8082; proxy_redirect default; rewrite ^/api/(.*) /$1 break; } error_page 500 502 503 504 /50x.html; location = /50x.html { root html; } } # 使用 Nginx 作为基础镜像 FROM nginx:alpine # 将构建好的前端应用静态文件复制到 Nginx 的 HTML 目录 COPY ./html /usr/share/nginx/html COPY ./conf.d /etc/nginx/conf.d # 暴露端口，如果需要的话 EXPOSE 80 # Nginx 会自动启动，无需手动启动 Nginx 服务 docker-compose version: '3' services: backend: build: context: ./sms-backend dockerfile: ./Dockerfile image: smsbackend container_name: \"smsbackend_container\" ports: - \"8082:8080\" environment: - PG_USER=postgres - PG_PASSWORD=admin666 - PG_DBNAME=sms - PG_SSLMODE=disable - PG_HOST=43.139.40.48 - PG_PORT=5432 nginx: build: context: ./sms-frontend dockerfile: ./Dockerfile image: nginx:sms container_name: \"smsnginx_container\" ports: - \"17000:80\" - \"443:443\" volumes: - /sms-frontend/conf.d:/etc/nginx/conf.d - /sms-frontend/html:/usr/share/nginx/html restart: always other WSL2 Ubuntu22.04 安装 Docker ，发现 daemon 启动失败 root@LAPTOP-O0KBCH8Q:~# service docker start * Starting Docker: docker [ OK ] root@LAPTOP-O0KBCH8Q:~# docker version Client: Docker Engine - Community Version: 20.10.18 API version: 1.41 Go version: go1.18.6 Git commit: b40c2f6 Built: Thu Sep 8 23:11:43 2022 OS/Arch: linux/amd64 Context: default Experimental: true Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running? root@LAPTOP-O0KBCH8Q:~# sudo systemctl enable docker Synchronizing state of docker.service with SysV service script with /lib/systemd/systemd-sysv-install. Executing: /lib/systemd/systemd-sysv-install enable docker root@LAPTOP-O0KBCH8Q:~# /lib/systemd/systemd-sysv-install enable docker root@LAPTOP-O0KBCH8Q:~# dockerd \u0026 failed to start daemon: Error initializing network controller: error obtaining controller instance: unable to add return rule in DOCKER-ISOLATION-STAGE-1 chain: (iptables failed: iptables --wait -A DOCKER-ISOLATION-STAGE-1 -j RETURN: iptables v1.8.7 (nf_tables): RULE_APPEND failed (No such file or directory): rule in chain DOCKER-ISOLATION-STAGE-1 (exit status 4)) [1]+ Exit 1 dockerd root@LAPTOP-O0KBCH8Q:~# iptables -L -t nat # Warning: iptables-legacy tables present, use iptables-legacy to see them Chain PREROUTING (policy ACCEPT) target prot opt source destination Chain INPUT (policy ACCEPT) target prot opt source destination Chain OUTPUT (policy ACCEPT) target prot opt source destination Chain POSTROUTING (policy ACCEPT) target prot opt source destination Chain DOCKER (0 references) target prot opt source destination root@LAPTOP-O0KBCH8Q:~# sudo update-alternatives --config iptables There are 2 choices for the alternative iptables (providing /usr/sbin/iptables). Selection Path Priority Status ------------------------------------------------------------ * 0 /usr/sbin/iptables-nft 20 auto mode 1 /usr/sbin/iptables-legacy 10 manual mode 2 /usr/sbin/iptables-nft 20 manual mode Press to keep the current choice[*], or type selection number: 1 update-alternatives: using /usr/sbin/iptables-legacy to provide /usr/sbin/iptables (iptables) in manual mode root@LAPTOP-O0KBCH8Q:~# service docker start * Starting Docker: docker [ OK ] root@LAPTOP-O0KBCH8Q:~# service docker status * Docker is running root@LAPTOP-O0KBCH8Q:~# docker pull hello-world Using default tag: latest latest: Pulling from library/hello-world 2db29710123e: Pull complete Digest: sha256:62af9efd515a25f84961b70f973a798d2eca956b1b2b026d0a4a63a3b0b6a3f2 Status: Downloaded newer image for hello-world:latest docker.io/library/hello-world:latest root@LAPTOP-O0KBCH8Q:~# docker run hello-world Hello from Docker! This message shows that your installation appears to be working correctly. To generate this message, Docker took the following steps: 1. The Docker client contacted the Docker daemon. 2. The Docker daemon pulled the \"hello-world\" image from the Docker Hub. (amd64) 3. The Docker daemon created a new container from that image which runs the executable that produces the output you are currently reading. 4. The Docker daemon streamed that output to the Docker client, which sent it to your terminal. To try something more ambitious, you can run an Ubuntu container with: $ docker run -it ubuntu bash Share images, automate workflows, and more with a free Docker ID: https://hub.docker.com/ For more examples and ideas, visit: https://docs.docker.com/get-started/ docker: Error response from daemon: network qnear not found. 改成 bridge 。\n",
+  "wordCount" : "5470",
+  "inLanguage": "zh",
+  "datePublished": "2023-10-28T18:35:29+08:00",
+  "dateModified": "2023-10-28T18:35:29+08:00",
+  "author":[{
+    "@type": "Person",
+    "name": "Blaine"
+  }],
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://Bin-lin-rgb.github.io/posts/deploy/docker/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Blaine's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://Bin-lin-rgb.github.io/img/icon.png"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    (function () {
+        let  arr,reg = new RegExp("(^| )"+"change-themes"+"=([^;]*)(;|$)");
+        if(arr = document.cookie.match(reg)) {
+        } else {
+            if (new Date().getHours() >= 19 || new Date().getHours() < 6) {
+                document.body.classList.add('dark');
+                localStorage.setItem("pref-theme", 'dark');
+            } else {
+                document.body.classList.remove('dark');
+                localStorage.setItem("pref-theme", 'light');
+            }
+        }
+    })()
+
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://Bin-lin-rgb.github.io/" accesskey="h" title="Blaine&#39;s Blog (Alt + H)">
+            <img src="https://Bin-lin-rgb.github.io/img/icon.png" alt="logo" aria-label="logo"
+                 height="35">Blaine&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://Bin-lin-rgb.github.io/" title="🏠 主页">
+                <span>🏠 主页</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://Bin-lin-rgb.github.io/posts" title="📚 文章">
+                <span>📚 文章</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://Bin-lin-rgb.github.io/search" title="🔍 搜索 (Alt &#43; /)" accesskey=/>
+                <span>🔍 搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://Bin-lin-rgb.github.io/tags" title="🧩 标签">
+                <span>🧩 标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://Bin-lin-rgb.github.io/archives/" title="⏱️ 时间轴">
+                <span>⏱️ 时间轴</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://Bin-lin-rgb.github.io/about" title="🙋🏻‍♂️ 关于">
+                <span>🙋🏻‍♂️ 关于</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://Bin-lin-rgb.github.io/links" title="🤝 友链">
+                <span>🤝 友链</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main page">
+<style>
+    i[id*="post_meta_style"] {
+        display: flex;
+        align-items: center;
+        margin: 0 0 10px 0;
+    }
+</style>
+
+<article class="post-single">
+    <div id="single-content">
+        <header class="post-header">
+            <div class="breadcrumbs"><a href="https://Bin-lin-rgb.github.io/">🏠 主页</a>&nbsp;»&nbsp;<a href="https://Bin-lin-rgb.github.io/posts/">📚文章</a>&nbsp;»&nbsp;<a href="https://Bin-lin-rgb.github.io/posts/deploy/">⏬ Deploy</a></div>
+            <h1 class="post-title">
+                Docker 基础
+            </h1>
+            <div class="post-meta">
+
+<style>
+    i[id*="post_meta_style"] {
+        display: flex;
+        align-items: center;
+        margin: 0 0 10px 0;
+    }
+
+    .parent-post-meta {
+        display: flex;
+        flex-wrap: wrap;
+        opacity: 0.8;
+    }
+</style>
+
+<span class="parent-post-meta">
+    <span id="post_meta_style_1">
+        <span class="fa fa-calendar-check-o"></span>
+        <span>2023-10-28
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    
+    
+    
+    
+    
+    
+    
+    <span id="post_meta_style_3">
+        <span class="fa fa-file-word-o"></span>
+        <span>5470字
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_4">
+        <span class="fa fa-clock-o"></span>
+        <span>11分钟
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_5">
+        <span class="fa fa-user-o"></span>
+        <span>Blaine
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_6">
+        <span class="fa fa-tags" style="opacity: 0.8"></span>
+        <span>
+            <span class="post-tags-meta">
+                <a href="https://Bin-lin-rgb.github.io/tags/docker/" style="color: var(--secondary)!important;">docker</a>
+            </span>
+        </span>
+    </span>
+</span>
+<span style="opacity: 0.8;">
+                    <span id="post_meta_style_7">
+                        &nbsp;&nbsp;
+                        <span class="fa fa-eye" ></span>
+                        <span>
+                            <span id="busuanzi_container_page_pv"><span id="busuanzi_value_page_pv"></span></span>
+                            &nbsp;&nbsp;
+                        </span>
+                    </span>
+                    <span id="post_meta_style_8">
+                        <span class="fa fa-commenting-o"></span>
+                        <span>
+                            <script src="https://cdn.staticfile.org/twikoo/1.5.8/twikoo.all.min.js"></script>
+                            <script>
+                                let url = document.documentURI
+                                
+                                let dnsUrl = "https://Bin-lin-rgb.github.io/"
+                                let urlSplit = url.split(dnsUrl)
+                                let finalUrl = urlSplit[1]
+                                if (finalUrl[0] !== '/') {
+                                    finalUrl = '/'+finalUrl
+                                }
+                                twikoo.getCommentsCount({
+                                    envId: "https://twikoo-api-nine-silk.vercel.app/", 
+                                region: "ap-guangzhou", 
+                                urls: [ 
+                                    
+                                    finalUrl,
+                                ],
+                                    includeReply: false 
+                                }).then(function (res) {
+                                    let count = res[0].count
+                                    const obj = document.getElementById("comment_count");
+                                    obj.innerText = count
+                                    
+                                    
+                                    
+                                }).catch(function (err) {
+                                    
+                                    console.error(err);
+                                });
+                            </script>
+                            <span id="comment_count"></span>
+                        </span>
+                    </span>
+                </span>
+
+</div>
+        </header> <aside id="toc-container" class="toc-container wide">
+    <div class="toc">
+        <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">目录</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#docker" aria-label="Docker">Docker</a><ul>
+                        
+                <li>
+                    <a href="#docker%e8%83%bd%e8%a7%a3%e5%86%b3%e7%9a%84%e9%97%ae%e9%a2%98" aria-label="Docker能解决的问题">Docker能解决的问题</a></li>
+                <li>
+                    <a href="#%e5%ae%89%e8%a3%85" aria-label="安装">安装</a><ul>
+                        
+                <li>
+                    <a href="#centos" aria-label="centos">centos</a></li>
+                <li>
+                    <a href="#ubuntu" aria-label="Ubuntu">Ubuntu</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e5%b8%b8%e7%94%a8%e5%91%bd%e4%bb%a4" aria-label="常用命令">常用命令</a></li>
+                <li>
+                    <a href="#docker-%e4%b8%ad%e5%a4%ae%e4%bb%93%e5%ba%93" aria-label="docker 中央仓库">docker 中央仓库</a></li>
+                <li>
+                    <a href="#docker-%e9%95%9c%e5%83%8f%e6%93%8d%e4%bd%9c" aria-label="docker 镜像操作">docker 镜像操作</a><ul>
+                        
+                <li>
+                    <a href="#%e6%8b%89%e5%8f%96%e5%88%b0%e6%9c%ac%e5%9c%b0" aria-label="拉取到本地">拉取到本地</a></li>
+                <li>
+                    <a href="#%e6%9f%a5%e7%9c%8b%e6%9c%ac%e5%9c%b0%e6%89%80%e6%9c%89%e9%95%9c%e5%83%8f" aria-label="查看本地所有镜像">查看本地所有镜像</a></li>
+                <li>
+                    <a href="#%e5%88%a0%e9%99%a4" aria-label="删除">删除</a></li>
+                <li>
+                    <a href="#%e9%95%9c%e5%83%8f%e5%af%bc%e5%87%ba%e5%af%bc%e5%85%a5" aria-label="镜像导出导入">镜像导出导入</a></li>
+                <li>
+                    <a href="#%e4%bf%ae%e6%94%b9%e9%95%9c%e5%83%8f%e5%90%8d%e7%a7%b0" aria-label="修改镜像名称">修改镜像名称</a></li></ul>
+                </li>
+                <li>
+                    <a href="#docker-%e5%ae%b9%e5%99%a8%e6%93%8d%e4%bd%9c" aria-label="docker 容器操作">docker 容器操作</a><ul>
+                        
+                <li>
+                    <a href="#1%e8%bf%90%e8%a1%8c%e5%ae%b9%e5%99%a8" aria-label="1、运行容器">1、运行容器</a></li>
+                <li>
+                    <a href="#2%e6%9f%a5%e7%9c%8b%e6%ad%a3%e5%9c%a8%e8%bf%90%e8%a1%8c%e7%9a%84%e5%ae%b9%e5%99%a8" aria-label="2、查看正在运行的容器">2、查看正在运行的容器</a></li>
+                <li>
+                    <a href="#3%e6%9f%a5%e7%9c%8b%e5%ae%b9%e5%99%a8%e7%9a%84%e6%97%a5%e5%bf%97" aria-label="3、查看容器的日志">3、查看容器的日志</a></li>
+                <li>
+                    <a href="#4%e8%bf%9b%e5%85%a5%e5%88%b0%e5%ae%b9%e5%99%a8%e5%86%85%e9%83%a8" aria-label="4、进入到容器内部">4、进入到容器内部</a></li>
+                <li>
+                    <a href="#5%e5%88%a0%e9%99%a4%e5%ae%b9%e5%99%a8" aria-label="5、删除容器">5、删除容器</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e5%88%9b%e5%bb%ba-mysql-%e5%ae%b9%e5%99%a8" aria-label="创建 mysql 容器">创建 mysql 容器</a><ul>
+                        
+                <li>
+                    <a href="#%e5%9d%911--%e4%b8%ad%e6%96%87%e5%ad%97%e7%ac%a6" aria-label="坑1&amp;ndash;中文字符">坑1&ndash;中文字符</a></li>
+                <li>
+                    <a href="#%e5%85%b3%e9%94%ae%e7%82%b92--%e5%bc%80%e5%90%af%e6%95%b0%e6%8d%ae%e5%8d%b7" aria-label="关键点2&amp;ndash;开启数据卷">关键点2&ndash;开启数据卷</a></li>
+                <li>
+                    <a href="#%e8%a7%a3%e5%86%b3%e5%8a%9e%e6%b3%95" aria-label="解决办法">解决办法</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e5%b0%86%e9%a1%b9%e7%9b%ae%e9%83%a8%e7%bd%b2%e5%88%b0tomcat" aria-label="将项目部署到Tomcat">将项目部署到Tomcat</a><ul>
+                        
+                <li>
+                    <a href="#%e4%b8%8a%e4%bc%a0%e9%a1%b9%e7%9b%ae" aria-label="上传项目">上传项目</a></li>
+                <li>
+                    <a href="#%e8%bf%9b%e5%85%a5%e5%ae%b9%e5%99%a8%e7%9b%ae%e5%bd%95" aria-label="进入容器目录">进入容器目录</a></li>
+                <li>
+                    <a href="#%e5%b0%86%e9%a1%b9%e7%9b%ae%e6%8b%b7%e8%b4%9d%e5%88%b0tomcat%e5%ae%b9%e5%99%a8%e7%9a%84webapps%e7%9b%ae%e5%bd%95%e4%b8%8b%e9%9d%a2" aria-label="将项目拷贝到tomcat:容器的webapps目录下面">将项目拷贝到tomcat:容器的webapps目录下面</a></li>
+                <li>
+                    <a href="#%e6%9f%a5%e7%9c%8btomcat%e8%bf%90%e8%a1%8c%e6%97%a5%e5%bf%97" aria-label="查看tomcat运行日志">查看tomcat运行日志</a></li></ul>
+                </li>
+                <li>
+                    <a href="#docker-%e6%95%b0%e6%8d%ae%e5%8d%b7" aria-label="docker 数据卷">docker 数据卷</a><ul>
+                        
+                <li>
+                    <a href="#1%e5%88%9b%e5%bb%ba%e6%95%b0%e6%8d%ae%e5%8d%b7" aria-label="1.创建数据卷">1.创建数据卷</a></li>
+                <li>
+                    <a href="#2%e6%9f%a5%e7%9c%8b%e6%95%b0%e6%8d%ae%e5%8d%b7%e7%9a%84%e8%af%a6%e7%bb%86%e4%bf%a1%e6%81%af" aria-label="2.查看数据卷的详细信息">2.查看数据卷的详细信息</a></li>
+                <li>
+                    <a href="#3%e6%9f%a5%e7%9c%8b%e5%85%a8%e9%83%a8%e6%95%b0%e6%8d%ae%e5%8d%b7" aria-label="3.查看全部数据卷">3.查看全部数据卷</a></li>
+                <li>
+                    <a href="#4%e5%88%a0%e9%99%a4%e6%95%b0%e6%8d%ae%e5%8d%b7" aria-label="4.删除数据卷">4.删除数据卷</a></li>
+                <li>
+                    <a href="#5%e5%ba%94%e7%94%a8%e6%95%b0%e6%8d%ae%e5%8d%b7" aria-label="5.应用数据卷">5.应用数据卷</a></li>
+                <li>
+                    <a href="#%e6%b5%8b%e8%af%95" aria-label="测试">测试</a></li>
+                <li>
+                    <a href="#%e5%8f%aa%e8%af%bb" aria-label="只读">只读</a></li>
+                <li>
+                    <a href="#%e7%bb%a7%e6%89%bf" aria-label="继承">继承</a></li></ul>
+                </li>
+                <li>
+                    <a href="#dockerfile" aria-label="Dockerfile">Dockerfile</a><ul>
+                        
+                <li>
+                    <a href="#%e4%bb%80%e4%b9%88%e6%98%afdockerfile" aria-label="什么是Dockerfile?">什么是Dockerfile?</a></li>
+                <li>
+                    <a href="#dockerfile%e7%9a%84%e5%9f%ba%e6%9c%ac%e7%bb%93%e6%9e%84" aria-label="Dockerfile的基本结构">Dockerfile的基本结构</a></li>
+                <li>
+                    <a href="#dockerfile%e6%96%87%e4%bb%b6%e8%af%b4%e6%98%8e" aria-label="Dockerfile文件说明">Dockerfile文件说明</a></li>
+                <li>
+                    <a href="#%e6%8c%87%e4%bb%a4" aria-label="指令">指令</a><ul>
+                        
+                <li>
+                    <a href="#from" aria-label="FROM">FROM</a></li>
+                <li>
+                    <a href="#maintainer" aria-label="MAINTAINER">MAINTAINER</a></li>
+                <li>
+                    <a href="#run" aria-label="RUN">RUN</a></li>
+                <li>
+                    <a href="#add" aria-label="ADD">ADD</a></li>
+                <li>
+                    <a href="#cmd" aria-label="CMD">CMD</a></li>
+                <li>
+                    <a href="#copy" aria-label="COPY">COPY</a></li>
+                <li>
+                    <a href="#volume" aria-label="VOLUME">VOLUME</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e5%b0%9a" aria-label="尚">尚</a></li></ul>
+                </li>
+                <li>
+                    <a href="#docker-%e8%87%aa%e5%ae%9a%e4%b9%89%e9%95%9c%e5%83%8f" aria-label="docker 自定义镜像">docker 自定义镜像</a></li>
+                <li>
+                    <a href="#docker-compose" aria-label="docker-compose">docker-compose</a></li>
+                <li>
+                    <a href="#yml-%e6%96%87%e4%bb%b6" aria-label="yml 文件">yml 文件</a></li>
+                <li>
+                    <a href="#jenkins-gitlab" aria-label="Jenkins gitlab">Jenkins gitlab</a><ul>
+                        
+                <li>
+                    <a href="#jenkins-sh" aria-label="Jenkins sh">Jenkins sh</a></li>
+                <li>
+                    <a href="#gitlab-sh" aria-label="gitlab sh">gitlab sh</a></li></ul>
+                </li>
+                <li>
+                    <a href="#windows-%e7%bc%96%e8%af%91%e5%90%8e%e9%83%a8%e7%bd%b2-juejin" aria-label="Windows 编译后部署 [juejin]">Windows 编译后部署 [juejin]</a><ul>
+                        
+                <li>
+                    <a href="#server" aria-label="server">server</a></li>
+                <li>
+                    <a href="#nginx" aria-label="nginx">nginx</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e5%85%88%e7%94%a8-builder-%e6%9e%84%e5%bb%ba%e5%86%8d-run-sms" aria-label="先用 builder 构建再 run [sms]">先用 builder 构建再 run [sms]</a><ul>
+                        
+                <li>
+                    <a href="#go-dockerfile" aria-label="go dockerfile">go dockerfile</a></li>
+                <li>
+                    <a href="#nginx-dockerfile" aria-label="nginx dockerfile">nginx dockerfile</a></li>
+                <li>
+                    <a href="#docker-compose-1" aria-label="docker-compose">docker-compose</a></li></ul>
+                </li></ul>
+                </li>
+                <li>
+                    <a href="#other" aria-label="other">other</a><ul>
+                        
+                <li>
+                    <a href="#wsl2-ubuntu2204-%e5%ae%89%e8%a3%85-docker-%e5%8f%91%e7%8e%b0-daemon-%e5%90%af%e5%8a%a8%e5%a4%b1%e8%b4%a5" aria-label="WSL2 Ubuntu22.04 安装 Docker ，发现 daemon 启动失败">WSL2 Ubuntu22.04 安装 Docker ，发现 daemon 启动失败</a></li>
+                <li>
+                    <a href="#docker-error-response-from-daemon-network-qnear-not-found" aria-label="docker: Error response from daemon: network qnear not found.">docker: Error response from daemon: network qnear not found.</a>
+                </li>
+            </ul>
+            </li>
+            </ul>
+        </div>
+        </details>
+    </div>
+</aside>
+<script>
+    let activeElement;
+    let elements;
+    window.addEventListener('DOMContentLoaded', function (event) {
+        checkTocPosition();
+
+        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+        
+        activeElement = elements[0];
+        const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
+        document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+    }, false);
+
+    window.addEventListener('resize', function(event) {
+        checkTocPosition();
+    }, false);
+
+    window.addEventListener('scroll', () => {
+        
+        if (elements) {
+            activeElement = Array.from(elements).find((element) => {
+                if ((getOffsetTop(element) - window.pageYOffset) > 0 &&
+                    (getOffsetTop(element) - window.pageYOffset) < window.innerHeight/2) {
+                    return element;
+                }
+            }) || activeElement
+
+            elements.forEach(element => {
+                const id = encodeURI(element.getAttribute('id')).toLowerCase();
+                if (element === activeElement){
+                    document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+                } else {
+                    document.querySelector(`.inner ul li a[href="#${id}"]`).classList.remove('active');
+                }
+            })
+        }
+    }, false);
+
+    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
+    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
+    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
+
+    function checkTocPosition() {
+        const width = document.body.scrollWidth;
+        if (width - main - (toc * 2) - (gap * 4) > 0) {
+            document.getElementById("toc-container").classList.add("wide");
+        } else {
+            document.getElementById("toc-container").classList.remove("wide");
+        }
+    }
+
+    function getOffsetTop(element) {
+        if (!element.getClientRects().length) {
+            return 0;
+        }
+        let rect = element.getBoundingClientRect();
+        let win = element.ownerDocument.defaultView;
+        return rect.top + win.pageYOffset;
+    }
+</script>
+        <div class="post-content"><h1 id="docker">Docker<a hidden class="anchor" aria-hidden="true" href="#docker">#</a></h1>
+<p>为什么使用Docker</p>
+<p>企业环境中存在的某个痛点
+企业使用一项技术是为了解决当前企业环境中存在的某个痛点。</p>
+<p>目前整个软件行业存在着以下几个痛点。</p>
+<p>1.软件更新发布及部署低效，过程烦琐且需要人工介入。</p>
+<p>2.环境一致性难以保证。</p>
+<p>3.不同环境之间迁移成本太高。</p>
+<h2 id="docker能解决的问题">Docker能解决的问题<a hidden class="anchor" aria-hidden="true" href="#docker能解决的问题">#</a></h2>
+<p>首先，Docker的使用十分简单，</p>
+<p>从开发的角度来看就是“三步走&quot;：构建、运输、运行。</p>
+<p>其中，关键步骤是构建环节，即打包镜像文件。</p>
+<p>但是从测试和运维的角度来看，那就只有两步：复制、运行。</p>
+<p>有了这个镜像文件，想复制到哪里运行都可以，完全和平台无关。</p>
+<p>Docker这种容器技术隔离出了独立的运行空间，不会和其他应用争用系统资源，不需要考虑应用之间的相互影响。</p>
+<p>其次，因为在构建镜像时就处理完了服务程序对于系统的所有依赖，所以在使用时，可以忽略原本程序的依赖以及开发语言。对测试和运维人员而言，可以更专注于自己的业务内容。</p>
+<p>最后，Docker为开发者提供了一种开发环境的管理办法，帮助测试人员保证环境的同步，为运维人员提供了可移植的标准化部署流程。</p>
+<hr>
+<p><strong>类       &ndash;&gt; 对象</strong></p>
+<p><strong>镜像    &ndash;&gt; 容器</strong></p>
+<hr>
+<h2 id="安装">安装<a hidden class="anchor" aria-hidden="true" href="#安装">#</a></h2>
+<h3 id="centos">centos<a hidden class="anchor" aria-hidden="true" href="#centos">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#57c7ff">uname -r</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">yum update</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">yum makecache fast</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">yum install docker-ce</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">docker version</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">systemctl status docker</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">systemctl start docker</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">// 测试</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">docker pull hello-world</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">docker run hello-world</span>
+</span></span></code></pre></div><h3 id="ubuntu">Ubuntu<a hidden class="anchor" aria-hidden="true" href="#ubuntu">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#57c7ff">curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun</span>
+</span></span></code></pre></div><h2 id="常用命令">常用命令<a hidden class="anchor" aria-hidden="true" href="#常用命令">#</a></h2>
+<p><a href="https://www.bilibili.com/video/BV1gr4y1U7CY?p=18&amp;spm_id_from=pageDriver&amp;vd_source=6168fe2db91f9a8c4c41d41f39d1703e">https://www.bilibili.com/video/BV1gr4y1U7CY?p=18&amp;spm_id_from=pageDriver&amp;vd_source=6168fe2db91f9a8c4c41d41f39d1703e</a></p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#57c7ff">启动docker:		systemctl start docker</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">停止docker:		systemctl stop docker</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">重启docker:		systemctl restart docker</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">查看docker状态:		systemctl status docker</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">开机启动:			systemctl enable docker</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">查看docker概要信息:	docker info</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">查看docker 总体帮助文档:	docker-help</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">查看docker 命令帮助文档:	docker具体命令-help</span>
+</span></span></code></pre></div><h2 id="docker-中央仓库">docker 中央仓库<a hidden class="anchor" aria-hidden="true" href="#docker-中央仓库">#</a></h2>
+<p>存放镜像的网站</p>
+<p>官网：https://hub.docker.com/</p>
+<p>daocloud：http://hub.daocloud.io/</p>
+<h2 id="docker-镜像操作">docker 镜像操作<a hidden class="anchor" aria-hidden="true" href="#docker-镜像操作">#</a></h2>
+<h3 id="拉取到本地">拉取到本地<a hidden class="anchor" aria-hidden="true" href="#拉取到本地">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>docker pull daocloud.io/library/tomcat:8.0.45
+</span></span></code></pre></div><h3 id="查看本地所有镜像">查看本地所有镜像<a hidden class="anchor" aria-hidden="true" href="#查看本地所有镜像">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>docker images
+</span></span></code></pre></div><h3 id="删除">删除<a hidden class="anchor" aria-hidden="true" href="#删除">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>// 查看正在运行的
+</span></span><span style="display:flex;"><span>docker ps -a
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>docker rm a66&lt;id前几位&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>docker rmi 镜像标识&lt;id前几位&gt;
+</span></span></code></pre></div><h3 id="镜像导出导入">镜像导出导入<a hidden class="anchor" aria-hidden="true" href="#镜像导出导入">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>docker save -o 路径 镜像id&lt;前两位即可&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>docker load -i 镜像文件
+</span></span></code></pre></div><h3 id="修改镜像名称">修改镜像名称<a hidden class="anchor" aria-hidden="true" href="#修改镜像名称">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>docker tag 镜像id 新镜像名称:版本
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>docker tag fa tomcat:8.0
+</span></span></code></pre></div><h2 id="docker-容器操作">docker 容器操作<a hidden class="anchor" aria-hidden="true" href="#docker-容器操作">#</a></h2>
+<h3 id="1运行容器">1、运行容器<a hidden class="anchor" aria-hidden="true" href="#1运行容器">#</a></h3>
+<p>基本操作</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>docker run 镜像的标识镜像名称[:tag] 
+</span></span></code></pre></div><p>常用的参数</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span> docker run -d -p 宿主机端口:容器端口 --name 容器名称 镜像的标识镜像名称[:tag] 
+</span></span><span style="display:flex;"><span> 
+</span></span><span style="display:flex;"><span> docker run -d -p 8080:8080 --name tomcat fa
+</span></span><span style="display:flex;"><span> 
+</span></span><span style="display:flex;"><span> 跑起来后直接访问即可
+</span></span></code></pre></div><ul>
+<li>-d: 代表后台运行容器</li>
+<li>-p 宿主机端口：容器端口：为了映射当前Liux的端口和容器的端口</li>
+<li>&ndash;name 容器名称：指定容器的名称</li>
+</ul>
+<h3 id="2查看正在运行的容器">2、查看正在运行的容器<a hidden class="anchor" aria-hidden="true" href="#2查看正在运行的容器">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>docker ps [-qa]
+</span></span></code></pre></div><ul>
+<li>-a：查看全部的容器，包括没有运行</li>
+<li>-q：只查看容器得到标识</li>
+</ul>
+<h3 id="3查看容器的日志">3、查看容器的日志<a hidden class="anchor" aria-hidden="true" href="#3查看容器的日志">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>docker logs -f 容器id
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>[root@localhost linbin]# docker ps
+</span></span><span style="display:flex;"><span>CONTAINER ID   IMAGE     COMMAND             CREATED         STATUS
+</span></span><span style="display:flex;"><span>b01afd80c224   fa        &#34;catalina.sh run&#34;   5 minutes ago   Up 5 minutes   
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[root@localhost linbin]# docker logs -f b0
+</span></span><span style="display:flex;"><span>08-Sep-2022 00:49:48.918 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server version:        Apache Tomcat/8.0.45
+</span></span><span style="display:flex;"><span>08-Sep-2022 00:49:48.921 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server built:          Jun 26 2017 20:06:07 UTC   8.0.45.0
+</span></span><span style="display:flex;"><span>08-Sep-2022 00:49:48.921 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log OS Name:               Linux
+</span></span></code></pre></div><h3 id="4进入到容器内部">4、进入到容器内部<a hidden class="anchor" aria-hidden="true" href="#4进入到容器内部">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>docker exec -it 容器id bash
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>[root@localhost linbin]# docker exec -it b0 bash
+</span></span><span style="display:flex;"><span>root@b01afd80c224:/usr/local/tomcat# pwd
+</span></span><span style="display:flex;"><span>/usr/local/tomcat
+</span></span><span style="display:flex;"><span>root@b01afd80c224:/usr/local/tomcat# ls
+</span></span><span style="display:flex;"><span>LICENSE  NOTICE  RELEASE-NOTES	RUNNING.txt  bin  conf	include  lib  logs  native-jni-lib  temp  webapps  work
+</span></span><span style="display:flex;"><span>root@b01afd80c224:/usr/local/tomcat# cd webapps
+</span></span><span style="display:flex;"><span>root@b01afd80c224:/usr/local/tomcat/webapps# ls
+</span></span><span style="display:flex;"><span>ROOT  docs  examples  host-manager  manager
+</span></span><span style="display:flex;"><span>root@b01afd80c224:/usr/local/tomcat/webapps# exit
+</span></span><span style="display:flex;"><span>exit
+</span></span></code></pre></div><h3 id="5删除容器">5、删除容器<a hidden class="anchor" aria-hidden="true" href="#5删除容器">#</a></h3>
+<p>(删除容器前，需要先停止容器)</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>#停止指定的容器
+</span></span><span style="display:flex;"><span>docker stop 容器id
+</span></span><span style="display:flex;"><span>#停止全部容器
+</span></span><span style="display:flex;"><span>docker stop $(docker ps -qa)
+</span></span><span style="display:flex;"><span>#删除指定容器
+</span></span><span style="display:flex;"><span>docker rm 容器id
+</span></span><span style="display:flex;"><span>#删除全部容器
+</span></span><span style="display:flex;"><span>docker rm $(docker ps -qa)
+</span></span><span style="display:flex;"><span>#启动容器
+</span></span><span style="display:flex;"><span>docker start 容器id
+</span></span></code></pre></div><h2 id="创建-mysql-容器">创建 mysql 容器<a hidden class="anchor" aria-hidden="true" href="#创建-mysql-容器">#</a></h2>
+<p>创建MySQL镜像</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>docker pull daocloud.io/library/mysq1:5.7.5-m15
+</span></span></code></pre></div><p>查看MySQL镜像</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>docker images
+</span></span></code></pre></div><p>创建MySQL容器</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>docker run -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=root --name msyql 镜像tag
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>eg：
+</span></span><span style="display:flex;"><span>docker run -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=Admin666 --name mysql 644
+</span></span></code></pre></div><p>然后使用连接工具 Navicat 测试。</p>
+<h3 id="坑1--中文字符">坑1&ndash;中文字符<a hidden class="anchor" aria-hidden="true" href="#坑1--中文字符">#</a></h3>
+<p>查看里面的字符集，好家伙，Latin1</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">mysql&gt; SHOW VARIABLES LIKE &#39;character%&#39;;</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">+--------------------------+----------------------------+</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">| Variable_name            | Value                      |</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">+--------------------------+----------------------------+</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">| character_set_client     | latin1                     |</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">| character_set_connection | latin1                     |</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">| character_set_database   | utf8                       |</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">| character_set_filesystem | binary                     |</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">| character_set_results    | latin1                     |</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">| character_set_server     | latin1                     |</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">| character_set_system     | utf8                       |</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">| character_sets_dir       | /usr/share/mysql/charsets/ |</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">+--------------------------+----------------------------+</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">8 rows in set (0.00 sec)</span>
+</span></span></code></pre></div><h3 id="关键点2--开启数据卷">关键点2&ndash;开启数据卷<a hidden class="anchor" aria-hidden="true" href="#关键点2--开启数据卷">#</a></h3>
+<p>删除容器后，里面的mysql数据如何办
+容器实例一删除，啥数据也没了！</p>
+<h3 id="解决办法">解决办法<a hidden class="anchor" aria-hidden="true" href="#解决办法">#</a></h3>
+<p>1、新增数据卷</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#57c7ff">docker run -d -p 3306:3306 --privileged</span><span style="color:#ff6ac1">=</span><span style="color:#5af78e">true </span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">-v /zzyyuse/mysql/log:/var/log/mysql </span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">-v /zzyyuse/mysql/data:/var/lib/mysql </span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">-v /zzyyuse/mysql/conf:/etc/mysql/conf.d </span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">-e MYSQL_ROOT_PASSWORD</span><span style="color:#ff6ac1">=</span><span style="color:#5af78e">123456  </span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">--name mysql mysql:5.7</span>
+</span></span></code></pre></div><p>2、/zzyyuse/mysql/conf 下新增 my.cnf</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#ff6ac1">[client]</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">default_character_set</span><span style="color:#ff6ac1">=</span><span style="color:#5af78e">utf8</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff6ac1">[mysqld]</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">collation_server</span> <span style="color:#ff6ac1">=</span> <span style="color:#5af78e">utf8_general_ci</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">character_set_server</span> <span style="color:#ff6ac1">=</span> <span style="color:#5af78e">utf8</span>
+</span></span></code></pre></div><p>然后restart一下</p>
+<blockquote>
+<p>之前的DB 无效</p>
+<p>修改字符集操作+重启mysql容器实例</p>
+<p>之后的DB 有效，需要新建</p>
+<p>结论：docker安装完MySQL并run出容器后，建议请先修改完字符集编码后再新建mysql库-表-插数据</p>
+</blockquote>
+<h2 id="将项目部署到tomcat">将项目部署到Tomcat<a hidden class="anchor" aria-hidden="true" href="#将项目部署到tomcat">#</a></h2>
+<h3 id="上传项目">上传项目<a hidden class="anchor" aria-hidden="true" href="#上传项目">#</a></h3>
+<p>上传项目</p>
+<h3 id="进入容器目录">进入容器目录<a hidden class="anchor" aria-hidden="true" href="#进入容器目录">#</a></h3>
+<p>docker exec -it 容器tag bash</p>
+<h3 id="将项目拷贝到tomcat容器的webapps目录下面">将项目拷贝到tomcat:容器的webapps目录下面<a hidden class="anchor" aria-hidden="true" href="#将项目拷贝到tomcat容器的webapps目录下面">#</a></h3>
+<p>docker cp demo a17:/usr/local/tomcat/webapps</p>
+<h3 id="查看tomcat运行日志">查看tomcat运行日志<a hidden class="anchor" aria-hidden="true" href="#查看tomcat运行日志">#</a></h3>
+<p>docker logs -f 容器tag</p>
+<h2 id="docker-数据卷">docker 数据卷<a hidden class="anchor" aria-hidden="true" href="#docker-数据卷">#</a></h2>
+<p>为了部署我们的demo工程，需要使用到 cp 的命令将宿主机内的 demo文件复制到容器内部</p>
+<p>数据卷：<strong>将宿主机的一个目录，映射到容器的一个目录中</strong>，可以在宿主机中操作目录中的内容，那么容器内部映射的文件，也会跟着一起改变。</p>
+<p>在挂载目录后多加一个参数 <code>--privileged=true</code></p>
+<h3 id="1创建数据卷">1.创建数据卷<a hidden class="anchor" aria-hidden="true" href="#1创建数据卷">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>docker volume create 数据卷名称
+</span></span><span style="display:flex;"><span>#创建数据卷之后，默认会存放在一个目录下/var/Tb/docker/volumes./数据卷名称/_data
+</span></span></code></pre></div><h3 id="2查看数据卷的详细信息">2.查看数据卷的详细信息<a hidden class="anchor" aria-hidden="true" href="#2查看数据卷的详细信息">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>docker volume inspect 数据卷名称
+</span></span></code></pre></div><h3 id="3查看全部数据卷">3.查看全部数据卷<a hidden class="anchor" aria-hidden="true" href="#3查看全部数据卷">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>docker volume ls
+</span></span></code></pre></div><h3 id="4删除数据卷">4.删除数据卷<a hidden class="anchor" aria-hidden="true" href="#4删除数据卷">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>docker volume rm 数据卷名称
+</span></span></code></pre></div><h3 id="5应用数据卷">5.应用数据卷<a hidden class="anchor" aria-hidden="true" href="#5应用数据卷">#</a></h3>
+<p>当你映射数据卷时，如果数据卷不存在。Docker会帮你自动创建，会将容器内部自带的文件，存储在默认的存放路径中。</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>docker run -v 数据卷名称:容器内部的路径镜像id
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>#直接指定一个路径作为数据卷的存放位置。这个路径下是空的。
+</span></span><span style="display:flex;"><span>docker run -V 宿主机路径:容器内部的路径 镜像id
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>docker run -d -p 8080:8080 -v /home/tomcat_webapps:/usr/local/tomcat/webapps/ --name tomcat fa6
+</span></span></code></pre></div><h3 id="测试">测试<a hidden class="anchor" aria-hidden="true" href="#测试">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#57c7ff">docker run -d --privileged</span><span style="color:#ff6ac1">=</span><span style="color:#5af78e">true -v /tmp/host_data/:/tmp/docker_data/ --name u1 ubuntu</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">[root@iZwz982ksp86xdjeeirtsdZ tmp]# cd /tmp/host_data/</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">[root@iZwz982ksp86xdjeeirtsdZ host_data]# touch test.txt</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">[root@iZwz982ksp86xdjeeirtsdZ host_data]# ls</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">test.txt</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">[root@iZwz982ksp86xdjeeirtsdZ host_data]# docker exec -it afb bash</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">root@afb5e67ee3d4:/# cd /tmp/docker_data/</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">root@afb5e67ee3d4:/tmp/docker_data# ls</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">test.txt</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">root@afb5e67ee3d4:/tmp/docker_data#</span>
+</span></span></code></pre></div><p>查看是否挂载成功</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">[root@iZwz982ksp86xdjeeirtsdZ host_data]# docker inspect af</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57c7ff">&#34;Mounts&#34;: [</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#57c7ff">{</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#57c7ff">&#34;Type&#34;: &#34;bind&#34;,</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#57c7ff">&#34;Source&#34;: &#34;/tmp/host_data&#34;,</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#57c7ff">&#34;Destination&#34;: &#34;/tmp/docker_data&#34;,</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#57c7ff">&#34;Mode&#34;: &#34;&#34;,</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#57c7ff">&#34;RW&#34;: true,</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#57c7ff">&#34;Propagation&#34;: &#34;rprivate&#34;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#57c7ff">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57c7ff">],</span>
+</span></span></code></pre></div><p>如果 docker stop 了，然后在宿主机绑定的目录新增了一个文件，然后在 start 一下，发现会同步过来。</p>
+<p>是共享的意思。</p>
+<h3 id="只读">只读<a hidden class="anchor" aria-hidden="true" href="#只读">#</a></h3>
+<p>上面默认rw</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#57c7ff">docker run -it -privileged</span><span style="color:#ff6ac1">=</span><span style="color:#5af78e">true -v /宿主机绝对路径目录:/容器内目录:ro 镜像名</span>
+</span></span></code></pre></div><p>/容器目录:ro 镜像名        就能完成功能，此时容器自己只能读取不能写</p>
+<p>ro = read only</p>
+<p>此时如果宿主机写入内容，可以同步给容器内，容器可以读取到。</p>
+<h3 id="继承">继承<a hidden class="anchor" aria-hidden="true" href="#继承">#</a></h3>
+<p>容器1完成和宿主机的映射
+容器2继承容器1的卷规则
+一</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#57c7ff">docker run -it --privileged</span><span style="color:#ff6ac1">=</span><span style="color:#5af78e">true --volumes-from  父亲 --name u2 ubuntu</span>
+</span></span></code></pre></div><h2 id="dockerfile">Dockerfile<a hidden class="anchor" aria-hidden="true" href="#dockerfile">#</a></h2>
+<h3 id="什么是dockerfile">什么是Dockerfile?<a hidden class="anchor" aria-hidden="true" href="#什么是dockerfile">#</a></h3>
+<hr>
+<p><a href="https://blog.csdn.net/m0_46090675/article/details/121846718">DockerFile详解</a></p>
+<hr>
+<p>Dockerfile是一个包含用于组合映像的命令的文本文档。可以使用在命令行中调用的任何命令。</p>
+<p>Docker通过读取Dockerfile中的指令自动生成映像。</p>
+<p><code>docker build </code>命令用于从 Dockerfile 构建映像。</p>
+<p>可以在<code>docker buiId</code>命令中使用<code>-f</code>标志指向文件系统中任何位置的Dockerfile。</p>
+<p>例：</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>docker build -f /path/to/a/Dockerfile
+</span></span></code></pre></div><h3 id="dockerfile的基本结构">Dockerfile的基本结构<a hidden class="anchor" aria-hidden="true" href="#dockerfile的基本结构">#</a></h3>
+<p>Dockerfile一般分为四部分：</p>
+<p>1.基础镜像信息</p>
+<p>2.维护者信息</p>
+<p>3.镜像操作指令</p>
+<p>4.容器启动时执行指令</p>
+<h3 id="dockerfile文件说明">Dockerfile文件说明<a hidden class="anchor" aria-hidden="true" href="#dockerfile文件说明">#</a></h3>
+<p>Docker以从上到下的顺序运行 Dockerfile 的指令。为了指定基本映像，第一条指令必须是FROM。一个声明以#字符开头则被视为注释。可以在Docker文件中使用<code>RUN,CMD,FROM,EXPOSE,ENV</code>等指令。</p>
+<p>在这里列出了一些堂用的指令.</p>
+<h3 id="指令">指令<a hidden class="anchor" aria-hidden="true" href="#指令">#</a></h3>
+<h4 id="from">FROM<a hidden class="anchor" aria-hidden="true" href="#from">#</a></h4>
+<p>指定基础镜像，必须为第一个命令</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#57c7ff">格式：</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">FROM &lt;image&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">FROM &lt;image&gt;:&lt;tag&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">FROM &lt;image&gt;@&lt;digest&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">示例：</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">FROM mysq1:5.6</span>
+</span></span></code></pre></div><blockquote>
+<p>注：tag或digest是可选的，如果不使用这两个值时，会使用jlatest版本的基础镜像</p>
+</blockquote>
+<h4 id="maintainer">MAINTAINER<a hidden class="anchor" aria-hidden="true" href="#maintainer">#</a></h4>
+<p>维护者信息</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#57c7ff">格式：</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">MAINTAINER &lt;name&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">示例：</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">MAINTAINER Jasper Xu</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">MAINTAINER sorex@163.com</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">MAINTAINER Jasper Xu &lt;sorex@163.com&gt;</span>
+</span></span></code></pre></div><h4 id="run">RUN<a hidden class="anchor" aria-hidden="true" href="#run">#</a></h4>
+<p>构建镜像时执行的命令</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#57c7ff">RUN用于在镜像容器中执行命令，其有以下两种命令执行方式：</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">shell执行</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">格式：</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">RUN &lt;command&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">exec执行</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">格式：</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">RUN [&#34;executable&#34;,&#34;paraml&#34;,&#34;param2&#34;]</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">示例：</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">RUN [&#34;executable&#34;,&#34;param1&#34;,&#34;param2&#34;]</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">RUN apk update</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">RUN [&#34;/etc/execfile&#34;,&#34;arg1&#34;,&#34;arg1&#34;]</span>
+</span></span></code></pre></div><blockquote>
+<p>注：RUN指令创建的中间镜像会被缓存，并会在下次构建中使用。如果不想使用这些缓存镜像，可以在构建时指定&ndash;no-cache参数，如：docker build &ndash;no-cache</p>
+</blockquote>
+<h4 id="add">ADD<a hidden class="anchor" aria-hidden="true" href="#add">#</a></h4>
+<p>ADD 指令和 COPY 的使用格类似（同样需求下，官方推荐使用 COPY）。功能也类似，不同之处如下：</p>
+<ul>
+<li>ADD 的优点：在执行 &lt;源文件&gt; 为 tar 压缩文件的话，压缩格式为 gzip, bzip2 以及 xz 的情况下，会自动复制并解压到 &lt;目标路径&gt;。</li>
+<li>ADD 的缺点：在不解压的前提下，无法复制 tar 压缩文件。会令镜像构建缓存失效，从而可能会令镜像构建变得比较缓慢。具体是否使用，可以根据是否需要自动解压来决定。</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-mysql" data-lang="mysql"><span style="display:flex;"><span><span style="color:#ff5c57">格式：</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff6ac1">ADD</span> <span style="color:#ff6ac1">&lt;</span>src<span style="color:#ff6ac1">&gt;</span>...<span style="color:#ff6ac1">&lt;</span>dest<span style="color:#ff6ac1">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff6ac1">ADD</span>[<span style="color:#5af78e">&#34;&lt;src&gt;&#34;</span>,...<span style="color:#5af78e">&#34;&lt;dest&gt;&#34;</span> <span style="color:#ff5c57">用于支持包含空格的路径</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff5c57">示例：</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff6ac1">ADD</span> hom<span style="color:#ff6ac1">*</span> <span style="color:#ff6ac1">/</span>mydir<span style="color:#ff6ac1">/</span>			<span style="color:#78787e">#添加所有以&#34;hom&#34;开头的文件
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span><span style="color:#ff6ac1">ADD</span> hom<span style="color:#ff6ac1">?</span>.txt <span style="color:#ff6ac1">/</span>mydir<span style="color:#ff6ac1">/</span>		<span style="color:#78787e">#?替代一个单字符，例如：&#34;home.txt&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span><span style="color:#ff6ac1">ADD</span> test relativeDir<span style="color:#ff6ac1">/</span>		<span style="color:#78787e">#添加&#34;test&#34;到`WORKDIR`/relativeDir/
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span><span style="color:#ff6ac1">ADD</span> test <span style="color:#ff6ac1">/</span>absoluteDir<span style="color:#ff6ac1">/</span>		<span style="color:#78787e">#添加&#34;test&#34;到/absoluteDir/
+</span></span></span></code></pre></div><h4 id="cmd">CMD<a hidden class="anchor" aria-hidden="true" href="#cmd">#</a></h4>
+<p>类似于 RUN 指令，用于运行程序，但二者运行的时间点不同:</p>
+<ul>
+<li>CMD 在docker run 时运行。</li>
+<li>RUN 是在 docker build。</li>
+</ul>
+<p><strong>作用</strong>：为启动的容器指定默认要运行的程序，程序运行结束，容器也就结束。CMD 指令指定的程序可被 docker run 命令行参数中指定要运行的程序所覆盖。</p>
+<p><strong>注意</strong>：如果 Dockerfile 中如果存在多个 CMD 指令，仅最后一个生效。</p>
+<p>格式：</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>CMD &lt;shell 命令&gt; 
+</span></span><span style="display:flex;"><span>CMD [&#34;&lt;可执行文件或命令&gt;&#34;,&#34;&lt;param1&gt;&#34;,&#34;&lt;param2&gt;&#34;,...] 
+</span></span><span style="display:flex;"><span>CMD [&#34;&lt;param1&gt;&#34;,&#34;&lt;param2&gt;&#34;,...]  # 该写法是为 ENTRYPOINT 指令指定的程序提供默认参数
+</span></span></code></pre></div><p>推荐使用第二种格式，执行过程比较明确。第一种格式实际上在运行的过程中也会自动转换成第二种格式运行，并且默认可执行文件是 sh。</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"></code></pre></div><h4 id="copy">COPY<a hidden class="anchor" aria-hidden="true" href="#copy">#</a></h4>
+<p>复制指令，从上下文目录中复制文件或者目录到容器里指定路径。</p>
+<p>格式：</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>COPY [--chown=&lt;user&gt;:&lt;group&gt;] &lt;源路径1&gt;...  &lt;目标路径&gt;
+</span></span><span style="display:flex;"><span>COPY [--chown=&lt;user&gt;:&lt;group&gt;] [&#34;&lt;源路径1&gt;&#34;,...  &#34;&lt;目标路径&gt;&#34;]
+</span></span></code></pre></div><p><strong>[&ndash;chown=<user>:<group>]</strong>：可选参数，用户改变复制到容器内文件的拥有者和属组。</p>
+<p><strong>&lt;源路径&gt;</strong>：源文件或者源目录，这里可以是通配符表达式，其通配符规则要满足 Go 的 filepath.Match 规则。例如：</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>COPY hom* /mydir/
+</span></span><span style="display:flex;"><span>COPY hom?.txt /mydir/
+</span></span></code></pre></div><p><strong>&lt;目标路径&gt;</strong>：容器内的指定路径，该路径不用事先建好，路径不存在的话，会自动创建。</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">FROM centos</span>
+</span></span><span style="display:flex;"><span><span style="color:#78787e"># 添加文件到目录下</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">COPY test.txt /mydir/</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#78787e"># 将文件内容写入 mytest</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">COPY test.txt /mytest</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#78787e"># 压缩文件,自动解压</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">COPY jmeter.log.zip /myzipdir/</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#78787e"># 添加目录</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">COPY TeamFile /</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#78787e"># 其他文件</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">COPY jmeter.log /mydir/</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#78787e"># 多个文件</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">COPY test1.txt test2.txt /mydir/</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#78787e"># 通配符,dest 不存在自动创建</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">COPY test*.txt /mydir/test/</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#78787e"># 特殊字符串</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">COPY COPY[[]0].txt /mydir/</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">WORKDIR /data</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#78787e"># 相对路径</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">COPY test.txt test/</span>
+</span></span></code></pre></div><h4 id="volume">VOLUME<a hidden class="anchor" aria-hidden="true" href="#volume">#</a></h4>
+<p>定义匿名数据卷。在启动容器时忘记挂载数据卷，会自动挂载到匿名卷。</p>
+<p>作用：</p>
+<ul>
+<li>避免重要的数据，因容器重启而丢失，这是非常致命的。</li>
+<li>避免容器不断变大。</li>
+</ul>
+<p>格式：</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>VOLUME [&#34;&lt;路径1&gt;&#34;, &#34;&lt;路径2&gt;&#34;...]
+</span></span><span style="display:flex;"><span>VOLUME &lt;路径&gt;
+</span></span></code></pre></div><h3 id="尚">尚<a hidden class="anchor" aria-hidden="true" href="#尚">#</a></h3>
+<h2 id="docker-自定义镜像">docker 自定义镜像<a hidden class="anchor" aria-hidden="true" href="#docker-自定义镜像">#</a></h2>
+<p><a href="https://www.bilibili.com/video/BV1zR4y1t7Wj?p=178&amp;spm_id_from=pageDriver&amp;vd_source=6168fe2db91f9a8c4c41d41f39d1703e">自定义镜像</a></p>
+<h2 id="docker-compose">docker-compose<a hidden class="anchor" aria-hidden="true" href="#docker-compose">#</a></h2>
+<p><strong>需求</strong></p>
+<p>之前运行一个镜像，需要添加大量的参数。</p>
+<p>可以通过Docker-Compose编写这些参数。</p>
+<p>Docker-Compose可以帮助我们批量的管理容器。</p>
+<p>只需要通过一个<code>docker-compose.yml</code>文件去维护即可。</p>
+<p><strong>下载安装</strong></p>
+<p>1.去github官网搜索docker-compose,下载Docker-Compose</p>
+<p>docker-compose-Linux-x86_64</p>
+<p>2.将下载好的文件，拖拽到Liux操作系统中</p>
+<p>3.需要将DockerCompose文件的名称修改一下，基于DockerCompose文件一个可执行的权限</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>[root@localhost compose]# mv docker-compose-linux-x86_64 docker-compose
+</span></span><span style="display:flex;"><span>[root@localhost compose]# mv docker-compose /usr/local/bin    //放到路径中
+</span></span><span style="display:flex;"><span>[root@localhost compose]# cd /usr/local/bin
+</span></span><span style="display:flex;"><span>[root@localhost bin]# ls
+</span></span><span style="display:flex;"><span>docker-compose
+</span></span><span style="display:flex;"><span>[root@localhost bin]# chmod 777 docker-compose   		 	//可执行权限
+</span></span><span style="display:flex;"><span>[root@localhost bin]# ls -al
+</span></span><span style="display:flex;"><span>total 3000
+</span></span><span style="display:flex;"><span>drwxr-xr-x.  2 root   root        28 Sep  7 23:23 .
+</span></span><span style="display:flex;"><span>drwxr-xr-x. 12 root   root       131 Aug 14 01:15 ..
+</span></span><span style="display:flex;"><span>-rwxrwxrwx.  1 linbin linbin 3072000 Sep  7 23:19 docker-compose
+</span></span><span style="display:flex;"><span>[root@localhost bin]# 
+</span></span></code></pre></div><p>4.方便后期操作，配置一个环境变量，让在其他目录也可以执行</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>vi /etc/profile
+</span></span></code></pre></div><h2 id="yml-文件">yml 文件<a hidden class="anchor" aria-hidden="true" href="#yml-文件">#</a></h2>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/Bin-lin-rgb/blog-img@main/image-20220908151305035.png" alt=""  />
+
+<img loading="lazy" src="https://cdn.jsdelivr.net/gh/Bin-lin-rgb/blog-img@main/image-20220908151347561-16626212288662.png" alt=""  />
+
+<img loading="lazy" src="https://cdn.jsdelivr.net/gh/Bin-lin-rgb/blog-img@main/image-20220908151424729.png" alt=""  />
+</p>
+<h2 id="jenkins-gitlab">Jenkins gitlab<a hidden class="anchor" aria-hidden="true" href="#jenkins-gitlab">#</a></h2>
+<h3 id="jenkins-sh">Jenkins sh<a hidden class="anchor" aria-hidden="true" href="#jenkins-sh">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>docker stop jenkins &gt; /dev/null 2&gt; /dev/null <span style="color:#ff6ac1">||</span> :
+</span></span><span style="display:flex;"><span>docker container rm jenkins &gt; /dev/null 2&gt; /dev/null <span style="color:#ff6ac1">||</span> :
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>docker run <span style="color:#5af78e">\
+</span></span></span><span style="display:flex;"><span><span style="color:#5af78e"></span>  --name jenkins <span style="color:#5af78e">\
+</span></span></span><span style="display:flex;"><span><span style="color:#5af78e"></span>  -d <span style="color:#5af78e">\
+</span></span></span><span style="display:flex;"><span><span style="color:#5af78e"></span>  -p 8080:8080 <span style="color:#5af78e">\
+</span></span></span><span style="display:flex;"><span><span style="color:#5af78e"></span>  -p 50000:50000 <span style="color:#5af78e">\
+</span></span></span><span style="display:flex;"><span><span style="color:#5af78e"></span>  -v jenkins_home:/var/jenkins_home:z <span style="color:#5af78e">\
+</span></span></span><span style="display:flex;"><span><span style="color:#5af78e"></span>  --env<span style="color:#ff6ac1">=</span><span style="color:#5af78e">&#34;JENKINS_OPTS=--prefix=/jenkins&#34;</span> <span style="color:#5af78e">\
+</span></span></span><span style="display:flex;"><span><span style="color:#5af78e"></span>  -v deploy:/var/deploy:z <span style="color:#5af78e">\
+</span></span></span><span style="display:flex;"><span><span style="color:#5af78e"></span>  --network bridge <span style="color:#5af78e">\
+</span></span></span><span style="display:flex;"><span><span style="color:#5af78e"></span>  jenkins:1.0
+</span></span></code></pre></div><h3 id="gitlab-sh">gitlab sh<a hidden class="anchor" aria-hidden="true" href="#gitlab-sh">#</a></h3>
+<p>docker pull gitlab/gitlab-ce:15.4.0-ce.0</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>docker stop gitlab &gt; /dev/null 2&gt; /dev/null <span style="color:#ff6ac1">||</span> :
+</span></span><span style="display:flex;"><span>docker container rm gitlab &gt; /dev/null 2&gt; /dev/null <span style="color:#ff6ac1">||</span> :
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>docker run -d <span style="color:#5af78e">\
+</span></span></span><span style="display:flex;"><span><span style="color:#5af78e"></span>  --name gitlab <span style="color:#5af78e">\
+</span></span></span><span style="display:flex;"><span><span style="color:#5af78e"></span>  --hostname my-gitlab <span style="color:#5af78e">\
+</span></span></span><span style="display:flex;"><span><span style="color:#5af78e"></span>  --publish 19080:80 --publish 19022:22 <span style="color:#5af78e">\
+</span></span></span><span style="display:flex;"><span><span style="color:#5af78e"></span>  --restart always <span style="color:#5af78e">\
+</span></span></span><span style="display:flex;"><span><span style="color:#5af78e"></span>  --volume /gitLabs/config:/etc/gitlab:Z <span style="color:#5af78e">\
+</span></span></span><span style="display:flex;"><span><span style="color:#5af78e"></span>  --volume /gitLabs/logs:/var/log/gitlab:Z <span style="color:#5af78e">\
+</span></span></span><span style="display:flex;"><span><span style="color:#5af78e"></span>  --volume /gitLabs/data:/var/opt/gitlab:Z <span style="color:#5af78e">\
+</span></span></span><span style="display:flex;"><span><span style="color:#5af78e"></span>  gitlab/gitlab-ce:15.4.0-ce.0
+</span></span><span style="display:flex;"><span>  
+</span></span></code></pre></div><p><a href="https://www.cnblogs.com/diaomina/p/12830449.html">https://www.cnblogs.com/diaomina/p/12830449.html</a></p>
+<p>修改 hostname</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>vi  /opt/gitlab/embedded/service/gitlab-rails/config/gitlab.yml
+</span></span></code></pre></div><h2 id="windows-编译后部署-juejin">Windows 编译后部署 [juejin]<a hidden class="anchor" aria-hidden="true" href="#windows-编译后部署-juejin">#</a></h2>
+<h3 id="server">server<a hidden class="anchor" aria-hidden="true" href="#server">#</a></h3>
+<p>windows 编译</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>// 注意 --&gt; 使用 cmd 而不是 powershell
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>SET GOOS=linux
+</span></span><span style="display:flex;"><span>SET GOARCH=amd64
+</span></span><span style="display:flex;"><span>go build ./main.go
+</span></span></code></pre></div><p>将编译形成的二进制文件</p>
+<p>dockerfile</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#57c7ff">FROM alpine:latest</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">RUN mkdir &#34;/app&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">RUN mkdir &#34;/app/config&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">WORKDIR &#34;/app&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">COPY main /app/</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">COPY config.ini /app/config/</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">ENTRYPOINT [&#34;./main&#34;]</span>
+</span></span></code></pre></div><p>在 Linux 下的 docker 打包构建镜像</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#57c7ff">sudo docker image build --platform linux/amd64 -t juejin_blog:v2.2 . </span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">docker image ls</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">sudo docker run -it -p 9000:9000 juejin_blog:v2.2</span>
+</span></span></code></pre></div><h3 id="nginx">nginx<a hidden class="anchor" aria-hidden="true" href="#nginx">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#57c7ff">docker pull nginx</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#78787e">;新建目录结构：nginx文件夹下新建conf.d文件夹，html文件夹</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">/docker</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57c7ff">|---juejin</span>
+</span></span><span style="display:flex;"><span>           <span style="color:#57c7ff">|----nginx</span>
+</span></span><span style="display:flex;"><span>                  <span style="color:#57c7ff">|----conf.d</span>
+</span></span><span style="display:flex;"><span>                  <span style="color:#57c7ff">|----html</span>
+</span></span></code></pre></div><p>default.conf</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#57c7ff">server {</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57c7ff">listen       80;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57c7ff">server_name  49.109.50.48;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57c7ff">location / {</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57c7ff">root   /usr/share/nginx/html;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57c7ff">try_files $uri $uri/ /index.html;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57c7ff">index  index.html index.htm;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57c7ff">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57c7ff">location /api/ {</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57c7ff">proxy_pass http://49.109.50.48:9000;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57c7ff">proxy_redirect default;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57c7ff">rewrite ^/api/(.*) /$1 break;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57c7ff">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57c7ff">error_page   500 502 503 504  /50x.html;</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#57c7ff">location</span> <span style="color:#ff6ac1">=</span> <span style="color:#5af78e">/50x.html {
+</span></span></span><span style="display:flex;"><span><span style="color:#5af78e">        root   html;
+</span></span></span><span style="display:flex;"><span><span style="color:#5af78e">    }</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">}</span>
+</span></span></code></pre></div><p>run.sh</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#57c7ff">sudo docker run -d -p 80:80 \</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">--name nginx_v1.3 \</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">-v /docker/juejin/nginx/conf.d:/etc/nginx/conf.d  \</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">-v /docker/juejin/nginx/html/dist:/usr/share/nginx/html \</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">nginx:latest</span>
+</span></span></code></pre></div><h2 id="先用-builder-构建再-run-sms">先用 builder 构建再 run [sms]<a hidden class="anchor" aria-hidden="true" href="#先用-builder-构建再-run-sms">#</a></h2>
+<h3 id="go-dockerfile">go dockerfile<a hidden class="anchor" aria-hidden="true" href="#go-dockerfile">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>FROM golang:alpine as builder
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ENV GOPROXY=https://goproxy.cn,direct
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>WORKDIR /home
+</span></span><span style="display:flex;"><span>COPY . .
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>RUN go mod tidy
+</span></span><span style="display:flex;"><span>RUN go build -o sms main.go
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>FROM alpine as runner
+</span></span><span style="display:flex;"><span>ENV WORKDIR=/home
+</span></span><span style="display:flex;"><span>WORKDIR $WORKDIR
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>RUN apk add tzdata --no-cache \
+</span></span><span style="display:flex;"><span>    &amp;&amp; cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
+</span></span><span style="display:flex;"><span>    &amp;&amp; echo &#34;Asia/Shanghai&#34; &gt; /etc/timezone \
+</span></span><span style="display:flex;"><span>    &amp;&amp; apk del tzdata
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>COPY --from=builder $WORKDIR/sms  $WORKDIR
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>CMD [&#34;./sms&#34;]
+</span></span></code></pre></div><h3 id="nginx-dockerfile">nginx dockerfile<a hidden class="anchor" aria-hidden="true" href="#nginx-dockerfile">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>└─frontend
+</span></span><span style="display:flex;"><span>    ├─conf.d
+</span></span><span style="display:flex;"><span>    └─html
+</span></span><span style="display:flex;"><span>        └─dist
+</span></span><span style="display:flex;"><span>            └─assets
+</span></span></code></pre></div><p>nginx.conf</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>server {
+</span></span><span style="display:flex;"><span>    listen       80;
+</span></span><span style="display:flex;"><span>    server_name  43.139.40.48;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    location / {
+</span></span><span style="display:flex;"><span>        root   /usr/share/nginx/html;
+</span></span><span style="display:flex;"><span>        try_files $uri $uri/ /index.html;
+</span></span><span style="display:flex;"><span>        index  index.html index.htm;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    location /api/ {
+</span></span><span style="display:flex;"><span>        proxy_pass http://43.139.40.48:8082;
+</span></span><span style="display:flex;"><span>        proxy_redirect default;
+</span></span><span style="display:flex;"><span>        rewrite ^/api/(.*) /$1 break;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    error_page   500 502 503 504  /50x.html;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    location = /50x.html {
+</span></span><span style="display:flex;"><span>        root   html;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># 使用 Nginx 作为基础镜像
+</span></span><span style="display:flex;"><span>FROM nginx:alpine
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># 将构建好的前端应用静态文件复制到 Nginx 的 HTML 目录
+</span></span><span style="display:flex;"><span>COPY ./html /usr/share/nginx/html
+</span></span><span style="display:flex;"><span>COPY ./conf.d /etc/nginx/conf.d
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># 暴露端口，如果需要的话
+</span></span><span style="display:flex;"><span>EXPOSE 80
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Nginx 会自动启动，无需手动启动 Nginx 服务
+</span></span></code></pre></div><h3 id="docker-compose-1">docker-compose<a hidden class="anchor" aria-hidden="true" href="#docker-compose-1">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#ff6ac1">version</span>: <span style="color:#5af78e">&#39;3&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff6ac1">services</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff6ac1">backend</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">build</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#ff6ac1">context</span>: ./sms-backend
+</span></span><span style="display:flex;"><span>      <span style="color:#ff6ac1">dockerfile</span>: ./Dockerfile
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">image</span>: smsbackend
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">container_name</span>: <span style="color:#5af78e">&#34;smsbackend_container&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">ports</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#5af78e">&#34;8082:8080&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">environment</span>:
+</span></span><span style="display:flex;"><span>      - PG_USER=postgres
+</span></span><span style="display:flex;"><span>      - PG_PASSWORD=admin666
+</span></span><span style="display:flex;"><span>      - PG_DBNAME=sms
+</span></span><span style="display:flex;"><span>      - PG_SSLMODE=disable
+</span></span><span style="display:flex;"><span>      - PG_HOST=43.139.40.48
+</span></span><span style="display:flex;"><span>      - PG_PORT=5432
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff6ac1">nginx</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">build</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#ff6ac1">context</span>: ./sms-frontend
+</span></span><span style="display:flex;"><span>      <span style="color:#ff6ac1">dockerfile</span>: ./Dockerfile
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">image</span>: nginx:sms
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">container_name</span>: <span style="color:#5af78e">&#34;smsnginx_container&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">ports</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#5af78e">&#34;17000:80&#34;</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#5af78e">&#34;443:443&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">volumes</span>:
+</span></span><span style="display:flex;"><span>      - /sms-frontend/conf.d:/etc/nginx/conf.d
+</span></span><span style="display:flex;"><span>      - /sms-frontend/html:/usr/share/nginx/html
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">restart</span>: always
+</span></span></code></pre></div><h1 id="other">other<a hidden class="anchor" aria-hidden="true" href="#other">#</a></h1>
+<h2 id="wsl2-ubuntu2204-安装-docker-发现-daemon-启动失败">WSL2 Ubuntu22.04 安装 Docker ，发现 daemon 启动失败<a hidden class="anchor" aria-hidden="true" href="#wsl2-ubuntu2204-安装-docker-发现-daemon-启动失败">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#57c7ff">root@LAPTOP-O0KBCH8Q:~# service docker start</span>
+</span></span><span style="display:flex;"><span> <span style="color:#57c7ff">* Starting Docker: docker                                                                                                                           [ OK ]</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">root@LAPTOP-O0KBCH8Q:~# docker version</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">Client: Docker Engine - Community</span>
+</span></span><span style="display:flex;"><span> <span style="color:#57c7ff">Version:           20.10.18</span>
+</span></span><span style="display:flex;"><span> <span style="color:#57c7ff">API version:       1.41</span>
+</span></span><span style="display:flex;"><span> <span style="color:#57c7ff">Go version:        go1.18.6</span>
+</span></span><span style="display:flex;"><span> <span style="color:#57c7ff">Git commit:        b40c2f6</span>
+</span></span><span style="display:flex;"><span> <span style="color:#57c7ff">Built:             Thu Sep  8 23:11:43 2022</span>
+</span></span><span style="display:flex;"><span> <span style="color:#57c7ff">OS/Arch:           linux/amd64</span>
+</span></span><span style="display:flex;"><span> <span style="color:#57c7ff">Context:           default</span>
+</span></span><span style="display:flex;"><span> <span style="color:#57c7ff">Experimental:      true</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">root@LAPTOP-O0KBCH8Q:~# sudo systemctl enable docker</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">Synchronizing state of docker.service with SysV service script with /lib/systemd/systemd-sysv-install.</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">Executing: /lib/systemd/systemd-sysv-install enable docker</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">root@LAPTOP-O0KBCH8Q:~# /lib/systemd/systemd-sysv-install enable docker</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">root@LAPTOP-O0KBCH8Q:~# dockerd &amp;</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">failed to start daemon: Error initializing network controller: error obtaining controller instance: unable to add return rule in DOCKER-ISOLATION-STAGE-1 chain:  (iptables failed: iptables --wait -A DOCKER-ISOLATION-STAGE-1 -j RETURN: iptables v1.8.7 (nf_tables):  RULE_APPEND failed (No such file or directory): rule in chain DOCKER-ISOLATION-STAGE-1</span>
+</span></span><span style="display:flex;"><span> <span style="color:#57c7ff">(exit status 4))</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">[1]+  Exit 1                  dockerd</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">root@LAPTOP-O0KBCH8Q:~# iptables -L -t nat</span>
+</span></span><span style="display:flex;"><span><span style="color:#78787e"># Warning: iptables-legacy tables present, use iptables-legacy to see them</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">Chain PREROUTING (policy ACCEPT)</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">target     prot opt source               destination</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">Chain INPUT (policy ACCEPT)</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">target     prot opt source               destination</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">Chain OUTPUT (policy ACCEPT)</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">target     prot opt source               destination</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">Chain POSTROUTING (policy ACCEPT)</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">target     prot opt source               destination</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">Chain DOCKER (0 references)</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">target     prot opt source               destination</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">root@LAPTOP-O0KBCH8Q:~# sudo update-alternatives --config iptables</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">There are 2 choices for the alternative iptables (providing /usr/sbin/iptables).</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#57c7ff">Selection    Path                       Priority   Status</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">------------------------------------------------------------</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">* 0            /usr/sbin/iptables-nft      20        auto mode</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#57c7ff">1            /usr/sbin/iptables-legacy   10        manual mode</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#57c7ff">2            /usr/sbin/iptables-nft      20        manual mode</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">Press &lt;enter&gt; to keep the current choice[*], or type selection number: 1</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">update-alternatives: using /usr/sbin/iptables-legacy to provide /usr/sbin/iptables (iptables) in manual mode</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">root@LAPTOP-O0KBCH8Q:~# service docker start</span>
+</span></span><span style="display:flex;"><span> <span style="color:#57c7ff">* Starting Docker: docker                                                                                                                           [ OK ]</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">root@LAPTOP-O0KBCH8Q:~# service docker status</span>
+</span></span><span style="display:flex;"><span> <span style="color:#57c7ff">* Docker is running</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">root@LAPTOP-O0KBCH8Q:~# docker pull hello-world</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">Using default tag: latest</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">latest: Pulling from library/hello-world</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">2db29710123e: Pull complete</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">Digest: sha256:62af9efd515a25f84961b70f973a798d2eca956b1b2b026d0a4a63a3b0b6a3f2</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">Status: Downloaded newer image for hello-world:latest</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">docker.io/library/hello-world:latest</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">root@LAPTOP-O0KBCH8Q:~# docker run hello-world</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">Hello from Docker!</span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">This message shows that your installation appears to be working correctly.</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">To generate this message, Docker took the following steps:</span>
+</span></span><span style="display:flex;"><span> <span style="color:#57c7ff">1. The Docker client contacted the Docker daemon.</span>
+</span></span><span style="display:flex;"><span> <span style="color:#57c7ff">2. The Docker daemon pulled the &#34;hello-world&#34; image from the Docker Hub.</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57c7ff">(amd64)</span>
+</span></span><span style="display:flex;"><span> <span style="color:#57c7ff">3. The Docker daemon created a new container from that image which runs the</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57c7ff">executable that produces the output you are currently reading.</span>
+</span></span><span style="display:flex;"><span> <span style="color:#57c7ff">4. The Docker daemon streamed that output to the Docker client, which sent it</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57c7ff">to your terminal.</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">To try something more ambitious, you can run an Ubuntu container with:</span>
+</span></span><span style="display:flex;"><span> <span style="color:#57c7ff">$ docker run -it ubuntu bash</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">Share images, automate workflows, and more with a free Docker ID:</span>
+</span></span><span style="display:flex;"><span> <span style="color:#57c7ff">https://hub.docker.com/</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57c7ff">For more examples and ideas, visit:</span>
+</span></span><span style="display:flex;"><span> <span style="color:#57c7ff">https://docs.docker.com/get-started/</span>
+</span></span></code></pre></div><h2 id="docker-error-response-from-daemon-network-qnear-not-found">docker: Error response from daemon: network qnear not found.<a hidden class="anchor" aria-hidden="true" href="#docker-error-response-from-daemon-network-qnear-not-found">#</a></h2>
+<p>改成 bridge 。</p>
+
+
+        </div>
+        <div class="post-reward">
+            <div style="padding: 0 0 0 0; margin: 0 0 0 0; width: 100%; font-size:16px; text-align: center;">
+                <div id="QR" style="opacity: 0;">
+                    <div id="wechat" style="display: inline-block">
+                        <a class="fancybox" rel="group">
+                            <img id="wechat_qr" src="https://Bin-lin-rgb.github.io/img/wechat_pay.png" alt="wechat_pay"></a>
+                        <p>微信</p>
+                    </div>
+                    <div id="alipay" style="display: inline-block">
+                        <a class="fancybox" rel="group">
+                            <img id="alipay_qr" src="https://Bin-lin-rgb.github.io/img/alipay.png" alt="alipay"></a>
+                        <p>支付宝</p>
+                    </div>
+                </div>
+                <button id="rewardButton"
+                        onclick="
+                    var qr = document.getElementById('QR');
+                    if (qr.style.opacity === '0') {
+                        qr.style.opacity='1';
+                    } else {
+                        qr.style.opacity='0'
+                    }"
+                >
+                    <span>🧧 鼓励</span>
+                </button>
+            </div>
+        </div>
+
+        <footer class="post-footer">
+            
+<nav class="paginav">
+  <a class="prev" href="https://Bin-lin-rgb.github.io/posts/leetcode/top150/">
+    <span class="title">« 上一页</span>
+    <br>
+    <span>Top150</span>
+  </a>
+  <a class="next" href="https://Bin-lin-rgb.github.io/posts/tech/tech/">
+    <span class="title">下一页 »</span>
+    <br>
+    <span>Redis scan命令学习</span>
+  </a>
+</nav>
+
+        </footer>
+    </div>
+
+<style>
+    .comments_details summary::marker {
+        font-size: 20px;
+        content: '👉展开评论';
+        color: var(--content);
+    }
+    .comments_details[open] summary::marker{
+        font-size: 20px;
+        content: '👇关闭评论';
+        color: var(--content);
+    }
+</style>
+
+
+<div>
+    <details class="comments_details">
+        <summary style="cursor: pointer; margin: 50px 0 20px 0;width: 130px;">
+            <span style="font-size: 20px;color: var(--content);">...</span>
+        </summary>
+        <div id="tcomment"></div>
+    </details>
+    <script src="https://cdn.staticfile.org/twikoo/1.5.8/twikoo.all.min.js">
+    </script>
+    <script>
+        twikoo.init({
+            envId: 'https://twikoo-api-nine-silk.vercel.app/',
+            el: "#tcomment",
+            lang: 'zh-CN',
+            region: 'ap-guangzhou',
+            path: window.TWIKOO_MAGIC_PATH||window.location.pathname,
+        })
+    
+    
+    
+    
+    
+    
+    
+    </script>
+</div>
+</article>
+</main>
+
+<footer class="footer">
+    <span>
+        Copyright
+        &copy;
+        2021-2023
+        <a href="https://Bin-lin-rgb.github.io/" style="color:#939393;">Blaine&#39;s Blog</a>
+        All Rights Reserved
+    </span>
+    <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;">备案号</a>&nbsp;
+    <span>
+        <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=null"
+           style="display:inline-block;text-decoration:none;height:20px;color:#939393;">
+            <img src="%e5%85%ac%e5%ae%89%e5%9b%be%e6%a0%87%e9%93%be%e6%8e%a5" style="float:left;margin: 0px 5px 0px 0px;"/>
+            公网安备
+        </a>
+    </span>
+    <span id="busuanzi_container">
+        <span class="fa fa-user"></span> <span id="busuanzi_value_site_uv"></span>
+        <span class="fa fa-eye"></span> <span id="busuanzi_value_site_pv"></span>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <span class="topInner">
+        <svg class="topSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z"/>
+        </svg>
+        <span id="read_progress"></span>
+    </span>
+</a>
+
+<script>
+    document.addEventListener('scroll', function (e) {
+        const readProgress = document.getElementById("read_progress");
+        const scrollHeight = document.documentElement.scrollHeight;
+        const clientHeight = document.documentElement.clientHeight;
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        readProgress.innerText = ((scrollTop / (scrollHeight - clientHeight)).toFixed(2) * 100).toFixed(0);
+    })
+</script>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+</script>
+<script>
+    let mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        (function() {
+            document.cookie = "change-themes" + "="+ escape ("false");
+        })()
+
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    });
+</script>
+
+<script>
+    document.body.addEventListener('copy', function (e) {
+        if (window.getSelection().toString() && window.getSelection().toString().length > 50) {
+            let clipboardData = e.clipboardData || window.clipboardData;
+            if (clipboardData) {
+                e.preventDefault();
+                let htmlData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Blaine's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                let textData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Blaine's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                clipboardData.setData('text/html', htmlData);
+                clipboardData.setData('text/plain', textData);
+            }
+        }
+    });
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerText = '复制';
+
+        function copyingDone() {
+            copybutton.innerText = '已复制！';
+            setTimeout(() => {
+                copybutton.innerText = '复制';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                let text = codeblock.textContent +
+                    '\r\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Blaine's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                navigator.clipboard.writeText(text);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) {}
+            selection.removeRange(range);
+        });
+
+        let language = codeblock.className.replaceAll("language-", "")
+        let macTool = document.createElement("div")
+        let macTool1 = document.createElement("div")
+        let macTool2 = document.createElement("div")
+        let macTool3 = document.createElement("div")
+        let languageType = document.createElement("div")
+        languageType.innerText = language
+        macTool.setAttribute('class', 'mac-tool')
+        macTool1.setAttribute('class', 'mac bb1')
+        macTool2.setAttribute('class', 'mac bb2')
+        macTool3.setAttribute('class', 'mac bb3')
+        languageType.setAttribute('class', 'language-type')
+        macTool.appendChild(macTool1)
+        macTool.appendChild(macTool2)
+        macTool.appendChild(macTool3)
+        macTool.appendChild(languageType)
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        }
+    });
+</script>
+</body>
+
+</html>

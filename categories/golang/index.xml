@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Golang on Blaine&#39;s Blog</title>
+    <link>https://Bin-lin-rgb.github.io/categories/golang/</link>
+    <description>Recent content in Golang on Blaine&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <lastBuildDate>Sat, 29 Oct 2022 16:00:07 +0800</lastBuildDate><atom:link href="https://Bin-lin-rgb.github.io/categories/golang/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Golang 基础语法</title>
+      <link>https://Bin-lin-rgb.github.io/posts/go/base/</link>
+      <pubDate>Tue, 30 Nov 2021 15:55:23 +0800</pubDate>
+      
+      <guid>https://Bin-lin-rgb.github.io/posts/go/base/</guid>
+      <description>Golang 基础语法</description>
+    </item>
+    
+    <item>
+      <title>omitempty 关键字</title>
+      <link>https://Bin-lin-rgb.github.io/posts/go/omitempty/</link>
+      <pubDate>Sat, 29 Oct 2022 16:00:07 +0800</pubDate>
+      
+      <guid>https://Bin-lin-rgb.github.io/posts/go/omitempty/</guid>
+      <description>Golang 的 “omitempty” 关键字略解</description>
+    </item>
+    
+  </channel>
+</rss>

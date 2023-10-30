@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>docker on Blaine&#39;s Blog</title>
+    <link>https://Bin-lin-rgb.github.io/tags/docker/</link>
+    <description>Recent content in docker on Blaine&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <lastBuildDate>Sat, 28 Oct 2023 18:35:29 +0800</lastBuildDate><atom:link href="https://Bin-lin-rgb.github.io/tags/docker/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Docker 基础</title>
+      <link>https://Bin-lin-rgb.github.io/posts/deploy/docker/</link>
+      <pubDate>Sat, 28 Oct 2023 18:35:29 +0800</pubDate>
+      
+      <guid>https://Bin-lin-rgb.github.io/posts/deploy/docker/</guid>
+      <description>Docker 为什么使用Docker 企业环境中存在的某个痛点 企业使用一项技术是为了解决当前企业环境中存在的某个痛点。 目前整个软件行业存在着以下几个痛点。 1.软件更新发布及部署低效，过程烦琐且需要人工介入。 2.环境一致性难以保证。 3.不同环境之间迁移成本太高。 Docker能解决的问题 首先，Do</description>
+    </item>
+    
+  </channel>
+</rss>
