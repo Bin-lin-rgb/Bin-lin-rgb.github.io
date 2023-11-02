@@ -5,11 +5,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="index, follow">
-<title>Redis scan命令学习 | Blaine&#39;s Blog</title>
-<meta name="keywords" content="Redis">
-<meta name="description" content="scan命令详解">
+<title>使用 FFmpeg 截取视频第一帧并保存案例 | Blaine&#39;s Blog</title>
+<meta name="keywords" content="ffmpeg 视频">
+<meta name="description" content="运行准备 由于需要使用 FFmpeg 第三方工具来完成视频截取第一帧作为封面并存储到本机， 所以运行之前需要预先安装 FFmpeg 到本机并配置好环境变量。 我这里使用的是 ffmpeg version 5.0.1-full_build 版本。 参考链接：FFmpeg 项目结构 假设有这样一个案例：assets 文件夹中是专门存放视频的，现在的要求就是将该视频的第一帧截取为图片并">
 <meta name="author" content="Blaine">
-<link rel="canonical" href="https://Bin-lin-rgb.github.io/posts/tech/tech/">
+<link rel="canonical" href="https://Bin-lin-rgb.github.io/posts/go/%E4%BD%BF%E7%94%A8ffmpeg/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.css" rel="preload stylesheet" as="style">
 <script defer crossorigin="anonymous" src="/assets/js/highlight.js" onload="hljs.initHighlightingOnLoad();"></script>
 <link rel="icon" href="https://Bin-lin-rgb.github.io/img/icon.png">
@@ -56,6 +56,8 @@
 
     </style>
 </noscript>
+<script defer src="https://unpkg.com/mermaid@8.8.1/dist/mermaid.min.js"></script>
+
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
 <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.3/dist/jquery.min.js"></script>
@@ -71,16 +73,16 @@ var _hmt = _hmt || [];
   s.parentNode.insertBefore(hm, s);
 })();
 </script>
-<meta property="og:title" content="Redis scan命令学习" />
-<meta property="og:description" content="scan命令详解" />
+<meta property="og:title" content="使用 FFmpeg 截取视频第一帧并保存案例" />
+<meta property="og:description" content="运行准备 由于需要使用 FFmpeg 第三方工具来完成视频截取第一帧作为封面并存储到本机， 所以运行之前需要预先安装 FFmpeg 到本机并配置好环境变量。 我这里使用的是 ffmpeg version 5.0.1-full_build 版本。 参考链接：FFmpeg 项目结构 假设有这样一个案例：assets 文件夹中是专门存放视频的，现在的要求就是将该视频的第一帧截取为图片并" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://Bin-lin-rgb.github.io/posts/tech/tech/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2022-11-30T15:55:23+08:00" />
-<meta property="article:modified_time" content="2022-11-30T15:55:23+08:00" />
+<meta property="og:url" content="https://Bin-lin-rgb.github.io/posts/go/%E4%BD%BF%E7%94%A8ffmpeg/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-10-30T10:26:55+08:00" />
+<meta property="article:modified_time" content="2022-10-30T10:26:55+08:00" />
 
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Redis scan命令学习"/>
-<meta name="twitter:description" content="scan命令详解"/>
+<meta name="twitter:title" content="使用 FFmpeg 截取视频第一帧并保存案例"/>
+<meta name="twitter:description" content="运行准备 由于需要使用 FFmpeg 第三方工具来完成视频截取第一帧作为封面并存储到本机， 所以运行之前需要预先安装 FFmpeg 到本机并配置好环境变量。 我这里使用的是 ffmpeg version 5.0.1-full_build 版本。 参考链接：FFmpeg 项目结构 假设有这样一个案例：assets 文件夹中是专门存放视频的，现在的要求就是将该视频的第一帧截取为图片并"/>
 
 
 <script type="application/ld+json">
@@ -99,14 +101,14 @@ var _hmt = _hmt || [];
         {
           "@type": "ListItem",
           "position":  2 ,
-          "name": "👨🏻‍💻 技术",
-          "item": "https://Bin-lin-rgb.github.io/posts/tech/"
+          "name": "🥇 Golang",
+          "item": "https://Bin-lin-rgb.github.io/posts/go/"
         }, 
     {
       "@type": "ListItem",
       "position":  3 ,
-      "name": "Redis scan命令学习",
-      "item": "https://Bin-lin-rgb.github.io/posts/tech/tech/"
+      "name": "使用 FFmpeg 截取视频第一帧并保存案例",
+      "item": "https://Bin-lin-rgb.github.io/posts/go/%E4%BD%BF%E7%94%A8ffmpeg/"
     }
   ]
 }
@@ -115,24 +117,24 @@ var _hmt = _hmt || [];
 {
   "@context": "https://schema.org",
   "@type": "BlogPosting",
-  "headline": "Redis scan命令学习",
-  "name": "Redis scan命令学习",
-  "description": "scan命令详解",
+  "headline": "使用 FFmpeg 截取视频第一帧并保存案例",
+  "name": "使用 FFmpeg 截取视频第一帧并保存案例",
+  "description": "运行准备 由于需要使用 FFmpeg 第三方工具来完成视频截取第一帧作为封面并存储到本机， 所以运行之前需要预先安装 FFmpeg 到本机并配置好环境变量。 我这里使用的是 ffmpeg version 5.0.1-full_build 版本。 参考链接：FFmpeg 项目结构 假设有这样一个案例：assets 文件夹中是专门存放视频的，现在的要求就是将该视频的第一帧截取为图片并",
   "keywords": [
-    "Redis"
+    "ffmpeg 视频"
   ],
-  "articleBody": "1. 介绍 scan命令的作用和keys *的作用类似，主要用于查找redis中的键，但是在正式的生产环境中一般不会直接使用keys *这个命令，因为他会返回所有的键，如果键的数量很多会导致查询时间很长，进而导致服务器阻塞，所以需要scan来进行更细致的查找\nscan总共有这几种命令：scan、sscan、hscan、zscan，分别用于迭代数据库中的：数据库中所有键、集合键、哈希键、有序集合键，命令具体结构如下：\nscan cursor [MATCH pattern] [COUNT count] [TYPE type] sscan key cursor [MATCH pattern] [COUNT count] hscan key cursor [MATCH pattern] [COUNT count] zscan key cursor [MATCH pattern] [COUNT count] 2. scan scan cursor [MATCH pattern] [COUNT count] [TYPE type]，cursor表示游标，指查询开始的位置，count默认为10，查询完后会返回下一个开始的游标，当返回0的时候表示所有键查询完了\n127.0.0.1:6379[2]\u003e scan 0 1) \"3\" 2) 1) \"mystring\" 2) \"myzadd\" 3) \"myhset\" 4) \"mylist\" 5) \"myset2\" 6) \"myset1\" 7) \"mystring1\" 8) \"mystring3\" 9) \"mystring4\" 10) \"myset\" 127.0.0.1:6379[2]\u003e scan 3 1) \"0\" 2) 1) \"myzadd1\" 2) \"mystring2\" 3) \"mylist2\" 4) \"myhset1\" 5) \"mylist1\" MATCH可以采用模糊匹配找出自己想要查找的键，这里的逻辑是先查出20个，再匹配，而不是先匹配再查询，这里加上count 20是因为默认查出的10个数中可能不能包含所有的相关项，所以把范围扩大到查20个，我这里测试的键总共有15个\n127.0.0.1:6379[2]\u003e scan 0 match mylist* count 20 1) \"0\" 2) 1) \"mylist\" 2) \"mylist2\" 3) \"mylist1\" TYPE可以根据具体的结构类型来匹配该类型的键\n127.0.0.1:6379[2]\u003e scan 0 count 20 type list 1) \"0\" 2) 1) \"mylist\" 2) \"mylist2\" 3) \"mylist1\" 3. sscan sscan key cursor [MATCH pattern] [COUNT count]，sscan的第一个参数总是集合类型的key\n127.0.0.1:6379[2]\u003e sadd myset1 a b c d (integer) 4 127.0.0.1:6379[2]\u003e smembers myset1 1) \"d\" 2) \"a\" 3) \"c\" 4) \"b\" 127.0.0.1:6379[2]\u003e sscan myset1 0 1) \"0\" 2) 1) \"d\" 2) \"c\" 3) \"b\" 4) \"a\" 127.0.0.1:6379[2]\u003e sscan myset1 0 match a 1) \"0\" 2) 1) \"a\" 4. hscan hscan key cursor [MATCH pattern] [COUNT count]，sscan的第一个参数总是哈希类型的key\n127.0.0.1:6379[2]\u003e hset myhset1 kk1 vv1 kk2 vv2 kk3 vv3 (integer) 3 127.0.0.1:6379[2]\u003e hgetall myhset1 1) \"kk1\" 2) \"vv1\" 3) \"kk2\" 4) \"vv2\" 5) \"kk3\" 6) \"vv3\" 127.0.0.1:6379[2]\u003e hscan myhset1 0 1) \"0\" 2) 1) \"kk1\" 2) \"vv1\" 3) \"kk2\" 4) \"vv2\" 5) \"kk3\" 6) \"vv3\" 5. zscan zscan key cursor [MATCH pattern] [COUNT count]，sscan的第一个参数总是有序集合类型的key\n127.0.0.1:6379[2]\u003e zadd myzadd1 1 zz1 2 zz2 3 zz3 (integer) 3 127.0.0.1:6379[2]\u003e zrange myzadd1 0 -1 withscores 1) \"zz1\" 2) \"1\" 3) \"zz2\" 4) \"2\" 5) \"zz3\" 6) \"3\" 127.0.0.1:6379[2]\u003e zscan myzadd1 0 1) \"0\" 2) 1) \"zz1\" 2) \"1\" 3) \"zz2\" 4) \"2\" 5) \"zz3\" 6) \"3\" ",
-  "wordCount" : "770",
+  "articleBody": "运行准备 由于需要使用 FFmpeg 第三方工具来完成视频截取第一帧作为封面并存储到本机，\n所以运行之前需要预先安装 FFmpeg 到本机并配置好环境变量。\n我这里使用的是 ffmpeg version 5.0.1-full_build 版本。\n参考链接：FFmpeg\n项目结构 假设有这样一个案例：assets 文件夹中是专门存放视频的，现在的要求就是将该视频的第一帧截取为图片并保存。\nD:. │ go.mod │ go.sum │ ├─.idea │ .gitignore │ modules.xml │ testvideo.iml │ thriftCompiler.xml │ workspace.xml │ ├─assets │ test.mp4 │ └─controller main.go 主要是调用 GetSnapshot() 函数\n第一个参数是 视频的相对地址，第二个参数是截出来的图片的名称，返回值是图片的相对路径\nfunc GetSnapshot(videoPath, snapshotPath string) (snapshotName string, err error)\nmain.go package main ​ import ( \"bytes\" \"fmt\" \"log\" \"os\" \"strings\" \"github.com/disintegration/imaging\" ffmpeg \"github.com/u2takey/ffmpeg-go\" ) ​ func GetSnapshot(videoPath, snapshotPath string, frameNum int) (snapshotName string, err error) { snapshotPath = \"./assets/\" + snapshotPath buf := bytes.NewBuffer(nil) err = ffmpeg.Input(videoPath). Filter(\"select\", ffmpeg.Args{fmt.Sprintf(\"gte(n,%d)\", frameNum)}). Output(\"pipe:\", ffmpeg.KwArgs{\"vframes\": 1, \"format\": \"image2\", \"vcodec\": \"mjpeg\"}). WithOutput(buf, os.Stdout). Run() if err != nil { log.Fatal(\"生成缩略图失败：\", err) return \"\", err } ​ img, err := imaging.Decode(buf) if err != nil { log.Fatal(\"生成缩略图失败：\", err) return \"\", err } ​ err = imaging.Save(img, snapshotPath+\".png\") if err != nil { log.Fatal(\"生成缩略图失败：\", err) return \"\", err } ​ fmt.Println(\"--snapshotPath--\", snapshotPath) // --snapshotPath-- ./assets/testImage ​ names := strings.Split(snapshotPath, \"\\\") fmt.Println(\"----names----\", names) // ----names---- [./assets/testImage] // 这里把 snapshotPath 的 string 类型转换成 []string ​ snapshotName = names[len(names)-1] + \".png\" fmt.Println(\"----snapshotName----\", snapshotName) // ----snapshotName---- ./assets/testImage.png ​ return snapshotName, nil } ​ func main() { name, err := GetSnapshot(\"./assets/test.mp4\", \"testImage\", 1) if err != nil { log.Fatal(err) return } fmt.Println(\"return:\", name) } ​ 完成之后发现项目的 assets 已经多了一个 testImage.png 文件，说明已经成功了！\nD:. │ go.mod │ go.sum │ ├─.idea │ .gitignore │ modules.xml │ testvideo.iml │ thriftCompiler.xml │ workspace.xml │ ├─assets │ test.mp4 │ testImage.png │ └─controller main.go 解决方法 若生成失败，可能存在的问题：\n1、安装 FFmpeg 之后，没有配置环境变量。可以使用 cmd 输入 ffmpeg -version 验证是否配置成功。\n2、可以尝试以管理员身份运行 goland\n",
+  "wordCount" : "639",
   "inLanguage": "zh",
-  "datePublished": "2022-11-30T15:55:23+08:00",
-  "dateModified": "2022-11-30T15:55:23+08:00",
+  "datePublished": "2022-10-30T10:26:55+08:00",
+  "dateModified": "2022-10-30T10:26:55+08:00",
   "author":[{
     "@type": "Person",
     "name": "Blaine"
   }],
   "mainEntityOfPage": {
     "@type": "WebPage",
-    "@id": "https://Bin-lin-rgb.github.io/posts/tech/tech/"
+    "@id": "https://Bin-lin-rgb.github.io/posts/go/%E4%BD%BF%E7%94%A8ffmpeg/"
   },
   "publisher": {
     "@type": "Organization",
@@ -251,13 +253,10 @@ var _hmt = _hmt || [];
 <article class="post-single">
     <div id="single-content">
         <header class="post-header">
-            <div class="breadcrumbs"><a href="https://Bin-lin-rgb.github.io/">🏠 主页</a>&nbsp;»&nbsp;<a href="https://Bin-lin-rgb.github.io/posts/">📚文章</a>&nbsp;»&nbsp;<a href="https://Bin-lin-rgb.github.io/posts/tech/">👨🏻‍💻 技术</a></div>
+            <div class="breadcrumbs"><a href="https://Bin-lin-rgb.github.io/">🏠 主页</a>&nbsp;»&nbsp;<a href="https://Bin-lin-rgb.github.io/posts/">📚文章</a>&nbsp;»&nbsp;<a href="https://Bin-lin-rgb.github.io/posts/go/">🥇 Golang</a></div>
             <h1 class="post-title">
-                Redis scan命令学习
+                使用 FFmpeg 截取视频第一帧并保存案例
             </h1>
-            <div class="post-description">
-                scan命令详解
-            </div>
             <div class="post-meta">
 
 <style>
@@ -277,7 +276,7 @@ var _hmt = _hmt || [];
 <span class="parent-post-meta">
     <span id="post_meta_style_1">
         <span class="fa fa-calendar-check-o"></span>
-        <span>2022-11-30
+        <span>2022-10-30
             &nbsp;&nbsp;
         </span>
     </span>
@@ -290,7 +289,7 @@ var _hmt = _hmt || [];
     
     <span id="post_meta_style_3">
         <span class="fa fa-file-word-o"></span>
-        <span>770字
+        <span>639字
             &nbsp;&nbsp;
         </span>
     </span>
@@ -310,8 +309,7 @@ var _hmt = _hmt || [];
         <span class="fa fa-tags" style="opacity: 0.8"></span>
         <span>
             <span class="post-tags-meta">
-                <a href="https://Bin-lin-rgb.github.io/tags/redis/" style="color: var(--secondary)!important;">Redis</a>
-                &nbsp;<a href="https://Bin-lin-rgb.github.io/tags/tech/" style="color: var(--secondary)!important;">tech</a>
+                <a href="https://Bin-lin-rgb.github.io/tags/ffmpeg/" style="color: var(--secondary)!important;">ffmpeg</a>
             </span>
         </span>
     </span>
@@ -373,15 +371,15 @@ var _hmt = _hmt || [];
 
         <div class="inner"><ul>
                 <li>
-                    <a href="#1-%e4%bb%8b%e7%bb%8d" aria-label="1. 介绍">1. 介绍</a></li>
+                    <a href="#%e8%bf%90%e8%a1%8c%e5%87%86%e5%a4%87" aria-label="运行准备">运行准备</a></li>
                 <li>
-                    <a href="#2-scan" aria-label="2. scan">2. scan</a></li>
+                    <a href="#%e9%a1%b9%e7%9b%ae%e7%bb%93%e6%9e%84" aria-label="项目结构">项目结构</a><ul>
+                        
                 <li>
-                    <a href="#3-sscan" aria-label="3. sscan">3. sscan</a></li>
+                    <a href="#maingo" aria-label="main.go">main.go</a></li></ul>
+                </li>
                 <li>
-                    <a href="#4-hscan" aria-label="4. hscan">4. hscan</a></li>
-                <li>
-                    <a href="#5-zscan" aria-label="5. zscan">5. zscan</a>
+                    <a href="#%e8%a7%a3%e5%86%b3%e6%96%b9%e6%b3%95" aria-label="解决方法">解决方法</a>
                 </li>
             </ul>
         </div>
@@ -448,103 +446,119 @@ var _hmt = _hmt || [];
         return rect.top + win.pageYOffset;
     }
 </script>
-        <div class="post-content"><h2 id="1-介绍">1. 介绍<a hidden class="anchor" aria-hidden="true" href="#1-介绍">#</a></h2>
-<p><code>scan</code>命令的作用和<code>keys *</code>的作用类似，主要用于查找redis中的键，但是在正式的生产环境中一般不会直接使用<code>keys *</code>这个命令，因为他会返回所有的键，如果键的数量很多会导致查询时间很长，进而导致服务器阻塞，所以需要scan来进行更细致的查找</p>
-<p><code>scan</code>总共有这几种命令：<code>scan</code>、<code>sscan</code>、<code>hscan</code>、<code>zscan</code>，分别用于迭代数据库中的：数据库中所有键、集合键、哈希键、有序集合键，命令具体结构如下：</p>
-<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>scan cursor <span style="color:#ff6ac1">[</span>MATCH pattern<span style="color:#ff6ac1">]</span> <span style="color:#ff6ac1">[</span>COUNT count<span style="color:#ff6ac1">]</span> <span style="color:#ff6ac1">[</span>TYPE type<span style="color:#ff6ac1">]</span>
-</span></span><span style="display:flex;"><span>sscan key cursor <span style="color:#ff6ac1">[</span>MATCH pattern<span style="color:#ff6ac1">]</span> <span style="color:#ff6ac1">[</span>COUNT count<span style="color:#ff6ac1">]</span>
-</span></span><span style="display:flex;"><span>hscan key cursor <span style="color:#ff6ac1">[</span>MATCH pattern<span style="color:#ff6ac1">]</span> <span style="color:#ff6ac1">[</span>COUNT count<span style="color:#ff6ac1">]</span>
-</span></span><span style="display:flex;"><span>zscan key cursor <span style="color:#ff6ac1">[</span>MATCH pattern<span style="color:#ff6ac1">]</span> <span style="color:#ff6ac1">[</span>COUNT count<span style="color:#ff6ac1">]</span>
-</span></span></code></pre></div><h2 id="2-scan">2. scan<a hidden class="anchor" aria-hidden="true" href="#2-scan">#</a></h2>
-<p><code>scan cursor [MATCH pattern] [COUNT count] [TYPE type]</code>，cursor表示游标，指查询开始的位置，count默认为10，查询完后会返回下一个开始的游标，当返回0的时候表示所有键查询完了</p>
-<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>127.0.0.1:6379<span style="color:#ff6ac1">[</span>2<span style="color:#ff6ac1">]</span>&gt; scan <span style="color:#ff9f43">0</span>
-</span></span><span style="display:flex;"><span>1<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;3&#34;</span>
-</span></span><span style="display:flex;"><span>2<span style="color:#ff6ac1">)</span>  1<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;mystring&#34;</span>
-</span></span><span style="display:flex;"><span>    2<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;myzadd&#34;</span>
-</span></span><span style="display:flex;"><span>    3<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;myhset&#34;</span>
-</span></span><span style="display:flex;"><span>    4<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;mylist&#34;</span>
-</span></span><span style="display:flex;"><span>    5<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;myset2&#34;</span>
-</span></span><span style="display:flex;"><span>    6<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;myset1&#34;</span>
-</span></span><span style="display:flex;"><span>    7<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;mystring1&#34;</span>
-</span></span><span style="display:flex;"><span>    8<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;mystring3&#34;</span>
-</span></span><span style="display:flex;"><span>    9<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;mystring4&#34;</span>
-</span></span><span style="display:flex;"><span>   10<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;myset&#34;</span>
-</span></span><span style="display:flex;"><span>127.0.0.1:6379<span style="color:#ff6ac1">[</span>2<span style="color:#ff6ac1">]</span>&gt; scan <span style="color:#ff9f43">3</span>
-</span></span><span style="display:flex;"><span>1<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;0&#34;</span>
-</span></span><span style="display:flex;"><span>2<span style="color:#ff6ac1">)</span> 1<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;myzadd1&#34;</span>
-</span></span><span style="display:flex;"><span>   2<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;mystring2&#34;</span>
-</span></span><span style="display:flex;"><span>   3<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;mylist2&#34;</span>
-</span></span><span style="display:flex;"><span>   4<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;myhset1&#34;</span>
-</span></span><span style="display:flex;"><span>   5<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;mylist1&#34;</span>
-</span></span></code></pre></div><p>MATCH可以采用模糊匹配找出自己想要查找的键，这里的逻辑是先查出20个，再匹配，而不是先匹配再查询，这里加上count 20是因为默认查出的10个数中可能不能包含所有的相关项，所以把范围扩大到查20个，我这里测试的键总共有15个</p>
-<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>127.0.0.1:6379<span style="color:#ff6ac1">[</span>2<span style="color:#ff6ac1">]</span>&gt; scan <span style="color:#ff9f43">0</span> match mylist* count <span style="color:#ff9f43">20</span>
-</span></span><span style="display:flex;"><span>1<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;0&#34;</span>
-</span></span><span style="display:flex;"><span>2<span style="color:#ff6ac1">)</span> 1<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;mylist&#34;</span>
-</span></span><span style="display:flex;"><span>   2<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;mylist2&#34;</span>
-</span></span><span style="display:flex;"><span>   3<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;mylist1&#34;</span>
-</span></span></code></pre></div><p>TYPE可以根据具体的结构类型来匹配该类型的键</p>
-<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>127.0.0.1:6379<span style="color:#ff6ac1">[</span>2<span style="color:#ff6ac1">]</span>&gt; scan <span style="color:#ff9f43">0</span> count <span style="color:#ff9f43">20</span> <span style="color:#ff5c57">type</span> list
-</span></span><span style="display:flex;"><span>1<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;0&#34;</span>
-</span></span><span style="display:flex;"><span>2<span style="color:#ff6ac1">)</span> 1<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;mylist&#34;</span>
-</span></span><span style="display:flex;"><span>   2<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;mylist2&#34;</span>
-</span></span><span style="display:flex;"><span>   3<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;mylist1&#34;</span>
-</span></span></code></pre></div><h2 id="3-sscan">3. sscan<a hidden class="anchor" aria-hidden="true" href="#3-sscan">#</a></h2>
-<p><code>sscan key cursor [MATCH pattern] [COUNT count]</code>，sscan的第一个参数总是集合类型的key</p>
-<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>127.0.0.1:6379<span style="color:#ff6ac1">[</span>2<span style="color:#ff6ac1">]</span>&gt; sadd myset1 a b c d
-</span></span><span style="display:flex;"><span><span style="color:#ff6ac1">(</span>integer<span style="color:#ff6ac1">)</span> <span style="color:#ff9f43">4</span>
-</span></span><span style="display:flex;"><span>127.0.0.1:6379<span style="color:#ff6ac1">[</span>2<span style="color:#ff6ac1">]</span>&gt; smembers myset1
-</span></span><span style="display:flex;"><span>1<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;d&#34;</span>
-</span></span><span style="display:flex;"><span>2<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;a&#34;</span>
-</span></span><span style="display:flex;"><span>3<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;c&#34;</span>
-</span></span><span style="display:flex;"><span>4<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;b&#34;</span>
-</span></span><span style="display:flex;"><span>127.0.0.1:6379<span style="color:#ff6ac1">[</span>2<span style="color:#ff6ac1">]</span>&gt; sscan myset1 <span style="color:#ff9f43">0</span>
-</span></span><span style="display:flex;"><span>1<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;0&#34;</span>
-</span></span><span style="display:flex;"><span>2<span style="color:#ff6ac1">)</span> 1<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;d&#34;</span>
-</span></span><span style="display:flex;"><span>   2<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;c&#34;</span>
-</span></span><span style="display:flex;"><span>   3<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;b&#34;</span>
-</span></span><span style="display:flex;"><span>   4<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;a&#34;</span>
-</span></span><span style="display:flex;"><span>127.0.0.1:6379<span style="color:#ff6ac1">[</span>2<span style="color:#ff6ac1">]</span>&gt; sscan myset1 <span style="color:#ff9f43">0</span> match a
-</span></span><span style="display:flex;"><span>1<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;0&#34;</span>
-</span></span><span style="display:flex;"><span>2<span style="color:#ff6ac1">)</span> 1<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;a&#34;</span>
-</span></span></code></pre></div><h2 id="4-hscan">4. hscan<a hidden class="anchor" aria-hidden="true" href="#4-hscan">#</a></h2>
-<p><code>hscan key cursor [MATCH pattern] [COUNT count]</code>，sscan的第一个参数总是哈希类型的key</p>
-<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>127.0.0.1:6379<span style="color:#ff6ac1">[</span>2<span style="color:#ff6ac1">]</span>&gt; hset myhset1 kk1 vv1 kk2 vv2 kk3 vv3
-</span></span><span style="display:flex;"><span><span style="color:#ff6ac1">(</span>integer<span style="color:#ff6ac1">)</span> <span style="color:#ff9f43">3</span>
-</span></span><span style="display:flex;"><span>127.0.0.1:6379<span style="color:#ff6ac1">[</span>2<span style="color:#ff6ac1">]</span>&gt; hgetall myhset1
-</span></span><span style="display:flex;"><span>1<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;kk1&#34;</span>
-</span></span><span style="display:flex;"><span>2<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;vv1&#34;</span>
-</span></span><span style="display:flex;"><span>3<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;kk2&#34;</span>
-</span></span><span style="display:flex;"><span>4<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;vv2&#34;</span>
-</span></span><span style="display:flex;"><span>5<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;kk3&#34;</span>
-</span></span><span style="display:flex;"><span>6<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;vv3&#34;</span>
-</span></span><span style="display:flex;"><span>127.0.0.1:6379<span style="color:#ff6ac1">[</span>2<span style="color:#ff6ac1">]</span>&gt; hscan myhset1 <span style="color:#ff9f43">0</span>
-</span></span><span style="display:flex;"><span>1<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;0&#34;</span>
-</span></span><span style="display:flex;"><span>2<span style="color:#ff6ac1">)</span> 1<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;kk1&#34;</span>
-</span></span><span style="display:flex;"><span>   2<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;vv1&#34;</span>
-</span></span><span style="display:flex;"><span>   3<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;kk2&#34;</span>
-</span></span><span style="display:flex;"><span>   4<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;vv2&#34;</span>
-</span></span><span style="display:flex;"><span>   5<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;kk3&#34;</span>
-</span></span><span style="display:flex;"><span>   6<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;vv3&#34;</span>
-</span></span></code></pre></div><h2 id="5-zscan">5. zscan<a hidden class="anchor" aria-hidden="true" href="#5-zscan">#</a></h2>
-<p><code>zscan key cursor [MATCH pattern] [COUNT count]</code>，sscan的第一个参数总是有序集合类型的key</p>
-<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>127.0.0.1:6379<span style="color:#ff6ac1">[</span>2<span style="color:#ff6ac1">]</span>&gt; zadd myzadd1 <span style="color:#ff9f43">1</span> zz1 <span style="color:#ff9f43">2</span> zz2 <span style="color:#ff9f43">3</span> zz3
-</span></span><span style="display:flex;"><span><span style="color:#ff6ac1">(</span>integer<span style="color:#ff6ac1">)</span> <span style="color:#ff9f43">3</span>
-</span></span><span style="display:flex;"><span>127.0.0.1:6379<span style="color:#ff6ac1">[</span>2<span style="color:#ff6ac1">]</span>&gt; zrange myzadd1 <span style="color:#ff9f43">0</span> -1 withscores
-</span></span><span style="display:flex;"><span>1<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;zz1&#34;</span>
-</span></span><span style="display:flex;"><span>2<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;1&#34;</span>
-</span></span><span style="display:flex;"><span>3<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;zz2&#34;</span>
-</span></span><span style="display:flex;"><span>4<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;2&#34;</span>
-</span></span><span style="display:flex;"><span>5<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;zz3&#34;</span>
-</span></span><span style="display:flex;"><span>6<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;3&#34;</span>
-</span></span><span style="display:flex;"><span>127.0.0.1:6379<span style="color:#ff6ac1">[</span>2<span style="color:#ff6ac1">]</span>&gt; zscan myzadd1 <span style="color:#ff9f43">0</span>
-</span></span><span style="display:flex;"><span>1<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;0&#34;</span>
-</span></span><span style="display:flex;"><span>2<span style="color:#ff6ac1">)</span> 1<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;zz1&#34;</span>
-</span></span><span style="display:flex;"><span>   2<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;1&#34;</span>
-</span></span><span style="display:flex;"><span>   3<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;zz2&#34;</span>
-</span></span><span style="display:flex;"><span>   4<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;2&#34;</span>
-</span></span><span style="display:flex;"><span>   5<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;zz3&#34;</span>
-</span></span><span style="display:flex;"><span>   6<span style="color:#ff6ac1">)</span> <span style="color:#5af78e">&#34;3&#34;</span>
-</span></span></code></pre></div>
+        <div class="post-content"><h2 id="运行准备">运行准备<a hidden class="anchor" aria-hidden="true" href="#运行准备">#</a></h2>
+<p>由于需要使用 FFmpeg 第三方工具来完成视频截取第一帧作为封面并存储到本机，</p>
+<p>所以运行之前需要预先安装 FFmpeg 到本机并配置好环境变量。</p>
+<p>我这里使用的是 <code>ffmpeg version 5.0.1-full_build</code> 版本。</p>
+<p>参考链接：<a href="http://ffmpeg.org/">FFmpeg</a></p>
+<h2 id="项目结构">项目结构<a hidden class="anchor" aria-hidden="true" href="#项目结构">#</a></h2>
+<p>假设有这样一个案例：<code>assets</code> 文件夹中是专门存放视频的，现在的要求就是将该视频的第一帧截取为图片并保存。</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span> D:.
+</span></span><span style="display:flex;"><span> │  go.mod
+</span></span><span style="display:flex;"><span> │  go.sum
+</span></span><span style="display:flex;"><span> │  
+</span></span><span style="display:flex;"><span> ├─.idea
+</span></span><span style="display:flex;"><span> │      .gitignore
+</span></span><span style="display:flex;"><span> │      modules.xml
+</span></span><span style="display:flex;"><span> │      testvideo.iml
+</span></span><span style="display:flex;"><span> │      thriftCompiler.xml
+</span></span><span style="display:flex;"><span> │      workspace.xml
+</span></span><span style="display:flex;"><span> │
+</span></span><span style="display:flex;"><span> ├─assets
+</span></span><span style="display:flex;"><span> │      test.mp4
+</span></span><span style="display:flex;"><span> │
+</span></span><span style="display:flex;"><span> └─controller
+</span></span><span style="display:flex;"><span>         main.go
+</span></span></code></pre></div><p>主要是调用 <code>GetSnapshot()</code> 函数</p>
+<p>第一个参数是 视频的相对地址，第二个参数是截出来的图片的名称，返回值是图片的相对路径</p>
+<p><code>func GetSnapshot(videoPath, snapshotPath string) (snapshotName string, err error)</code></p>
+<h3 id="maingo">main.go<a hidden class="anchor" aria-hidden="true" href="#maingo">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span> <span style="color:#ff6ac1">package</span> main
+</span></span><span style="display:flex;"><span> <span style="color:#ff5c57">​</span>
+</span></span><span style="display:flex;"><span> <span style="color:#ff6ac1">import</span> (
+</span></span><span style="display:flex;"><span>     <span style="color:#5af78e">&#34;bytes&#34;</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#5af78e">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#5af78e">&#34;log&#34;</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#5af78e">&#34;os&#34;</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#5af78e">&#34;strings&#34;</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#5af78e">&#34;github.com/disintegration/imaging&#34;</span>
+</span></span><span style="display:flex;"><span>     ffmpeg <span style="color:#5af78e">&#34;github.com/u2takey/ffmpeg-go&#34;</span>
+</span></span><span style="display:flex;"><span> )
+</span></span><span style="display:flex;"><span> <span style="color:#ff5c57">​</span>
+</span></span><span style="display:flex;"><span> <span style="color:#ff5c57">func</span> <span style="color:#57c7ff">GetSnapshot</span>(videoPath, snapshotPath <span style="color:#9aedfe">string</span>, frameNum <span style="color:#9aedfe">int</span>) (snapshotName <span style="color:#9aedfe">string</span>, err <span style="color:#9aedfe">error</span>) {
+</span></span><span style="display:flex;"><span>     snapshotPath = <span style="color:#5af78e">&#34;./assets/&#34;</span> <span style="color:#ff6ac1">+</span> snapshotPath
+</span></span><span style="display:flex;"><span>     buf <span style="color:#ff6ac1">:=</span> bytes.<span style="color:#57c7ff">NewBuffer</span>(<span style="color:#ff6ac1">nil</span>)
+</span></span><span style="display:flex;"><span>     err = ffmpeg.<span style="color:#57c7ff">Input</span>(videoPath).
+</span></span><span style="display:flex;"><span>         <span style="color:#57c7ff">Filter</span>(<span style="color:#5af78e">&#34;select&#34;</span>, ffmpeg.Args{fmt.<span style="color:#57c7ff">Sprintf</span>(<span style="color:#5af78e">&#34;gte(n,%d)&#34;</span>, frameNum)}).
+</span></span><span style="display:flex;"><span>         <span style="color:#57c7ff">Output</span>(<span style="color:#5af78e">&#34;pipe:&#34;</span>, ffmpeg.KwArgs{<span style="color:#5af78e">&#34;vframes&#34;</span>: <span style="color:#ff9f43">1</span>, <span style="color:#5af78e">&#34;format&#34;</span>: <span style="color:#5af78e">&#34;image2&#34;</span>, <span style="color:#5af78e">&#34;vcodec&#34;</span>: <span style="color:#5af78e">&#34;mjpeg&#34;</span>}).
+</span></span><span style="display:flex;"><span>         <span style="color:#57c7ff">WithOutput</span>(buf, os.Stdout).
+</span></span><span style="display:flex;"><span>         <span style="color:#57c7ff">Run</span>()
+</span></span><span style="display:flex;"><span>     <span style="color:#ff6ac1">if</span> err <span style="color:#ff6ac1">!=</span> <span style="color:#ff6ac1">nil</span> {
+</span></span><span style="display:flex;"><span>         log.<span style="color:#57c7ff">Fatal</span>(<span style="color:#5af78e">&#34;生成缩略图失败：&#34;</span>, err)
+</span></span><span style="display:flex;"><span>         <span style="color:#ff6ac1">return</span> <span style="color:#5af78e">&#34;&#34;</span>, err
+</span></span><span style="display:flex;"><span>     }
+</span></span><span style="display:flex;"><span> <span style="color:#ff5c57">​</span>
+</span></span><span style="display:flex;"><span>     img, err <span style="color:#ff6ac1">:=</span> imaging.<span style="color:#57c7ff">Decode</span>(buf)
+</span></span><span style="display:flex;"><span>     <span style="color:#ff6ac1">if</span> err <span style="color:#ff6ac1">!=</span> <span style="color:#ff6ac1">nil</span> {
+</span></span><span style="display:flex;"><span>         log.<span style="color:#57c7ff">Fatal</span>(<span style="color:#5af78e">&#34;生成缩略图失败：&#34;</span>, err)
+</span></span><span style="display:flex;"><span>         <span style="color:#ff6ac1">return</span> <span style="color:#5af78e">&#34;&#34;</span>, err
+</span></span><span style="display:flex;"><span>     }
+</span></span><span style="display:flex;"><span> <span style="color:#ff5c57">​</span>
+</span></span><span style="display:flex;"><span>     err = imaging.<span style="color:#57c7ff">Save</span>(img, snapshotPath<span style="color:#ff6ac1">+</span><span style="color:#5af78e">&#34;.png&#34;</span>)
+</span></span><span style="display:flex;"><span>     <span style="color:#ff6ac1">if</span> err <span style="color:#ff6ac1">!=</span> <span style="color:#ff6ac1">nil</span> {
+</span></span><span style="display:flex;"><span>         log.<span style="color:#57c7ff">Fatal</span>(<span style="color:#5af78e">&#34;生成缩略图失败：&#34;</span>, err)
+</span></span><span style="display:flex;"><span>         <span style="color:#ff6ac1">return</span> <span style="color:#5af78e">&#34;&#34;</span>, err
+</span></span><span style="display:flex;"><span>     }
+</span></span><span style="display:flex;"><span> <span style="color:#ff5c57">​</span>
+</span></span><span style="display:flex;"><span>     fmt.<span style="color:#57c7ff">Println</span>(<span style="color:#5af78e">&#34;--snapshotPath--&#34;</span>, snapshotPath)
+</span></span><span style="display:flex;"><span>     <span style="color:#78787e">// --snapshotPath-- ./assets/testImage
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span> <span style="color:#ff5c57">​</span>
+</span></span><span style="display:flex;"><span>     names <span style="color:#ff6ac1">:=</span> strings.<span style="color:#57c7ff">Split</span>(snapshotPath, <span style="color:#5af78e">&#34;\&#34;)
+</span></span></span><span style="display:flex;"><span><span style="color:#5af78e">     fmt.Println(&#34;</span><span style="color:#ff6ac1">----</span>names<span style="color:#ff6ac1">----</span><span style="color:#5af78e">&#34;, names)
+</span></span></span><span style="display:flex;"><span><span style="color:#5af78e">     // ----names---- [./assets/testImage]
+</span></span></span><span style="display:flex;"><span><span style="color:#5af78e">     // 这里把 snapshotPath 的 string 类型转换成 []string
+</span></span></span><span style="display:flex;"><span><span style="color:#5af78e"> ​
+</span></span></span><span style="display:flex;"><span><span style="color:#5af78e">     snapshotName = names[len(names)-1] + &#34;</span>.png<span style="color:#5af78e">&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#5af78e">     fmt.Println(&#34;</span><span style="color:#ff6ac1">----</span>snapshotName<span style="color:#ff6ac1">----</span><span style="color:#5af78e">&#34;, snapshotName)
+</span></span></span><span style="display:flex;"><span><span style="color:#5af78e">     // ----snapshotName---- ./assets/testImage.png
+</span></span></span><span style="display:flex;"><span><span style="color:#5af78e"> ​
+</span></span></span><span style="display:flex;"><span><span style="color:#5af78e">     return snapshotName, nil
+</span></span></span><span style="display:flex;"><span><span style="color:#5af78e"> }
+</span></span></span><span style="display:flex;"><span><span style="color:#5af78e"> ​
+</span></span></span><span style="display:flex;"><span><span style="color:#5af78e"> func main() {
+</span></span></span><span style="display:flex;"><span><span style="color:#5af78e">     name, err := GetSnapshot(&#34;</span>.<span style="color:#ff6ac1">/</span>assets<span style="color:#ff6ac1">/</span>test.mp4<span style="color:#5af78e">&#34;, &#34;</span>testImage<span style="color:#5af78e">&#34;, 1)
+</span></span></span><span style="display:flex;"><span><span style="color:#5af78e">     if err != nil {
+</span></span></span><span style="display:flex;"><span><span style="color:#5af78e">         log.Fatal(err)
+</span></span></span><span style="display:flex;"><span><span style="color:#5af78e">         return
+</span></span></span><span style="display:flex;"><span><span style="color:#5af78e">     }
+</span></span></span><span style="display:flex;"><span><span style="color:#5af78e">     fmt.Println(&#34;</span><span style="color:#ff6ac1">return</span>:<span style="color:#ff5c57">&#34;</span>, name)
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span> <span style="color:#ff5c57">​</span>
+</span></span></code></pre></div><p>完成之后发现项目的 <code>assets</code> 已经多了一个 <code>testImage.png</code> 文件，说明已经成功了！</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span> D:.
+</span></span><span style="display:flex;"><span> │  go.mod
+</span></span><span style="display:flex;"><span> │  go.sum
+</span></span><span style="display:flex;"><span> │  
+</span></span><span style="display:flex;"><span> ├─.idea
+</span></span><span style="display:flex;"><span> │      .gitignore
+</span></span><span style="display:flex;"><span> │      modules.xml
+</span></span><span style="display:flex;"><span> │      testvideo.iml
+</span></span><span style="display:flex;"><span> │      thriftCompiler.xml
+</span></span><span style="display:flex;"><span> │      workspace.xml
+</span></span><span style="display:flex;"><span> │
+</span></span><span style="display:flex;"><span> ├─assets
+</span></span><span style="display:flex;"><span> │      test.mp4
+</span></span><span style="display:flex;"><span> │      testImage.png
+</span></span><span style="display:flex;"><span> │
+</span></span><span style="display:flex;"><span> └─controller
+</span></span><span style="display:flex;"><span>         main.go
+</span></span></code></pre></div><h2 id="解决方法">解决方法<a hidden class="anchor" aria-hidden="true" href="#解决方法">#</a></h2>
+<p>若生成失败，可能存在的问题：</p>
+<p>1、安装 FFmpeg 之后，没有配置环境变量。可以使用 <code>cmd</code> 输入 <code>ffmpeg -version</code> 验证是否配置成功。</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/Bin-lin-rgb/blog-img@main/20231030102850.png" alt=""  />
+</p>
+<p>2、可以尝试以管理员身份运行 goland</p>
+
 
         </div>
         <div class="post-reward">
@@ -578,15 +592,15 @@ var _hmt = _hmt || [];
         <footer class="post-footer">
             
 <nav class="paginav">
-  <a class="prev" href="https://Bin-lin-rgb.github.io/posts/deploy/docker/">
+  <a class="prev" href="https://Bin-lin-rgb.github.io/posts/go/golang%E9%9B%86%E6%88%90gorm/">
     <span class="title">« 上一页</span>
     <br>
-    <span>Docker 基础</span>
+    <span>Golang集成gorm</span>
   </a>
-  <a class="next" href="https://Bin-lin-rgb.github.io/posts/go/zap%E6%97%A5%E5%BF%97%E5%BA%93/">
+  <a class="next" href="https://Bin-lin-rgb.github.io/posts/go/omitempty/">
     <span class="title">下一页 »</span>
     <br>
-    <span>Zap日志库</span>
+    <span>omitempty 关键字</span>
   </a>
 </nav>
 

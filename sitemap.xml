@@ -5,22 +5,61 @@
     <loc>https://Bin-lin-rgb.github.io/posts/go/base/</loc>
     <lastmod>2021-11-30T15:55:23+08:00</lastmod>
   </url><url>
+    <loc>https://Bin-lin-rgb.github.io/posts/</loc>
+    <lastmod>2023-11-01T09:46:59+08:00</lastmod>
+  </url><url>
+    <loc>https://Bin-lin-rgb.github.io/</loc>
+    <lastmod>2023-11-01T09:46:59+08:00</lastmod>
+  </url><url>
+    <loc>https://Bin-lin-rgb.github.io/posts/go/go-%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E7%AF%87/</loc>
+    <lastmod>2023-11-01T09:46:59+08:00</lastmod>
+  </url><url>
+    <loc>https://Bin-lin-rgb.github.io/posts/go/</loc>
+    <lastmod>2023-11-01T09:46:59+08:00</lastmod>
+  </url><url>
+    <loc>https://Bin-lin-rgb.github.io/posts/go/go-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E7%AF%87/</loc>
+    <lastmod>2023-11-01T09:46:51+08:00</lastmod>
+  </url><url>
+    <loc>https://Bin-lin-rgb.github.io/posts/go/go-%E8%B0%83%E5%BA%A6%E6%A8%A1%E5%9E%8B%E7%AF%87/</loc>
+    <lastmod>2023-11-01T09:46:37+08:00</lastmod>
+  </url><url>
+    <loc>https://Bin-lin-rgb.github.io/posts/go/go-goroutine%E7%AF%87/</loc>
+    <lastmod>2023-11-01T09:46:08+08:00</lastmod>
+  </url><url>
+    <loc>https://Bin-lin-rgb.github.io/posts/go/go-mutex%E7%AF%87/</loc>
+    <lastmod>2023-11-01T09:45:41+08:00</lastmod>
+  </url><url>
+    <loc>https://Bin-lin-rgb.github.io/posts/go/go-channel%E7%AF%87/</loc>
+    <lastmod>2023-11-01T09:45:23+08:00</lastmod>
+  </url><url>
+    <loc>https://Bin-lin-rgb.github.io/posts/go/go-map%E7%AF%87/</loc>
+    <lastmod>2023-11-01T09:45:15+08:00</lastmod>
+  </url><url>
+    <loc>https://Bin-lin-rgb.github.io/posts/go/go-slice%E7%AF%87/</loc>
+    <lastmod>2023-11-01T09:45:04+08:00</lastmod>
+  </url><url>
+    <loc>https://Bin-lin-rgb.github.io/categories/</loc>
+    <lastmod>2023-11-01T09:44:29+08:00</lastmod>
+  </url><url>
+    <loc>https://Bin-lin-rgb.github.io/tags/go/</loc>
+    <lastmod>2023-11-01T09:44:29+08:00</lastmod>
+  </url><url>
+    <loc>https://Bin-lin-rgb.github.io/posts/go/go%E5%9F%BA%E7%A1%80%E7%AF%87/</loc>
+    <lastmod>2023-11-01T09:44:29+08:00</lastmod>
+  </url><url>
+    <loc>https://Bin-lin-rgb.github.io/categories/golang/</loc>
+    <lastmod>2023-11-01T09:44:29+08:00</lastmod>
+  </url><url>
+    <loc>https://Bin-lin-rgb.github.io/tags/</loc>
+    <lastmod>2023-11-01T09:44:29+08:00</lastmod>
+  </url><url>
+    <loc>https://Bin-lin-rgb.github.io/posts/go/%E9%9B%AA%E8%8A%B1id%E7%94%9F%E6%88%90%E5%89%8D%E5%90%8E%E7%AB%AF%E4%BC%A0%E8%BE%93%E4%B8%8D%E4%B8%80%E8%87%B4/</loc>
+    <lastmod>2023-10-30T10:53:54+08:00</lastmod>
+  </url><url>
     <loc>https://Bin-lin-rgb.github.io/posts/basics/</loc>
     <lastmod>2023-10-29T16:34:43+08:00</lastmod>
   </url><url>
-    <loc>https://Bin-lin-rgb.github.io/posts/</loc>
-    <lastmod>2023-10-29T16:34:43+08:00</lastmod>
-  </url><url>
     <loc>https://Bin-lin-rgb.github.io/categories/basics/</loc>
-    <lastmod>2023-10-29T16:34:43+08:00</lastmod>
-  </url><url>
-    <loc>https://Bin-lin-rgb.github.io/</loc>
-    <lastmod>2023-10-29T16:34:43+08:00</lastmod>
-  </url><url>
-    <loc>https://Bin-lin-rgb.github.io/categories/</loc>
-    <lastmod>2023-10-29T16:34:43+08:00</lastmod>
-  </url><url>
-    <loc>https://Bin-lin-rgb.github.io/tags/</loc>
     <lastmod>2023-10-29T16:34:43+08:00</lastmod>
   </url><url>
     <loc>https://Bin-lin-rgb.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/</loc>
@@ -68,16 +107,19 @@
     <loc>https://Bin-lin-rgb.github.io/tags/tech/</loc>
     <lastmod>2022-11-30T15:55:23+08:00</lastmod>
   </url><url>
-    <loc>https://Bin-lin-rgb.github.io/tags/go/</loc>
-    <lastmod>2022-10-29T16:00:07+08:00</lastmod>
+    <loc>https://Bin-lin-rgb.github.io/posts/go/zap%E6%97%A5%E5%BF%97%E5%BA%93/</loc>
+    <lastmod>2022-10-30T10:39:16+08:00</lastmod>
   </url><url>
-    <loc>https://Bin-lin-rgb.github.io/categories/golang/</loc>
-    <lastmod>2022-10-29T16:00:07+08:00</lastmod>
+    <loc>https://Bin-lin-rgb.github.io/posts/go/golang%E9%9B%86%E6%88%90gorm/</loc>
+    <lastmod>2022-10-30T10:35:11+08:00</lastmod>
+  </url><url>
+    <loc>https://Bin-lin-rgb.github.io/tags/ffmpeg/</loc>
+    <lastmod>2022-10-30T10:26:55+08:00</lastmod>
+  </url><url>
+    <loc>https://Bin-lin-rgb.github.io/posts/go/%E4%BD%BF%E7%94%A8ffmpeg/</loc>
+    <lastmod>2022-10-30T10:26:55+08:00</lastmod>
   </url><url>
     <loc>https://Bin-lin-rgb.github.io/posts/go/omitempty/</loc>
-    <lastmod>2022-10-29T16:00:07+08:00</lastmod>
-  </url><url>
-    <loc>https://Bin-lin-rgb.github.io/posts/go/</loc>
     <lastmod>2022-10-29T16:00:07+08:00</lastmod>
   </url><url>
     <loc>https://Bin-lin-rgb.github.io/tags/life/</loc>

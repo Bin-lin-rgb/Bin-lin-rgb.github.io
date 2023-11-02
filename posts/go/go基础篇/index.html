@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="zh" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Go 基础篇 | Blaine&#39;s Blog</title>
+<meta name="keywords" content="基础篇">
+<meta name="description" content="Go 方法与函数的区别？ 在 Go 语言中，有方法（method）和函数（function）两个概念，它们之间有一些重要的区别，主要体现在以下几个方面： 定义方式： 函数：函数是一段独立的代码块，它可以在任何地方定义和调用。函数的定义是全局的，可以在不同包中调用。 方法：方法是与类型（结构体或接口">
+<meta name="author" content="Blaine">
+<link rel="canonical" href="https://Bin-lin-rgb.github.io/posts/go/go%E5%9F%BA%E7%A1%80%E7%AF%87/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.css" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.js" onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://Bin-lin-rgb.github.io/img/icon.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://Bin-lin-rgb.github.io/img/icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://Bin-lin-rgb.github.io/img/icon.png">
+<link rel="apple-touch-icon" href="https://Bin-lin-rgb.github.io/img/icon.png">
+<link rel="mask-icon" href="https://Bin-lin-rgb.github.io/img/icon.png">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+<script defer src="https://unpkg.com/mermaid@8.8.1/dist/mermaid.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+<script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.3/dist/jquery.min.js"></script>
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = ""; 
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<meta property="og:title" content="Go 基础篇" />
+<meta property="og:description" content="Go 方法与函数的区别？ 在 Go 语言中，有方法（method）和函数（function）两个概念，它们之间有一些重要的区别，主要体现在以下几个方面： 定义方式： 函数：函数是一段独立的代码块，它可以在任何地方定义和调用。函数的定义是全局的，可以在不同包中调用。 方法：方法是与类型（结构体或接口" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://Bin-lin-rgb.github.io/posts/go/go%E5%9F%BA%E7%A1%80%E7%AF%87/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-11-01T09:44:29+08:00" />
+<meta property="article:modified_time" content="2023-11-01T09:44:29+08:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Go 基础篇"/>
+<meta name="twitter:description" content="Go 方法与函数的区别？ 在 Go 语言中，有方法（method）和函数（function）两个概念，它们之间有一些重要的区别，主要体现在以下几个方面： 定义方式： 函数：函数是一段独立的代码块，它可以在任何地方定义和调用。函数的定义是全局的，可以在不同包中调用。 方法：方法是与类型（结构体或接口"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+
+        {
+          "@type": "ListItem",
+          "position":  1 ,
+          "name": "📚文章",
+          "item": "https://Bin-lin-rgb.github.io/posts/"
+        },
+
+        {
+          "@type": "ListItem",
+          "position":  2 ,
+          "name": "🥇 Golang",
+          "item": "https://Bin-lin-rgb.github.io/posts/go/"
+        }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "Go 基础篇",
+      "item": "https://Bin-lin-rgb.github.io/posts/go/go%E5%9F%BA%E7%A1%80%E7%AF%87/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Go 基础篇",
+  "name": "Go 基础篇",
+  "description": "Go 方法与函数的区别？ 在 Go 语言中，有方法（method）和函数（function）两个概念，它们之间有一些重要的区别，主要体现在以下几个方面： 定义方式： 函数：函数是一段独立的代码块，它可以在任何地方定义和调用。函数的定义是全局的，可以在不同包中调用。 方法：方法是与类型（结构体或接口",
+  "keywords": [
+    "基础篇"
+  ],
+  "articleBody": "Go 方法与函数的区别？ 在 Go 语言中，有方法（method）和函数（function）两个概念，它们之间有一些重要的区别，主要体现在以下几个方面：\n定义方式：\n函数：函数是一段独立的代码块，它可以在任何地方定义和调用。函数的定义是全局的，可以在不同包中调用。\n方法：方法是与类型（结构体或接口）关联的函数。方法的定义是与类型绑定的，它们通常用于对类型进行操作和处理。通过实例来调用这些方法。\n方法的接收者：\n方法：方法通常有一个接收者（receiver），它指定了方法可以作用于哪种类型。接收者可以是值接收者（value receiver）或指针接收者（pointer receiver）。\n函数：函数没有接收者，它们是独立的代码块，不与特定类型关联。\n下面是一个简单的示例，演示了方法和函数之间的区别：\npackage main import ( \"fmt\" ) type Rectangle struct { Width float64 Height float64 } // 方法，使用值接收者 func (r Rectangle) Area() float64 { return r.Width * r.Height } // 函数，计算两个数的和 func Add(a, b int) int { return a + b } func main() { r := Rectangle{Width: 5, Height: 3} // 调用方法 area := r.Area() fmt.Println(\"面积:\", area) // 调用函数 sum := Add(2, 3) fmt.Println(\"和:\", sum) } Go 方法值接收者和指针接收者的区别? 如果方法的接收者是指针类型，无论调用者是对象还是对象指针，修改的都是对象本身，会影响调用者；\n如果方法的接收者是值类型，无论调用者是对象还是对象指针，修改的都是对象的副本，不影响调用者；\npackage main import \"fmt\" type Person struct { age int } // 如果实现了接收者是指针类型的方法，会隐含地也实现了接收者是值类型的IncrAge1方法。 // 会修改age的值 func (p *Person) IncrAge1() { p.age += 1 } // 如果实现了接收者是值类型的方法，会隐含地也实现了接收者是指针类型的IncrAge2方法。 // 不会修改age的值 func (p Person) IncrAge2() { p.age += 1 } // 如果实现了接收者是值类型的方法，会隐含地也实现了接收者是指针类型的GetAge方法。 func (p Person) GetAge() int { return p.age } func main() { // p1 是值类型 p := Person{age: 10} // 值类型 调用接收者是指针类型的方法 p.IncrAge1() fmt.Println(p.GetAge()) // 值类型 调用接收者是值类型的方法 p.IncrAge2() fmt.Println(p.GetAge()) // ---------------------- // p2 是指针类型 p2 := \u0026Person{age: 20} // 指针类型 调用接收者是指针类型的方法 p2.IncrAge1() fmt.Println(p2.GetAge()) // 指针类型 调用接收者是值类型的方法 p2.IncrAge2() fmt.Println(p2.GetAge()) } 上述代码中：\n实现了接收者是指针类型的 IncrAge1 函数，不管调用者是值类型还是指针类型，都可以调用IncrAge1方法，并且它的 age 值都改变了。 实现了接收者是指针类型的 IncrAge2 函数，不管调用者是值类型还是指针类型，都可以调用IncrAge2方法，并且它的 age 值都没有被改变。\n通常我们使用指针类型作为方法的接收者的理由：\n使用指针类型能够修改调用者的值。 使用指针类型可以避免在每次调用方法时复制该值，在值的类型为大型结构体时，这样做会更加高效。 总结：\n值接收者用于不需要修改原始数据的情况，适用于只读操作。 指针接收者用于需要修改原始数据的情况，适用于读写操作。 选择接收者类型取决于方法的需求，需要考虑是否要修改原始数据以及性能等因素。 Go 函数返回局部变量的指针是否安全? 一般来说，局部变量会在函数返回后被销毁，因此被返回的引用就成为了\"无所指\"的引用，程序会进入未知状态。\n但这在 Go 中是安全的，Go 编译器将会对每个局部变量进行逃逸分析。如果发现局部变量的作用域超出该函数，则不会将内存分配在栈上，而是分配在堆上，因为他们不在栈区，即使释放函数，其内容也不会受影响。\npackage main import \"fmt\" func add(x, y int) *int { res := 0 res = x + y return \u0026res } func main() { fmt.Println(add(1, 2)) } 这个例子中，函数 add 局部变量 res 发生了逃逸。res作为返回值，在 main 函数中继续使用，因此 res 指向的内存不能够分配在栈上，随着函数结束而回收，只能分配在堆上。\n编译时可以借助选项 -gcflags=-m，查看变量逃逸的情况\n~/GoTest$ go build -gcflags=-m main.go # command-line-arguments ./main.go:5:6: can inline add ./main.go:12:16: inlining call to add ./main.go:12:12: inlining call to fmt.Println ./main.go:6:1: moved to heap: res ./main.go:12:16: moved to heap: res ./main.go:12:12: []interface {}{...} does not escape :1: leaking param content: .this res escapes to heap 即表示 res 逃逸到堆上了。\nGo 函数参数传递到底是值传递还是引用传递？ 结论：\nGo语言中所有的传参都是值传递（传值），都是一个副本，一个拷贝。\n参数如果是非引用类型（int、string、struct），这样就在函数中就无法修改原内容数据；如果是引用类型（指针、map、slice、chan），这样就可以修改原内容数据。\n是否可以修改原内容数据，和传值、传引用没有必然的关系。在C++中，传引用肯定是可以修改原内容数据的，在Go语言里,需要看参数是值类型还是引用类型。\n值类型 值类型：值类型的实例在分配给变量、作为函数参数传递或复制时会创建副本。这意味着每个值类型的实例都是独立的，对其进行修改不会影响其他实例。以下是一些常见的值类型：\n基本数据类型：包括整数、浮点数、布尔值和字符串。\n数组（Array）：数组的大小在声明时是固定的，数组是值类型。\n结构体（Struct）：结构体由一组字段组成，是值类型。\n引用类型 引用类型：引用类型的实例在分配给变量、作为函数参数传递或复制时，不会创建副本，而是会共享同一个底层数据。这意味着对引用类型的修改可能会影响其他引用该数据的实例。以下是一些常见的引用类型：\n切片（Slice）：切片是对数组的引用，它可以动态调整大小，并且多个切片可以引用相同的底层数组。\n映射（Map）：映射是一种键值对集合，多个映射可以引用不同数据，但它们可以共享相同的底层数据结构。\n通道（Channel）：通道用于在不同的 Go 协程之间进行通信，多个通道可以引用不同的数据，但它们可以共享相同的通道。\n接口（Interface）：接口类型包含一个具体类型和该类型的值。多个接口可以引用不同类型的数据，但它们可以引用相同类型的值。\n函数（Function）：函数是一种引用类型，可以将函数作为参数传递给其他函数。\n引用类型和引用传递 什么是值传递？\n将实参的值传递给形参，形参是实参的一份拷贝，实参和形参的内存地址不同。函数内对形参值内容的修改，是否会影响实参的值内容，取决于参数是否是引用类型\n什么是引用传递？\n将实参的地址传递给形参，函数内对形参值内容的修改，将会影响实参的值内容。Go语言是没有引用传递的，在C++中，函数参数的传递方式有引用传递。\ndefer 关键字 defer定义的延迟函数参数在defer语句出时就已经确定下来了 defer定义顺序与实际执行顺序相反 return不是原子操作，执行过程是: 保存返回值(若有)–\u003e执行defer（若有）–\u003e执行ret跳转 申请资源后立即使用defer关闭资源是好习惯 示例题目 1、\nfunc deferFuncParameter() { var aInt = 1 defer fmt.Println(aInt) aInt = 2 return } 参考答案： 输出1。延迟函数fmt.Println(aInt)的参数在defer语句出现时就已经确定了，所以无论后面如何修改aInt变量都不会影响延迟函数。\n2、\n下面函数输出什么？\nfunc deferFuncReturn() (result int) { i := 1 defer func() { result++ }() return i } 参考答案： 函数输出2。函数的return语句并不是原子的，实际执行分为设置返回值–\u003eret，defer语句实际执行在返回前， 即拥有defer的函数返回过程是：设置返回值–\u003e执行defer–\u003eret。 所以return语句先把result设置为i的值，即1，defer语句中又把result递增1，所以最终返回2。\nGo 内置函数make和new的区别？ 首先纠正下make和new是内置函数，不是关键字\n变量初始化，一般包括2步，变量声明 + 变量内存分配，var关键字就是用来声明变量的，new和make函数主要是用来分配内存的\nvar声明值类型的变量时，系统会默认为他分配内存空间，并赋该类型的零值\n比如布尔、数字、字符串、结构体\n如果指针类型或者引用类型的变量，系统不会为它分配内存，默认就是nil。此时如果你想直接使用，那么系统会抛异常，必须进行内存分配后，才能使用。\nnew 和 make 两个内置函数，主要用来分配内存空间，有了内存，变量就能使用了，主要有以下2点区别：\n使用场景区别：\nmake 只能用来分配及初始化类型为 slice、map、chan 的数据。\nnew 可以分配任意类型的数据，并且置零。\n返回值区别：\nmake函数原型如下，返回的是slice、map、chan类型本身 这3种类型是引用类型，就没有必要返回他们的指针\nfunc make(t Type, size ...IntegerType) Type new函数原型如下，返回一个指向该类型内存地址的指针\nfunc new(Type) *Type ",
+  "wordCount" : "3316",
+  "inLanguage": "zh",
+  "datePublished": "2023-11-01T09:44:29+08:00",
+  "dateModified": "2023-11-01T09:44:29+08:00",
+  "author":[{
+    "@type": "Person",
+    "name": "Blaine"
+  }],
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://Bin-lin-rgb.github.io/posts/go/go%E5%9F%BA%E7%A1%80%E7%AF%87/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Blaine's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://Bin-lin-rgb.github.io/img/icon.png"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    (function () {
+        let  arr,reg = new RegExp("(^| )"+"change-themes"+"=([^;]*)(;|$)");
+        if(arr = document.cookie.match(reg)) {
+        } else {
+            if (new Date().getHours() >= 19 || new Date().getHours() < 6) {
+                document.body.classList.add('dark');
+                localStorage.setItem("pref-theme", 'dark');
+            } else {
+                document.body.classList.remove('dark');
+                localStorage.setItem("pref-theme", 'light');
+            }
+        }
+    })()
+
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://Bin-lin-rgb.github.io/" accesskey="h" title="Blaine&#39;s Blog (Alt + H)">
+            <img src="https://Bin-lin-rgb.github.io/img/icon.png" alt="logo" aria-label="logo"
+                 height="35">Blaine&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://Bin-lin-rgb.github.io/" title="🏠 主页">
+                <span>🏠 主页</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://Bin-lin-rgb.github.io/posts" title="📚 文章">
+                <span>📚 文章</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://Bin-lin-rgb.github.io/search" title="🔍 搜索 (Alt &#43; /)" accesskey=/>
+                <span>🔍 搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://Bin-lin-rgb.github.io/tags" title="🧩 标签">
+                <span>🧩 标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://Bin-lin-rgb.github.io/archives/" title="⏱️ 时间轴">
+                <span>⏱️ 时间轴</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://Bin-lin-rgb.github.io/about" title="🙋🏻‍♂️ 关于">
+                <span>🙋🏻‍♂️ 关于</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://Bin-lin-rgb.github.io/links" title="🤝 友链">
+                <span>🤝 友链</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main page">
+<style>
+    i[id*="post_meta_style"] {
+        display: flex;
+        align-items: center;
+        margin: 0 0 10px 0;
+    }
+</style>
+
+<article class="post-single">
+    <div id="single-content">
+        <header class="post-header">
+            <div class="breadcrumbs"><a href="https://Bin-lin-rgb.github.io/">🏠 主页</a>&nbsp;»&nbsp;<a href="https://Bin-lin-rgb.github.io/posts/">📚文章</a>&nbsp;»&nbsp;<a href="https://Bin-lin-rgb.github.io/posts/go/">🥇 Golang</a></div>
+            <h1 class="post-title">
+                Go 基础篇
+            </h1>
+            <div class="post-meta">
+
+<style>
+    i[id*="post_meta_style"] {
+        display: flex;
+        align-items: center;
+        margin: 0 0 10px 0;
+    }
+
+    .parent-post-meta {
+        display: flex;
+        flex-wrap: wrap;
+        opacity: 0.8;
+    }
+</style>
+
+<span class="parent-post-meta">
+    <span id="post_meta_style_1">
+        <span class="fa fa-calendar-check-o"></span>
+        <span>2023-11-01
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    
+    
+    
+    
+    
+    
+    
+    <span id="post_meta_style_3">
+        <span class="fa fa-file-word-o"></span>
+        <span>3316字
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_4">
+        <span class="fa fa-clock-o"></span>
+        <span>7分钟
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_5">
+        <span class="fa fa-user-o"></span>
+        <span>Blaine
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_6">
+        <span class="fa fa-tags" style="opacity: 0.8"></span>
+        <span>
+            <span class="post-tags-meta">
+                <a href="https://Bin-lin-rgb.github.io/tags/go/" style="color: var(--secondary)!important;">go</a>
+            </span>
+        </span>
+    </span>
+</span>
+<span style="opacity: 0.8;">
+                    <span id="post_meta_style_7">
+                        &nbsp;&nbsp;
+                        <span class="fa fa-eye" ></span>
+                        <span>
+                            <span id="busuanzi_container_page_pv"><span id="busuanzi_value_page_pv"></span></span>
+                            &nbsp;&nbsp;
+                        </span>
+                    </span>
+                    <span id="post_meta_style_8">
+                        <span class="fa fa-commenting-o"></span>
+                        <span>
+                            <script src="https://cdn.staticfile.org/twikoo/1.5.8/twikoo.all.min.js"></script>
+                            <script>
+                                let url = document.documentURI
+                                
+                                let dnsUrl = "https://Bin-lin-rgb.github.io/"
+                                let urlSplit = url.split(dnsUrl)
+                                let finalUrl = urlSplit[1]
+                                if (finalUrl[0] !== '/') {
+                                    finalUrl = '/'+finalUrl
+                                }
+                                twikoo.getCommentsCount({
+                                    envId: "https://twikoo-api-nine-silk.vercel.app/", 
+                                region: "ap-guangzhou", 
+                                urls: [ 
+                                    
+                                    finalUrl,
+                                ],
+                                    includeReply: false 
+                                }).then(function (res) {
+                                    let count = res[0].count
+                                    const obj = document.getElementById("comment_count");
+                                    obj.innerText = count
+                                    
+                                    
+                                    
+                                }).catch(function (err) {
+                                    
+                                    console.error(err);
+                                });
+                            </script>
+                            <span id="comment_count"></span>
+                        </span>
+                    </span>
+                </span>
+
+</div>
+        </header> <aside id="toc-container" class="toc-container wide">
+    <div class="toc">
+        <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">目录</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#go-%e6%96%b9%e6%b3%95%e4%b8%8e%e5%87%bd%e6%95%b0%e7%9a%84%e5%8c%ba%e5%88%ab" aria-label="Go 方法与函数的区别？">Go 方法与函数的区别？</a></li>
+                <li>
+                    <a href="#go-%e6%96%b9%e6%b3%95%e5%80%bc%e6%8e%a5%e6%94%b6%e8%80%85%e5%92%8c%e6%8c%87%e9%92%88%e6%8e%a5%e6%94%b6%e8%80%85%e7%9a%84%e5%8c%ba%e5%88%ab" aria-label="Go 方法值接收者和指针接收者的区别?">Go 方法值接收者和指针接收者的区别?</a></li>
+                <li>
+                    <a href="#go-%e5%87%bd%e6%95%b0%e8%bf%94%e5%9b%9e%e5%b1%80%e9%83%a8%e5%8f%98%e9%87%8f%e7%9a%84%e6%8c%87%e9%92%88%e6%98%af%e5%90%a6%e5%ae%89%e5%85%a8" aria-label="Go 函数返回局部变量的指针是否安全?">Go 函数返回局部变量的指针是否安全?</a></li>
+                <li>
+                    <a href="#go-%e5%87%bd%e6%95%b0%e5%8f%82%e6%95%b0%e4%bc%a0%e9%80%92%e5%88%b0%e5%ba%95%e6%98%af%e5%80%bc%e4%bc%a0%e9%80%92%e8%bf%98%e6%98%af%e5%bc%95%e7%94%a8%e4%bc%a0%e9%80%92" aria-label="Go 函数参数传递到底是值传递还是引用传递？">Go 函数参数传递到底是值传递还是引用传递？</a><ul>
+                        
+                <li>
+                    <a href="#%e5%80%bc%e7%b1%bb%e5%9e%8b" aria-label="值类型">值类型</a></li>
+                <li>
+                    <a href="#%e5%bc%95%e7%94%a8%e7%b1%bb%e5%9e%8b" aria-label="引用类型">引用类型</a></li>
+                <li>
+                    <a href="#%e5%bc%95%e7%94%a8%e7%b1%bb%e5%9e%8b%e5%92%8c%e5%bc%95%e7%94%a8%e4%bc%a0%e9%80%92" aria-label="引用类型和引用传递">引用类型和引用传递</a></li></ul>
+                </li>
+                <li>
+                    <a href="#defer-%e5%85%b3%e9%94%ae%e5%ad%97" aria-label="defer 关键字">defer 关键字</a><ul>
+                        
+                <li>
+                    <a href="#%e7%a4%ba%e4%be%8b%e9%a2%98%e7%9b%ae" aria-label="示例题目">示例题目</a></li></ul>
+                </li>
+                <li>
+                    <a href="#go-%e5%86%85%e7%bd%ae%e5%87%bd%e6%95%b0make%e5%92%8cnew%e7%9a%84%e5%8c%ba%e5%88%ab" aria-label="Go 内置函数make和new的区别？">Go 内置函数make和new的区别？</a>
+                </li>
+            </ul>
+        </div>
+        </details>
+    </div>
+</aside>
+<script>
+    let activeElement;
+    let elements;
+    window.addEventListener('DOMContentLoaded', function (event) {
+        checkTocPosition();
+
+        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+        
+        activeElement = elements[0];
+        const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
+        document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+    }, false);
+
+    window.addEventListener('resize', function(event) {
+        checkTocPosition();
+    }, false);
+
+    window.addEventListener('scroll', () => {
+        
+        if (elements) {
+            activeElement = Array.from(elements).find((element) => {
+                if ((getOffsetTop(element) - window.pageYOffset) > 0 &&
+                    (getOffsetTop(element) - window.pageYOffset) < window.innerHeight/2) {
+                    return element;
+                }
+            }) || activeElement
+
+            elements.forEach(element => {
+                const id = encodeURI(element.getAttribute('id')).toLowerCase();
+                if (element === activeElement){
+                    document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+                } else {
+                    document.querySelector(`.inner ul li a[href="#${id}"]`).classList.remove('active');
+                }
+            })
+        }
+    }, false);
+
+    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
+    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
+    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
+
+    function checkTocPosition() {
+        const width = document.body.scrollWidth;
+        if (width - main - (toc * 2) - (gap * 4) > 0) {
+            document.getElementById("toc-container").classList.add("wide");
+        } else {
+            document.getElementById("toc-container").classList.remove("wide");
+        }
+    }
+
+    function getOffsetTop(element) {
+        if (!element.getClientRects().length) {
+            return 0;
+        }
+        let rect = element.getBoundingClientRect();
+        let win = element.ownerDocument.defaultView;
+        return rect.top + win.pageYOffset;
+    }
+</script>
+        <div class="post-content"><h1 id="go-方法与函数的区别">Go 方法与函数的区别？<a hidden class="anchor" aria-hidden="true" href="#go-方法与函数的区别">#</a></h1>
+<p>在 Go 语言中，有方法（method）和函数（function）两个概念，它们之间有一些重要的区别，主要体现在以下几个方面：</p>
+<p>定义方式：</p>
+<ul>
+<li>
+<p>函数：函数是一段独立的代码块，它可以在任何地方定义和调用。函数的定义是全局的，可以在不同包中调用。</p>
+</li>
+<li>
+<p>方法：方法是与类型（结构体或接口）关联的函数。方法的定义是与类型绑定的，它们通常用于对类型进行操作和处理。通过实例来调用这些方法。</p>
+</li>
+</ul>
+<p>方法的接收者：</p>
+<ul>
+<li>
+<p>方法：方法通常有一个接收者（receiver），它指定了方法可以作用于哪种类型。接收者可以是值接收者（value receiver）或指针接收者（pointer receiver）。</p>
+</li>
+<li>
+<p>函数：函数没有接收者，它们是独立的代码块，不与特定类型关联。</p>
+</li>
+</ul>
+<p>下面是一个简单的示例，演示了方法和函数之间的区别：</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff6ac1">package</span> main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff6ac1">import</span> (
+</span></span><span style="display:flex;"><span>	<span style="color:#5af78e">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff5c57">type</span> Rectangle <span style="color:#ff5c57">struct</span> {
+</span></span><span style="display:flex;"><span>	Width  <span style="color:#9aedfe">float64</span>
+</span></span><span style="display:flex;"><span>	Height <span style="color:#9aedfe">float64</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#78787e">// 方法，使用值接收者
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span><span style="color:#ff5c57">func</span> (r Rectangle) <span style="color:#57c7ff">Area</span>() <span style="color:#9aedfe">float64</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#ff6ac1">return</span> r.Width <span style="color:#ff6ac1">*</span> r.Height
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#78787e">// 函数，计算两个数的和
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">Add</span>(a, b <span style="color:#9aedfe">int</span>) <span style="color:#9aedfe">int</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#ff6ac1">return</span> a <span style="color:#ff6ac1">+</span> b
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">main</span>() {
+</span></span><span style="display:flex;"><span>	r <span style="color:#ff6ac1">:=</span> Rectangle{Width: <span style="color:#ff9f43">5</span>, Height: <span style="color:#ff9f43">3</span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#78787e">// 调用方法
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>	area <span style="color:#ff6ac1">:=</span> r.<span style="color:#57c7ff">Area</span>()
+</span></span><span style="display:flex;"><span>	fmt.<span style="color:#57c7ff">Println</span>(<span style="color:#5af78e">&#34;面积:&#34;</span>, area)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#78787e">// 调用函数
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>	sum <span style="color:#ff6ac1">:=</span> <span style="color:#57c7ff">Add</span>(<span style="color:#ff9f43">2</span>, <span style="color:#ff9f43">3</span>)
+</span></span><span style="display:flex;"><span>	fmt.<span style="color:#57c7ff">Println</span>(<span style="color:#5af78e">&#34;和:&#34;</span>, sum)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h1 id="go-方法值接收者和指针接收者的区别">Go 方法值接收者和指针接收者的区别?<a hidden class="anchor" aria-hidden="true" href="#go-方法值接收者和指针接收者的区别">#</a></h1>
+<p>如果方法的接收者是指针类型，无论调用者是对象还是对象指针，修改的都是对象本身，会影响调用者；</p>
+<p>如果方法的接收者是值类型，无论调用者是对象还是对象指针，修改的都是对象的副本，不影响调用者；</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff6ac1">package</span> main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff6ac1">import</span> <span style="color:#5af78e">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff5c57">type</span> Person <span style="color:#ff5c57">struct</span> {
+</span></span><span style="display:flex;"><span>	age <span style="color:#9aedfe">int</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#78787e">// 如果实现了接收者是指针类型的方法，会隐含地也实现了接收者是值类型的IncrAge1方法。
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e">// 会修改age的值
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span><span style="color:#ff5c57">func</span> (p <span style="color:#ff6ac1">*</span>Person) <span style="color:#57c7ff">IncrAge1</span>() {
+</span></span><span style="display:flex;"><span>	p.age <span style="color:#ff6ac1">+=</span> <span style="color:#ff9f43">1</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#78787e">// 如果实现了接收者是值类型的方法，会隐含地也实现了接收者是指针类型的IncrAge2方法。
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e">// 不会修改age的值
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span><span style="color:#ff5c57">func</span> (p Person) <span style="color:#57c7ff">IncrAge2</span>() {
+</span></span><span style="display:flex;"><span>	p.age <span style="color:#ff6ac1">+=</span> <span style="color:#ff9f43">1</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#78787e">// 如果实现了接收者是值类型的方法，会隐含地也实现了接收者是指针类型的GetAge方法。
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span><span style="color:#ff5c57">func</span> (p Person) <span style="color:#57c7ff">GetAge</span>() <span style="color:#9aedfe">int</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#ff6ac1">return</span> p.age
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">main</span>() {
+</span></span><span style="display:flex;"><span>	<span style="color:#78787e">// p1 是值类型
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>	p <span style="color:#ff6ac1">:=</span> Person{age: <span style="color:#ff9f43">10</span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#78787e">// 值类型 调用接收者是指针类型的方法
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>	p.<span style="color:#57c7ff">IncrAge1</span>()
+</span></span><span style="display:flex;"><span>	fmt.<span style="color:#57c7ff">Println</span>(p.<span style="color:#57c7ff">GetAge</span>())
+</span></span><span style="display:flex;"><span>	<span style="color:#78787e">// 值类型 调用接收者是值类型的方法
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>	p.<span style="color:#57c7ff">IncrAge2</span>()
+</span></span><span style="display:flex;"><span>	fmt.<span style="color:#57c7ff">Println</span>(p.<span style="color:#57c7ff">GetAge</span>())
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#78787e">// ----------------------
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>
+</span></span><span style="display:flex;"><span>	<span style="color:#78787e">// p2 是指针类型
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>	p2 <span style="color:#ff6ac1">:=</span> <span style="color:#ff6ac1">&amp;</span>Person{age: <span style="color:#ff9f43">20</span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#78787e">// 指针类型 调用接收者是指针类型的方法
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>	p2.<span style="color:#57c7ff">IncrAge1</span>()
+</span></span><span style="display:flex;"><span>	fmt.<span style="color:#57c7ff">Println</span>(p2.<span style="color:#57c7ff">GetAge</span>())
+</span></span><span style="display:flex;"><span>	<span style="color:#78787e">// 指针类型 调用接收者是值类型的方法
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>	p2.<span style="color:#57c7ff">IncrAge2</span>()
+</span></span><span style="display:flex;"><span>	fmt.<span style="color:#57c7ff">Println</span>(p2.<span style="color:#57c7ff">GetAge</span>())
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>上述代码中：</p>
+<p>实现了接收者是指针类型的 IncrAge1 函数，不管调用者是值类型还是指针类型，都可以调用IncrAge1方法，并且它的 age 值都改变了。
+实现了接收者是指针类型的 IncrAge2 函数，不管调用者是值类型还是指针类型，都可以调用IncrAge2方法，并且它的 age 值都没有被改变。</p>
+<p>通常我们使用指针类型作为方法的接收者的理由：</p>
+<ul>
+<li>使用指针类型能够修改调用者的值。</li>
+<li>使用指针类型可以避免在每次调用方法时复制该值，在值的类型为大型结构体时，这样做会更加高效。</li>
+</ul>
+<p>总结：</p>
+<ul>
+<li>值接收者用于不需要修改原始数据的情况，适用于只读操作。</li>
+<li>指针接收者用于需要修改原始数据的情况，适用于读写操作。</li>
+<li>选择接收者类型取决于方法的需求，需要考虑是否要修改原始数据以及性能等因素。</li>
+</ul>
+<h1 id="go-函数返回局部变量的指针是否安全">Go 函数返回局部变量的指针是否安全?<a hidden class="anchor" aria-hidden="true" href="#go-函数返回局部变量的指针是否安全">#</a></h1>
+<p>一般来说，局部变量会在函数返回后被销毁，因此被返回的引用就成为了&quot;无所指&quot;的引用，程序会进入未知状态。</p>
+<p>但这在 Go 中是安全的，Go 编译器将会对每个局部变量进行逃逸分析。如果发现局部变量的作用域超出该函数，则不会将内存分配在栈上，而是分配在堆上，因为他们不在栈区，即使释放函数，其内容也不会受影响。</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff6ac1">package</span> main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff6ac1">import</span> <span style="color:#5af78e">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">add</span>(x, y <span style="color:#9aedfe">int</span>) <span style="color:#ff6ac1">*</span><span style="color:#9aedfe">int</span> {
+</span></span><span style="display:flex;"><span>    res <span style="color:#ff6ac1">:=</span> <span style="color:#ff9f43">0</span>
+</span></span><span style="display:flex;"><span>    res = x <span style="color:#ff6ac1">+</span> y
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">return</span> <span style="color:#ff6ac1">&amp;</span>res
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">main</span>() {
+</span></span><span style="display:flex;"><span>    fmt.<span style="color:#57c7ff">Println</span>(<span style="color:#57c7ff">add</span>(<span style="color:#ff9f43">1</span>, <span style="color:#ff9f43">2</span>))
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>这个例子中，函数 add 局部变量 res 发生了逃逸。res作为返回值，在 main 函数中继续使用，因此 res 指向的内存不能够分配在栈上，随着函数结束而回收，只能分配在堆上。</p>
+<p>编译时可以借助选项 -gcflags=-m，查看变量逃逸的情况</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>~/GoTest$ go build -gcflags<span style="color:#ff6ac1">=</span>-m main.go
+</span></span><span style="display:flex;"><span><span style="color:#78787e"># command-line-arguments</span>
+</span></span><span style="display:flex;"><span>./main.go:5:6: can inline add
+</span></span><span style="display:flex;"><span>./main.go:12:16: inlining call to add
+</span></span><span style="display:flex;"><span>./main.go:12:12: inlining call to fmt.Println
+</span></span><span style="display:flex;"><span>./main.go:6:1: moved to heap: res
+</span></span><span style="display:flex;"><span>./main.go:12:16: moved to heap: res
+</span></span><span style="display:flex;"><span>./main.go:12:12: <span style="color:#ff6ac1">[]</span>interface <span style="color:#ff6ac1">{}{</span>...<span style="color:#ff6ac1">}</span> does not escape
+</span></span><span style="display:flex;"><span>&lt;autogenerated&gt;:1: leaking param content: .this
+</span></span></code></pre></div><p>res escapes to heap 即表示 res 逃逸到堆上了。</p>
+<h1 id="go-函数参数传递到底是值传递还是引用传递">Go 函数参数传递到底是值传递还是引用传递？<a hidden class="anchor" aria-hidden="true" href="#go-函数参数传递到底是值传递还是引用传递">#</a></h1>
+<p>结论：</p>
+<p>Go语言中所有的传参都是值传递（传值），都是一个副本，一个拷贝。</p>
+<p>参数如果是非引用类型（int、string、struct），这样就在函数中就无法修改原内容数据；如果是<code>引用类型</code>（指针、map、slice、chan），这样就可以修改原内容数据。</p>
+<p>是否可以修改原内容数据，和传值、传引用没有必然的关系。在C++中，传引用肯定是可以修改原内容数据的，在Go语言里,需要看参数是值类型还是引用类型。</p>
+<h2 id="值类型">值类型<a hidden class="anchor" aria-hidden="true" href="#值类型">#</a></h2>
+<p>值类型：值类型的实例在分配给变量、作为函数参数传递或复制时会创建副本。这意味着每个值类型的实例都是独立的，对其进行修改不会影响其他实例。以下是一些常见的值类型：</p>
+<ul>
+<li>
+<p>基本数据类型：包括整数、浮点数、布尔值和字符串。</p>
+</li>
+<li>
+<p>数组（Array）：数组的大小在声明时是固定的，数组是值类型。</p>
+</li>
+<li>
+<p>结构体（Struct）：结构体由一组字段组成，是值类型。</p>
+</li>
+</ul>
+<h2 id="引用类型">引用类型<a hidden class="anchor" aria-hidden="true" href="#引用类型">#</a></h2>
+<p>引用类型：引用类型的实例在分配给变量、作为函数参数传递或复制时，不会创建副本，而是会共享同一个底层数据。这意味着对引用类型的修改可能会影响其他引用该数据的实例。以下是一些常见的引用类型：</p>
+<ul>
+<li>
+<p>切片（Slice）：切片是对数组的引用，它可以动态调整大小，并且多个切片可以引用相同的底层数组。</p>
+</li>
+<li>
+<p>映射（Map）：映射是一种键值对集合，多个映射可以引用不同数据，但它们可以共享相同的底层数据结构。</p>
+</li>
+<li>
+<p>通道（Channel）：通道用于在不同的 Go 协程之间进行通信，多个通道可以引用不同的数据，但它们可以共享相同的通道。</p>
+</li>
+<li>
+<p>接口（Interface）：接口类型包含一个具体类型和该类型的值。多个接口可以引用不同类型的数据，但它们可以引用相同类型的值。</p>
+</li>
+<li>
+<p>函数（Function）：函数是一种引用类型，可以将函数作为参数传递给其他函数。</p>
+</li>
+</ul>
+<h2 id="引用类型和引用传递">引用类型和引用传递<a hidden class="anchor" aria-hidden="true" href="#引用类型和引用传递">#</a></h2>
+<p>什么是值传递？</p>
+<p>将实参的值传递给形参，形参是实参的一份拷贝，实参和形参的内存地址不同。函数内对形参值内容的修改，是否会影响实参的值内容，取决于参数是否是引用类型</p>
+<p>什么是引用传递？</p>
+<p>将实参的地址传递给形参，函数内对形参值内容的修改，将会影响实参的值内容。Go语言是没有引用传递的，在C++中，函数参数的传递方式有引用传递。</p>
+<h1 id="defer-关键字">defer 关键字<a hidden class="anchor" aria-hidden="true" href="#defer-关键字">#</a></h1>
+<ul>
+<li>defer定义的延迟函数参数在defer语句出时就已经确定下来了</li>
+<li>defer定义顺序与实际执行顺序相反</li>
+<li>return不是原子操作，执行过程是: 保存返回值(若有)&ndash;&gt;执行defer（若有）&ndash;&gt;执行ret跳转</li>
+<li>申请资源后立即使用defer关闭资源是好习惯</li>
+</ul>
+<h2 id="示例题目">示例题目<a hidden class="anchor" aria-hidden="true" href="#示例题目">#</a></h2>
+<p>1、</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">deferFuncParameter</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#ff5c57">var</span> aInt = <span style="color:#ff9f43">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">defer</span> fmt.<span style="color:#57c7ff">Println</span>(aInt)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    aInt = <span style="color:#ff9f43">2</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">return</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>参考答案：
+输出1。延迟函数fmt.Println(aInt)的参数在defer语句出现时就已经确定了，所以无论后面如何修改aInt变量都不会影响延迟函数。</p>
+<p>2、</p>
+<p>下面函数输出什么？</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">deferFuncReturn</span>() (result <span style="color:#9aedfe">int</span>) {
+</span></span><span style="display:flex;"><span>    i <span style="color:#ff6ac1">:=</span> <span style="color:#ff9f43">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">defer</span> <span style="color:#ff5c57">func</span>() {
+</span></span><span style="display:flex;"><span>       result<span style="color:#ff6ac1">++</span>
+</span></span><span style="display:flex;"><span>    }()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">return</span> i
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>参考答案：
+函数输出2。函数的return语句并不是原子的，实际执行分为设置返回值&ndash;&gt;ret，defer语句实际执行在返回前，
+即拥有defer的函数返回过程是：设置返回值&ndash;&gt;执行defer&ndash;&gt;ret。
+所以return语句先把result设置为i的值，即1，defer语句中又把result递增1，所以最终返回2。</p>
+<h1 id="go-内置函数make和new的区别">Go 内置函数make和new的区别？<a hidden class="anchor" aria-hidden="true" href="#go-内置函数make和new的区别">#</a></h1>
+<p>首先纠正下make和new是内置函数，不是关键字</p>
+<p>变量初始化，一般包括2步，变量声明 + 变量内存分配，var关键字就是用来声明变量的，new和make函数主要是用来分配内存的</p>
+<p>var声明值类型的变量时，系统会默认为他分配内存空间，并赋该类型的零值</p>
+<p>比如布尔、数字、字符串、结构体</p>
+<p>如果<code>指针类型</code>或者<code>引用类型</code>的变量，系统不会为它分配内存，默认就是<code>nil</code>。此时如果你想直接使用，那么系统会抛异常，必须进行内存分配后，才能使用。</p>
+<p>new 和 make 两个内置函数，主要用来分配内存空间，有了内存，变量就能使用了，主要有以下2点区别：</p>
+<p>使用场景区别：</p>
+<ul>
+<li>
+<p>make 只能用来分配及初始化类型为 slice、map、chan 的数据。</p>
+</li>
+<li>
+<p>new 可以分配任意类型的数据，并且置零。</p>
+</li>
+</ul>
+<p>返回值区别：</p>
+<p>make函数原型如下，返回的是slice、map、chan类型本身
+这3种类型是引用类型，就没有必要返回他们的指针</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#ff5c57">make</span>(t Type, size <span style="color:#ff6ac1">...</span>IntegerType) Type
+</span></span></code></pre></div><p>new函数原型如下，返回一个指向该类型内存地址的指针</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#ff5c57">new</span>(Type) <span style="color:#ff6ac1">*</span>Type
+</span></span></code></pre></div>
+
+        </div>
+        <div class="post-reward">
+            <div style="padding: 0 0 0 0; margin: 0 0 0 0; width: 100%; font-size:16px; text-align: center;">
+                <div id="QR" style="opacity: 0;">
+                    <div id="wechat" style="display: inline-block">
+                        <a class="fancybox" rel="group">
+                            <img id="wechat_qr" src="https://Bin-lin-rgb.github.io/img/wechat_pay.png" alt="wechat_pay"></a>
+                        <p>微信</p>
+                    </div>
+                    <div id="alipay" style="display: inline-block">
+                        <a class="fancybox" rel="group">
+                            <img id="alipay_qr" src="https://Bin-lin-rgb.github.io/img/alipay.png" alt="alipay"></a>
+                        <p>支付宝</p>
+                    </div>
+                </div>
+                <button id="rewardButton"
+                        onclick="
+                    var qr = document.getElementById('QR');
+                    if (qr.style.opacity === '0') {
+                        qr.style.opacity='1';
+                    } else {
+                        qr.style.opacity='0'
+                    }"
+                >
+                    <span>🧧 鼓励</span>
+                </button>
+            </div>
+        </div>
+
+        <footer class="post-footer">
+            
+<nav class="paginav">
+  <a class="prev" href="https://Bin-lin-rgb.github.io/posts/go/go-slice%E7%AF%87/">
+    <span class="title">« 上一页</span>
+    <br>
+    <span>Go Slice篇</span>
+  </a>
+  <a class="next" href="https://Bin-lin-rgb.github.io/posts/go/%E9%9B%AA%E8%8A%B1id%E7%94%9F%E6%88%90%E5%89%8D%E5%90%8E%E7%AB%AF%E4%BC%A0%E8%BE%93%E4%B8%8D%E4%B8%80%E8%87%B4/">
+    <span class="title">下一页 »</span>
+    <br>
+    <span>雪花id生成，前后端传输不一致</span>
+  </a>
+</nav>
+
+        </footer>
+    </div>
+
+<style>
+    .comments_details summary::marker {
+        font-size: 20px;
+        content: '👉展开评论';
+        color: var(--content);
+    }
+    .comments_details[open] summary::marker{
+        font-size: 20px;
+        content: '👇关闭评论';
+        color: var(--content);
+    }
+</style>
+
+
+<div>
+    <details class="comments_details">
+        <summary style="cursor: pointer; margin: 50px 0 20px 0;width: 130px;">
+            <span style="font-size: 20px;color: var(--content);">...</span>
+        </summary>
+        <div id="tcomment"></div>
+    </details>
+    <script src="https://cdn.staticfile.org/twikoo/1.5.8/twikoo.all.min.js">
+    </script>
+    <script>
+        twikoo.init({
+            envId: 'https://twikoo-api-nine-silk.vercel.app/',
+            el: "#tcomment",
+            lang: 'zh-CN',
+            region: 'ap-guangzhou',
+            path: window.TWIKOO_MAGIC_PATH||window.location.pathname,
+        })
+    
+    
+    
+    
+    
+    
+    
+    </script>
+</div>
+</article>
+</main>
+
+<footer class="footer">
+    <span>
+        Copyright
+        &copy;
+        2021-2023
+        <a href="https://Bin-lin-rgb.github.io/" style="color:#939393;">Blaine&#39;s Blog</a>
+        All Rights Reserved
+    </span>
+    <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;">备案号</a>&nbsp;
+    <span>
+        <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=null"
+           style="display:inline-block;text-decoration:none;height:20px;color:#939393;">
+            <img src="%e5%85%ac%e5%ae%89%e5%9b%be%e6%a0%87%e9%93%be%e6%8e%a5" style="float:left;margin: 0px 5px 0px 0px;"/>
+            公网安备
+        </a>
+    </span>
+    <span id="busuanzi_container">
+        <span class="fa fa-user"></span> <span id="busuanzi_value_site_uv"></span>
+        <span class="fa fa-eye"></span> <span id="busuanzi_value_site_pv"></span>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <span class="topInner">
+        <svg class="topSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z"/>
+        </svg>
+        <span id="read_progress"></span>
+    </span>
+</a>
+
+<script>
+    document.addEventListener('scroll', function (e) {
+        const readProgress = document.getElementById("read_progress");
+        const scrollHeight = document.documentElement.scrollHeight;
+        const clientHeight = document.documentElement.clientHeight;
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        readProgress.innerText = ((scrollTop / (scrollHeight - clientHeight)).toFixed(2) * 100).toFixed(0);
+    })
+</script>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+</script>
+<script>
+    let mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        (function() {
+            document.cookie = "change-themes" + "="+ escape ("false");
+        })()
+
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    });
+</script>
+
+<script>
+    document.body.addEventListener('copy', function (e) {
+        if (window.getSelection().toString() && window.getSelection().toString().length > 50) {
+            let clipboardData = e.clipboardData || window.clipboardData;
+            if (clipboardData) {
+                e.preventDefault();
+                let htmlData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Blaine's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                let textData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Blaine's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                clipboardData.setData('text/html', htmlData);
+                clipboardData.setData('text/plain', textData);
+            }
+        }
+    });
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerText = '复制';
+
+        function copyingDone() {
+            copybutton.innerText = '已复制！';
+            setTimeout(() => {
+                copybutton.innerText = '复制';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                let text = codeblock.textContent +
+                    '\r\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Blaine's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                navigator.clipboard.writeText(text);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) {}
+            selection.removeRange(range);
+        });
+
+        let language = codeblock.className.replaceAll("language-", "")
+        let macTool = document.createElement("div")
+        let macTool1 = document.createElement("div")
+        let macTool2 = document.createElement("div")
+        let macTool3 = document.createElement("div")
+        let languageType = document.createElement("div")
+        languageType.innerText = language
+        macTool.setAttribute('class', 'mac-tool')
+        macTool1.setAttribute('class', 'mac bb1')
+        macTool2.setAttribute('class', 'mac bb2')
+        macTool3.setAttribute('class', 'mac bb3')
+        languageType.setAttribute('class', 'language-type')
+        macTool.appendChild(macTool1)
+        macTool.appendChild(macTool2)
+        macTool.appendChild(macTool3)
+        macTool.appendChild(languageType)
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        }
+    });
+</script>
+</body>
+
+</html>

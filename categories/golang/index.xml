@@ -6,7 +6,7 @@
     <description>Recent content in Golang on Blaine&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <lastBuildDate>Sat, 29 Oct 2022 16:00:07 +0800</lastBuildDate><atom:link href="https://Bin-lin-rgb.github.io/categories/golang/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 01 Nov 2023 09:44:29 +0800</lastBuildDate><atom:link href="https://Bin-lin-rgb.github.io/categories/golang/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Golang 基础语法</title>
       <link>https://Bin-lin-rgb.github.io/posts/go/base/</link>
@@ -14,6 +14,24 @@
       
       <guid>https://Bin-lin-rgb.github.io/posts/go/base/</guid>
       <description>Golang 基础语法</description>
+    </item>
+    
+    <item>
+      <title>Go 基础篇</title>
+      <link>https://Bin-lin-rgb.github.io/posts/go/go%E5%9F%BA%E7%A1%80%E7%AF%87/</link>
+      <pubDate>Wed, 01 Nov 2023 09:44:29 +0800</pubDate>
+      
+      <guid>https://Bin-lin-rgb.github.io/posts/go/go%E5%9F%BA%E7%A1%80%E7%AF%87/</guid>
+      <description>Go 方法与函数的区别？ 在 Go 语言中，有方法（method）和函数（function）两个概念，它们之间有一些重要的区别，主要体现在以下几个方面： 定义方式： 函数：函数是一段独立的代码块，它可以在任何地方定义和调用。函数的定义是全局的，可以在不同包中调用。 方法：方法是与类型（结构体或接口</description>
+    </item>
+    
+    <item>
+      <title>使用 FFmpeg 截取视频第一帧并保存案例</title>
+      <link>https://Bin-lin-rgb.github.io/posts/go/%E4%BD%BF%E7%94%A8ffmpeg/</link>
+      <pubDate>Sun, 30 Oct 2022 10:26:55 +0800</pubDate>
+      
+      <guid>https://Bin-lin-rgb.github.io/posts/go/%E4%BD%BF%E7%94%A8ffmpeg/</guid>
+      <description>运行准备 由于需要使用 FFmpeg 第三方工具来完成视频截取第一帧作为封面并存储到本机， 所以运行之前需要预先安装 FFmpeg 到本机并配置好环境变量。 我这里使用的是 ffmpeg version 5.0.1-full_build 版本。 参考链接：FFmpeg 项目结构 假设有这样一个案例：assets 文件夹中是专门存放视频的，现在的要求就是将该视频的第一帧截取为图片并</description>
     </item>
     
     <item>

@@ -6,7 +6,7 @@
     <description>Recent content in 🥇 Golang on Blaine&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <lastBuildDate>Sat, 29 Oct 2022 16:00:07 +0800</lastBuildDate><atom:link href="https://Bin-lin-rgb.github.io/posts/go/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 01 Nov 2023 09:46:59 +0800</lastBuildDate><atom:link href="https://Bin-lin-rgb.github.io/posts/go/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Golang 基础语法</title>
       <link>https://Bin-lin-rgb.github.io/posts/go/base/</link>
@@ -14,6 +14,123 @@
       
       <guid>https://Bin-lin-rgb.github.io/posts/go/base/</guid>
       <description>Golang 基础语法</description>
+    </item>
+    
+    <item>
+      <title>Go 并发编程篇</title>
+      <link>https://Bin-lin-rgb.github.io/posts/go/go-%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E7%AF%87/</link>
+      <pubDate>Wed, 01 Nov 2023 09:46:59 +0800</pubDate>
+      
+      <guid>https://Bin-lin-rgb.github.io/posts/go/go-%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E7%AF%87/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Go 内存管理篇</title>
+      <link>https://Bin-lin-rgb.github.io/posts/go/go-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E7%AF%87/</link>
+      <pubDate>Wed, 01 Nov 2023 09:46:51 +0800</pubDate>
+      
+      <guid>https://Bin-lin-rgb.github.io/posts/go/go-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E7%AF%87/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Go 调度模型篇</title>
+      <link>https://Bin-lin-rgb.github.io/posts/go/go-%E8%B0%83%E5%BA%A6%E6%A8%A1%E5%9E%8B%E7%AF%87/</link>
+      <pubDate>Wed, 01 Nov 2023 09:46:37 +0800</pubDate>
+      
+      <guid>https://Bin-lin-rgb.github.io/posts/go/go-%E8%B0%83%E5%BA%A6%E6%A8%A1%E5%9E%8B%E7%AF%87/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Go Goroutine篇</title>
+      <link>https://Bin-lin-rgb.github.io/posts/go/go-goroutine%E7%AF%87/</link>
+      <pubDate>Wed, 01 Nov 2023 09:46:08 +0800</pubDate>
+      
+      <guid>https://Bin-lin-rgb.github.io/posts/go/go-goroutine%E7%AF%87/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Go Mutex篇</title>
+      <link>https://Bin-lin-rgb.github.io/posts/go/go-mutex%E7%AF%87/</link>
+      <pubDate>Wed, 01 Nov 2023 09:45:41 +0800</pubDate>
+      
+      <guid>https://Bin-lin-rgb.github.io/posts/go/go-mutex%E7%AF%87/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Go Channel篇</title>
+      <link>https://Bin-lin-rgb.github.io/posts/go/go-channel%E7%AF%87/</link>
+      <pubDate>Wed, 01 Nov 2023 09:45:23 +0800</pubDate>
+      
+      <guid>https://Bin-lin-rgb.github.io/posts/go/go-channel%E7%AF%87/</guid>
+      <description>1.Go channel 的底层实现原理 概念： Go 中的 channel 是一个队列，遵循先进先出的原则，负责协程之间的通信（Go 语言提倡不要通过共享内存来通信，而要通过通信来实现内存共享，CSP(Communicating Sequential Process)并发模型，就是通过 goroutine 和 channel 来实现的） 使用场景： 停止信号监听 定时任务 生产方和消费方解</description>
+    </item>
+    
+    <item>
+      <title>Go Map篇</title>
+      <link>https://Bin-lin-rgb.github.io/posts/go/go-map%E7%AF%87/</link>
+      <pubDate>Wed, 01 Nov 2023 09:45:15 +0800</pubDate>
+      
+      <guid>https://Bin-lin-rgb.github.io/posts/go/go-map%E7%AF%87/</guid>
+      <description>1. map数据结构 Golang的map使用哈希表作为底层实现，一个哈希表里可以有多个哈希表节点，也即bucket，而每个bucket就保存了map中的一个或一组键值对。 map数据结构由runtime/map.go/hmap定义: // A header for a Go map. type hmap struct { count int // 代表哈希表中的元素个数，调</description>
+    </item>
+    
+    <item>
+      <title>Go Slice篇</title>
+      <link>https://Bin-lin-rgb.github.io/posts/go/go-slice%E7%AF%87/</link>
+      <pubDate>Wed, 01 Nov 2023 09:45:04 +0800</pubDate>
+      
+      <guid>https://Bin-lin-rgb.github.io/posts/go/go-slice%E7%AF%87/</guid>
+      <description>Slice实现原理 Slice依托数组实现，底层数组对用户屏蔽，在底层数组容量不足时可以实现自动重分配并生成新的Slice。 接下来按照实际使用场景分别介绍其实现机制。 3.1 Slice数据结构 源码包中src/runtime/slice.go:slice定义了Slice的数据结构： type slice struct {</description>
+    </item>
+    
+    <item>
+      <title>Go 基础篇</title>
+      <link>https://Bin-lin-rgb.github.io/posts/go/go%E5%9F%BA%E7%A1%80%E7%AF%87/</link>
+      <pubDate>Wed, 01 Nov 2023 09:44:29 +0800</pubDate>
+      
+      <guid>https://Bin-lin-rgb.github.io/posts/go/go%E5%9F%BA%E7%A1%80%E7%AF%87/</guid>
+      <description>Go 方法与函数的区别？ 在 Go 语言中，有方法（method）和函数（function）两个概念，它们之间有一些重要的区别，主要体现在以下几个方面： 定义方式： 函数：函数是一段独立的代码块，它可以在任何地方定义和调用。函数的定义是全局的，可以在不同包中调用。 方法：方法是与类型（结构体或接口</description>
+    </item>
+    
+    <item>
+      <title>雪花id生成，前后端传输不一致</title>
+      <link>https://Bin-lin-rgb.github.io/posts/go/%E9%9B%AA%E8%8A%B1id%E7%94%9F%E6%88%90%E5%89%8D%E5%90%8E%E7%AB%AF%E4%BC%A0%E8%BE%93%E4%B8%8D%E4%B8%80%E8%87%B4/</link>
+      <pubDate>Mon, 30 Oct 2023 10:53:54 +0800</pubDate>
+      
+      <guid>https://Bin-lin-rgb.github.io/posts/go/%E9%9B%AA%E8%8A%B1id%E7%94%9F%E6%88%90%E5%89%8D%E5%90%8E%E7%AB%AF%E4%BC%A0%E8%BE%93%E4%B8%8D%E4%B8%80%E8%87%B4/</guid>
+      <description>前言 今天发现后端使用雪花算法生成的 PostId 传给前端之后，居然不一致！ 导致文章详情页带参数查询为空！ 为啥会这样呢？ 什么是雪花算法？ 雪花算法，Twitter 的分布式自增 ID 算法 snowflake 优缺点： 优点： （1）经测试 snowflake 每秒能生成 26 万个自增可排序的 ID。 （2）snowflake 生成的 ID 结果是一个 64bit 大小的整</description>
+    </item>
+    
+    <item>
+      <title>Zap日志库</title>
+      <link>https://Bin-lin-rgb.github.io/posts/go/zap%E6%97%A5%E5%BF%97%E5%BA%93/</link>
+      <pubDate>Sun, 30 Oct 2022 10:39:16 +0800</pubDate>
+      
+      <guid>https://Bin-lin-rgb.github.io/posts/go/zap%E6%97%A5%E5%BF%97%E5%BA%93/</guid>
+      <description>前言 zap 的使用。 安装 运行下面的命令安装zap go get -u go.uber.org/zap 实现 logger.go 文件 先在 logger 下新建一个文件 具体内容如下： package Logger import ( &amp;#34;github.com/gin-gonic/gin&amp;#34; &amp;#34;go.uber.org/zap&amp;#34; &amp;#34;go.uber.org/zap/zapcore&amp;#34; &amp;#34;gopkg.in/natefinch/lumberjack.v2&amp;#34; &amp;#34;net&amp;#34; &amp;#34;net/http&amp;#34; &amp;#34;net/http/httputil&amp;#34; &amp;#34;os&amp;#34; &amp;#34;runtime/debug&amp;#34; &amp;#34;server/Config&amp;#34; &amp;#34;strings&amp;#34; &amp;#34;time&amp;#34; ) var lg *zap.Logger // InitLogger 初始化Logger func InitLogger(cfg *Config.LogConfig) (err error) { writeSyncer := getLogWriter(cfg.Filename, cfg.MaxSize, cfg.MaxBackups, cfg.MaxAge) encoder := getEncoder() var l = new(zapcore.Level) err = l.UnmarshalText([]byte(cfg.Level)) if err != nil { return } core := zapcore.NewCore(encoder, writeSyncer, l) lg = zap.New(core, zap.AddCaller()) zap.ReplaceGlobals(lg) // 替换zap包中全局的logger实例，后续在</description>
+    </item>
+    
+    <item>
+      <title>Golang集成gorm</title>
+      <link>https://Bin-lin-rgb.github.io/posts/go/golang%E9%9B%86%E6%88%90gorm/</link>
+      <pubDate>Sun, 30 Oct 2022 10:35:11 +0800</pubDate>
+      
+      <guid>https://Bin-lin-rgb.github.io/posts/go/golang%E9%9B%86%E6%88%90gorm/</guid>
+      <description>gorm基础使用及解决部分疑惑 这是我参与「第三届青训营 -后端场」笔记创作活动的第4篇笔记。 01 简介 本文主要介绍在项目中集成 gorm 的大致方法、一些错误的解决方法、规范包及目录。 02 规范包及目录 这只是其中的一种分包方式，具体使用哪种可以根据自己需求。 controller //处理函数 ​ dao //数据库相关，gorm</description>
+    </item>
+    
+    <item>
+      <title>使用 FFmpeg 截取视频第一帧并保存案例</title>
+      <link>https://Bin-lin-rgb.github.io/posts/go/%E4%BD%BF%E7%94%A8ffmpeg/</link>
+      <pubDate>Sun, 30 Oct 2022 10:26:55 +0800</pubDate>
+      
+      <guid>https://Bin-lin-rgb.github.io/posts/go/%E4%BD%BF%E7%94%A8ffmpeg/</guid>
+      <description>运行准备 由于需要使用 FFmpeg 第三方工具来完成视频截取第一帧作为封面并存储到本机， 所以运行之前需要预先安装 FFmpeg 到本机并配置好环境变量。 我这里使用的是 ffmpeg version 5.0.1-full_build 版本。 参考链接：FFmpeg 项目结构 假设有这样一个案例：assets 文件夹中是专门存放视频的，现在的要求就是将该视频的第一帧截取为图片并</description>
     </item>
     
     <item>

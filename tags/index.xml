@@ -6,7 +6,16 @@
     <description>Recent content in 🧩 标签 on Blaine&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <lastBuildDate>Sun, 29 Oct 2023 16:34:43 +0800</lastBuildDate><atom:link href="https://Bin-lin-rgb.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 01 Nov 2023 09:44:29 +0800</lastBuildDate><atom:link href="https://Bin-lin-rgb.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>go</title>
+      <link>https://Bin-lin-rgb.github.io/tags/go/</link>
+      <pubDate>Wed, 01 Nov 2023 09:44:29 +0800</pubDate>
+      
+      <guid>https://Bin-lin-rgb.github.io/tags/go/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>计算机网络</title>
       <link>https://Bin-lin-rgb.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/</link>
@@ -53,11 +62,11 @@
     </item>
     
     <item>
-      <title>go</title>
-      <link>https://Bin-lin-rgb.github.io/tags/go/</link>
-      <pubDate>Sat, 29 Oct 2022 16:00:07 +0800</pubDate>
+      <title>ffmpeg</title>
+      <link>https://Bin-lin-rgb.github.io/tags/ffmpeg/</link>
+      <pubDate>Sun, 30 Oct 2022 10:26:55 +0800</pubDate>
       
-      <guid>https://Bin-lin-rgb.github.io/tags/go/</guid>
+      <guid>https://Bin-lin-rgb.github.io/tags/ffmpeg/</guid>
       <description></description>
     </item>
     

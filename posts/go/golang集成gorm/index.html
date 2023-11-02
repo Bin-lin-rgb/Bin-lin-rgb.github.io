@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="zh" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Golang集成gorm | Blaine&#39;s Blog</title>
+<meta name="keywords" content="">
+<meta name="description" content="gorm基础使用及解决部分疑惑 这是我参与「第三届青训营 -后端场」笔记创作活动的第4篇笔记。 01 简介 本文主要介绍在项目中集成 gorm 的大致方法、一些错误的解决方法、规范包及目录。 02 规范包及目录 这只是其中的一种分包方式，具体使用哪种可以根据自己需求。 controller //处理函数 ​ dao //数据库相关，gorm">
+<meta name="author" content="Blaine">
+<link rel="canonical" href="https://Bin-lin-rgb.github.io/posts/go/golang%E9%9B%86%E6%88%90gorm/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.css" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.js" onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://Bin-lin-rgb.github.io/img/icon.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://Bin-lin-rgb.github.io/img/icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://Bin-lin-rgb.github.io/img/icon.png">
+<link rel="apple-touch-icon" href="https://Bin-lin-rgb.github.io/img/icon.png">
+<link rel="mask-icon" href="https://Bin-lin-rgb.github.io/img/icon.png">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+<script defer src="https://unpkg.com/mermaid@8.8.1/dist/mermaid.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+<script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.3/dist/jquery.min.js"></script>
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = ""; 
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<meta property="og:title" content="Golang集成gorm" />
+<meta property="og:description" content="gorm基础使用及解决部分疑惑 这是我参与「第三届青训营 -后端场」笔记创作活动的第4篇笔记。 01 简介 本文主要介绍在项目中集成 gorm 的大致方法、一些错误的解决方法、规范包及目录。 02 规范包及目录 这只是其中的一种分包方式，具体使用哪种可以根据自己需求。 controller //处理函数 ​ dao //数据库相关，gorm" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://Bin-lin-rgb.github.io/posts/go/golang%E9%9B%86%E6%88%90gorm/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-10-30T10:35:11+08:00" />
+<meta property="article:modified_time" content="2022-10-30T10:35:11+08:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Golang集成gorm"/>
+<meta name="twitter:description" content="gorm基础使用及解决部分疑惑 这是我参与「第三届青训营 -后端场」笔记创作活动的第4篇笔记。 01 简介 本文主要介绍在项目中集成 gorm 的大致方法、一些错误的解决方法、规范包及目录。 02 规范包及目录 这只是其中的一种分包方式，具体使用哪种可以根据自己需求。 controller //处理函数 ​ dao //数据库相关，gorm"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+
+        {
+          "@type": "ListItem",
+          "position":  1 ,
+          "name": "📚文章",
+          "item": "https://Bin-lin-rgb.github.io/posts/"
+        },
+
+        {
+          "@type": "ListItem",
+          "position":  2 ,
+          "name": "🥇 Golang",
+          "item": "https://Bin-lin-rgb.github.io/posts/go/"
+        }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "Golang集成gorm",
+      "item": "https://Bin-lin-rgb.github.io/posts/go/golang%E9%9B%86%E6%88%90gorm/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Golang集成gorm",
+  "name": "Golang集成gorm",
+  "description": "gorm基础使用及解决部分疑惑 这是我参与「第三届青训营 -后端场」笔记创作活动的第4篇笔记。 01 简介 本文主要介绍在项目中集成 gorm 的大致方法、一些错误的解决方法、规范包及目录。 02 规范包及目录 这只是其中的一种分包方式，具体使用哪种可以根据自己需求。 controller //处理函数 ​ dao //数据库相关，gorm",
+  "keywords": [
+    ""
+  ],
+  "articleBody": "gorm基础使用及解决部分疑惑 这是我参与「第三届青训营 -后端场」笔记创作活动的第4篇笔记。\n01 简介 本文主要介绍在项目中集成 gorm 的大致方法、一些错误的解决方法、规范包及目录。\n02 规范包及目录 这只是其中的一种分包方式，具体使用哪种可以根据自己需求。\ncontroller //处理函数 ​ dao //数据库相关，gorm相关接口 ​ router //路由 ​ model //生成数据表相关的结构体 ​ assets //静态资源 ​ templates //模板文件、HTML 03 集成gorm 这里分两种情况：\n如果还未建表，可以先声明结构体数据之后再使用 gorm 自动建表功能。 若已经建好表了，则可以使用一些便捷的网站快速生成相应的结构体，然后再根据实际需求更改（比如外键）。 1.自动建表 1、go get 一下\n我这里使用 mysql 所以执行go get -u gorm.io/driver/mysql.\n如果你们使用其他数据库可以参考gorm官方文档：GORM 指南 | GORM - The fantastic ORM library for Golang, aims to be developer friendly.\ngo get -u gorm.io/gorm go get -u gorm.io/driver/mysql 2、声明结构体\n在这一个案例中是还没有建表的。这里后面的字段不需要指定数据库列。后边使用 db.AutoMigrate(\u0026model.User{}) 就可以自动建表\nmodel.go package model ​ import \"gorm.io/gorm\" ​ type User struct { gorm.Model Username string `json:\"username\"` Password string `json:\"password\"` } 在dsn记得换上自己的 数据库密码 。\ndao.go package dao ​ import ( \"blog/model\" \"gorm.io/driver/mysql\" \"gorm.io/gorm\" \"log\" ) ​ type Manager interface { AddUser(user *model.User) } ​ type manager struct { db *gorm.DB } ​ func (mgr manager) AddUser(user *model.User) { mgr.db.Create(user) } ​ var Mgr Manager ​ func init() { // 在dsn记得换上自己的 数据库密码 dsn := \"root:xxxxxx@tcp(127.0.0.1:3306)/golang_blog?charset=utf8mb4\u0026parseTime=True\u0026loc=Local\" db, err := gorm.Open(mysql.Open(dsn), \u0026gorm.Config{}) if err != nil { log.Fatal(\"Failed to init db:\", err) } Mgr = \u0026manager{db: db} err1 := db.AutoMigrate(\u0026model.User{}) if err1 != nil { log.Fatal(err1) } } main.go package main ​ import ( \"blog/dao\" \"blog/model\" ) ​ func main() { user := model.User{ Username: \"tom\", Password: \"123456\", } dao.Mgr.AddUser(\u0026user) } 测试 测试AddUser是否成功\nmysql\u003e use golang_blog Database changed mysql\u003e show tables; +-----------------------+ | Tables_in_golang_blog | +-----------------------+ | users | +-----------------------+ 1 row in set (0.00 sec) ​ mysql\u003e select * from users; +----+-------------------------+-------------------------+------------+----------+----------+ | id | created_at | updated_at | deleted_at | username | password | +----+-------------------------+-------------------------+------------+----------+----------+ | 1 | 2022-05-22 09:13:22.688 | 2022-05-22 09:13:22.688 | NULL | tom | 123456 | +----+-------------------------+-------------------------+------------+----------+----------+ 1 row in set (0.00 sec) 2.手动建表 这种情况先把SQL建表语句复制到这个网站：在线sql转go, json转go - 球儿工具 (qetool.com)\n然后就可以愉快根据需要转成相应的结构体。\nSQL转struct 1、Navicat 直接粘贴过来的 t_video 表的SQL :\nCREATE TABLE `t_video` ( `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '视频id', `author_id` int(11) NOT NULL COMMENT '作者id', `play_url` varchar(512) NOT NULL COMMENT '视频播放地址', `cover_url` varchar(255) NOT NULL COMMENT '视频封面地址', `favorite_count` int(11) unsigned DEFAULT NULL COMMENT '视频的点赞总数', `comment_count` int(11) unsigned DEFAULT NULL COMMENT '视频的评论总数', `title` varchar(255) CHARACTER SET utf8 NOT NULL COMMENT '视频标题', `created_at` datetime DEFAULT NULL COMMENT '投稿时间', `deleted_at` datetime DEFAULT NULL COMMENT '删除时间', `updated_at` datetime DEFAULT NULL COMMENT '更新时间', `is_favorite` tinyint(1) DEFAULT NULL, PRIMARY KEY (`id`), KEY `author_id` (`author_id`), KEY `normal_favorite_count` (`favorite_count`) USING BTREE, CONSTRAINT `author_id` FOREIGN KEY (`author_id`) REFERENCES `t_userinfo` (`id`) ) 2、然后在网站勾选 json 、gorm ，就出现了：\ntype Video struct { ID int64 `gorm:\"column:id\" json:\"id\"` // 视频id AuthorId int64 `gorm:\"column:author_id\" json:\"author_id\"` // 作者id PlayUrl string `gorm:\"column:play_url\" json:\"play_url\"` // 视频播放地址 CoverUrl string `gorm:\"column:cover_url\" json:\"cover_url\"` // 视频封面地址 FavoriteCount int64 `gorm:\"column:favorite_count\" json:\"favorite_count\"` // 视频的点赞总数 CommentCount int64 `gorm:\"column:comment_count\" json:\"comment_count\"` // 视频的评论总数 Title string `gorm:\"column:title\" json:\"title\"` // 视频标题 CreatedAt time.Time `gorm:\"column:created_at\" json:\"created_at\"` // 投稿时间 DeletedAt time.Time `gorm:\"column:deleted_at\" json:\"deleted_at\"` // 删除时间 UpdatedAt time.Time `gorm:\"column:updated_at\" json:\"updated_at\"` // 更新时间 IsFavorite int64 `gorm:\"column:is_favorite\" json:\"is_favorite\"` } 3、修改\n比如这里的需求是 t_video 表中需要携带作者 userinfo 的数据。\n这里新增 Author Userinfo 连接 Userinfo 结构体，并声明 gorm 字段为 \"foreignKey:AuthorId;\" 。 把UpdatedAt、DeletedAt、CreatedAt字段删掉，新增 gorm.Model ，因为它自带这些参数。 type Video struct { gorm.Model ID int64 `gorm:\"column:id\" json:\"id\"` // 视频id Author Userinfo `json:\"author\" gorm:\"foreignKey:AuthorId;\"` // -新增- AuthorId int64 `gorm:\"column:author_id\" json:\"author_id\"` // 作者id PlayUrl string `gorm:\"column:play_url\" json:\"play_url\"` // 视频播放地址 CoverUrl string `gorm:\"column:cover_url\" json:\"cover_url\"` // 视频封面地址 FavoriteCount int64 `gorm:\"column:favorite_count\" json:\"favorite_count\"` // 视频的点赞总数 CommentCount int64 `gorm:\"column:comment_count\" json:\"comment_count\"` // 视频的评论总数 Title string `gorm:\"column:title\" json:\"title\"` // 视频标题 // CreatedAt time.Time `gorm:\"column:created_at\" json:\"created_at\"` // 投稿时间 // DeletedAt time.Time `gorm:\"column:deleted_at\" json:\"deleted_at\"` // 删除时间 // UpdatedAt time.Time `gorm:\"column:updated_at\" json:\"updated_at\"` // 更新时间 IsFavorite int64 `gorm:\"column:is_favorite\" json:\"is_favorite\"` } ​ 注意的问题 1、比如使用 Navicat 建表的表名是 t_video ，但是想关联的结构体名是 Video ， 那 gorm 怎么知道关联想要的东西呢？\n这里需要在连接数据库时进行一些配置，这里只需要使用前两个：\ndsn := \"root:xxxxxx@tcp(127.0.0.1:3306)/golang_blog?charset=utf8mb4\u0026parseTime=True\u0026loc=Local\" db, err := gorm.Open(mysql.Open(\"gorm.db\"), \u0026gorm.Config{ NamingStrategy: schema.NamingStrategy{ TablePrefix: \"t_\", // table name prefix, table for `User` would be `t_users` SingularTable: true, // use singular table name, table for `User` would be `user` with this option enabled //NoLowerCase: true, // skip the snake_casing of names //NameReplacer: strings.NewReplacer(\"CID\", \"Cid\"), // use name replacer to change struct/field name before convert it to db name }, }) 2、若需要的字段可能有中文，为了避免报错，建表时设置该字段的字符集为utf8，排序规则为utf8_general_ci。\n3.Preload 预加载 在上述嵌套的情况下，此时直接查询返回一个 video 是没有 Userinfo 的信息的，需要使用 Preload 。\nGORM 允许在 Preload 的其它 SQL 中直接加载关系。\n比如：直接链式添加 .Preload(\"Author\") ：\nfunc (mgr manager) GetAllVideo(latestTime int64) ([]model.Video, error) { var videos []model.Video timeLayout := \"2006-01-02 15:04:05\" result := mgr.db.Model(\u0026model.Video{}).Where(\"created_at \u003c= ?\", time.Unix(latestTime, 0).Format(timeLayout)). Order(\"created_at DESC\").Preload(\"Author\").Limit(30).Count(\u0026count).Find(\u0026videos) ​ return videos, result.Error } 04 总结 gorm使用下来是比较方便的orm工具，建议读者如果出问题了多看看官方文档。\n参考资料：\ngorm官方文档：GORM 指南 | GORM - The fantastic ORM library for Golang, aims to be developer friendly.\n",
+  "wordCount" : "1717",
+  "inLanguage": "zh",
+  "datePublished": "2022-10-30T10:35:11+08:00",
+  "dateModified": "2022-10-30T10:35:11+08:00",
+  "author":[{
+    "@type": "Person",
+    "name": "Blaine"
+  }],
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://Bin-lin-rgb.github.io/posts/go/golang%E9%9B%86%E6%88%90gorm/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Blaine's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://Bin-lin-rgb.github.io/img/icon.png"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    (function () {
+        let  arr,reg = new RegExp("(^| )"+"change-themes"+"=([^;]*)(;|$)");
+        if(arr = document.cookie.match(reg)) {
+        } else {
+            if (new Date().getHours() >= 19 || new Date().getHours() < 6) {
+                document.body.classList.add('dark');
+                localStorage.setItem("pref-theme", 'dark');
+            } else {
+                document.body.classList.remove('dark');
+                localStorage.setItem("pref-theme", 'light');
+            }
+        }
+    })()
+
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://Bin-lin-rgb.github.io/" accesskey="h" title="Blaine&#39;s Blog (Alt + H)">
+            <img src="https://Bin-lin-rgb.github.io/img/icon.png" alt="logo" aria-label="logo"
+                 height="35">Blaine&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://Bin-lin-rgb.github.io/" title="🏠 主页">
+                <span>🏠 主页</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://Bin-lin-rgb.github.io/posts" title="📚 文章">
+                <span>📚 文章</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://Bin-lin-rgb.github.io/search" title="🔍 搜索 (Alt &#43; /)" accesskey=/>
+                <span>🔍 搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://Bin-lin-rgb.github.io/tags" title="🧩 标签">
+                <span>🧩 标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://Bin-lin-rgb.github.io/archives/" title="⏱️ 时间轴">
+                <span>⏱️ 时间轴</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://Bin-lin-rgb.github.io/about" title="🙋🏻‍♂️ 关于">
+                <span>🙋🏻‍♂️ 关于</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://Bin-lin-rgb.github.io/links" title="🤝 友链">
+                <span>🤝 友链</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main page">
+<style>
+    i[id*="post_meta_style"] {
+        display: flex;
+        align-items: center;
+        margin: 0 0 10px 0;
+    }
+</style>
+
+<article class="post-single">
+    <div id="single-content">
+        <header class="post-header">
+            <div class="breadcrumbs"><a href="https://Bin-lin-rgb.github.io/">🏠 主页</a>&nbsp;»&nbsp;<a href="https://Bin-lin-rgb.github.io/posts/">📚文章</a>&nbsp;»&nbsp;<a href="https://Bin-lin-rgb.github.io/posts/go/">🥇 Golang</a></div>
+            <h1 class="post-title">
+                Golang集成gorm
+            </h1>
+            <div class="post-meta">
+
+<style>
+    i[id*="post_meta_style"] {
+        display: flex;
+        align-items: center;
+        margin: 0 0 10px 0;
+    }
+
+    .parent-post-meta {
+        display: flex;
+        flex-wrap: wrap;
+        opacity: 0.8;
+    }
+</style>
+
+<span class="parent-post-meta">
+    <span id="post_meta_style_1">
+        <span class="fa fa-calendar-check-o"></span>
+        <span>2022-10-30
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    
+    
+    
+    
+    
+    
+    
+    <span id="post_meta_style_3">
+        <span class="fa fa-file-word-o"></span>
+        <span>1717字
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_4">
+        <span class="fa fa-clock-o"></span>
+        <span>4分钟
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_5">
+        <span class="fa fa-user-o"></span>
+        <span>Blaine
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_6">
+        <span class="fa fa-tags" style="opacity: 0.8"></span>
+        <span>
+            <span class="post-tags-meta">
+            </span>
+        </span>
+    </span>
+</span>
+<span style="opacity: 0.8;">
+                    <span id="post_meta_style_7">
+                        &nbsp;&nbsp;
+                        <span class="fa fa-eye" ></span>
+                        <span>
+                            <span id="busuanzi_container_page_pv"><span id="busuanzi_value_page_pv"></span></span>
+                            &nbsp;&nbsp;
+                        </span>
+                    </span>
+                    <span id="post_meta_style_8">
+                        <span class="fa fa-commenting-o"></span>
+                        <span>
+                            <script src="https://cdn.staticfile.org/twikoo/1.5.8/twikoo.all.min.js"></script>
+                            <script>
+                                let url = document.documentURI
+                                
+                                let dnsUrl = "https://Bin-lin-rgb.github.io/"
+                                let urlSplit = url.split(dnsUrl)
+                                let finalUrl = urlSplit[1]
+                                if (finalUrl[0] !== '/') {
+                                    finalUrl = '/'+finalUrl
+                                }
+                                twikoo.getCommentsCount({
+                                    envId: "https://twikoo-api-nine-silk.vercel.app/", 
+                                region: "ap-guangzhou", 
+                                urls: [ 
+                                    
+                                    finalUrl,
+                                ],
+                                    includeReply: false 
+                                }).then(function (res) {
+                                    let count = res[0].count
+                                    const obj = document.getElementById("comment_count");
+                                    obj.innerText = count
+                                    
+                                    
+                                    
+                                }).catch(function (err) {
+                                    
+                                    console.error(err);
+                                });
+                            </script>
+                            <span id="comment_count"></span>
+                        </span>
+                    </span>
+                </span>
+
+</div>
+        </header> <aside id="toc-container" class="toc-container wide">
+    <div class="toc">
+        <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">目录</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#gorm%e5%9f%ba%e7%a1%80%e4%bd%bf%e7%94%a8%e5%8f%8a%e8%a7%a3%e5%86%b3%e9%83%a8%e5%88%86%e7%96%91%e6%83%91" aria-label="gorm基础使用及解决部分疑惑">gorm基础使用及解决部分疑惑</a><ul>
+                        
+                <li>
+                    <a href="#01-%e7%ae%80%e4%bb%8b" aria-label="01 简介">01 简介</a></li>
+                <li>
+                    <a href="#02-%e8%a7%84%e8%8c%83%e5%8c%85%e5%8f%8a%e7%9b%ae%e5%bd%95" aria-label="02 规范包及目录">02 规范包及目录</a></li>
+                <li>
+                    <a href="#03-%e9%9b%86%e6%88%90gorm" aria-label="03 集成gorm">03 集成gorm</a><ul>
+                        
+                <li>
+                    <a href="#1%e8%87%aa%e5%8a%a8%e5%bb%ba%e8%a1%a8" aria-label="1.自动建表">1.自动建表</a><ul>
+                        
+                <li>
+                    <a href="#modelgo" aria-label="model.go">model.go</a></li>
+                <li>
+                    <a href="#daogo" aria-label="dao.go">dao.go</a></li>
+                <li>
+                    <a href="#maingo" aria-label="main.go">main.go</a></li>
+                <li>
+                    <a href="#%e6%b5%8b%e8%af%95" aria-label="测试">测试</a></li></ul>
+                </li>
+                <li>
+                    <a href="#2%e6%89%8b%e5%8a%a8%e5%bb%ba%e8%a1%a8" aria-label="2.手动建表">2.手动建表</a><ul>
+                        
+                <li>
+                    <a href="#sql%e8%bd%acstruct" aria-label="SQL转struct">SQL转struct</a></li>
+                <li>
+                    <a href="#%e6%b3%a8%e6%84%8f%e7%9a%84%e9%97%ae%e9%a2%98" aria-label="注意的问题">注意的问题</a></li></ul>
+                </li>
+                <li>
+                    <a href="#3preload-%e9%a2%84%e5%8a%a0%e8%bd%bd" aria-label="3.Preload 预加载">3.<code>Preload</code> 预加载</a></li></ul>
+                </li>
+                <li>
+                    <a href="#04-%e6%80%bb%e7%bb%93" aria-label="04 总结">04 总结</a>
+                </li>
+            </ul>
+            </li>
+            </ul>
+        </div>
+        </details>
+    </div>
+</aside>
+<script>
+    let activeElement;
+    let elements;
+    window.addEventListener('DOMContentLoaded', function (event) {
+        checkTocPosition();
+
+        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+        
+        activeElement = elements[0];
+        const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
+        document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+    }, false);
+
+    window.addEventListener('resize', function(event) {
+        checkTocPosition();
+    }, false);
+
+    window.addEventListener('scroll', () => {
+        
+        if (elements) {
+            activeElement = Array.from(elements).find((element) => {
+                if ((getOffsetTop(element) - window.pageYOffset) > 0 &&
+                    (getOffsetTop(element) - window.pageYOffset) < window.innerHeight/2) {
+                    return element;
+                }
+            }) || activeElement
+
+            elements.forEach(element => {
+                const id = encodeURI(element.getAttribute('id')).toLowerCase();
+                if (element === activeElement){
+                    document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+                } else {
+                    document.querySelector(`.inner ul li a[href="#${id}"]`).classList.remove('active');
+                }
+            })
+        }
+    }, false);
+
+    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
+    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
+    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
+
+    function checkTocPosition() {
+        const width = document.body.scrollWidth;
+        if (width - main - (toc * 2) - (gap * 4) > 0) {
+            document.getElementById("toc-container").classList.add("wide");
+        } else {
+            document.getElementById("toc-container").classList.remove("wide");
+        }
+    }
+
+    function getOffsetTop(element) {
+        if (!element.getClientRects().length) {
+            return 0;
+        }
+        let rect = element.getBoundingClientRect();
+        let win = element.ownerDocument.defaultView;
+        return rect.top + win.pageYOffset;
+    }
+</script>
+        <div class="post-content"><h1 id="gorm基础使用及解决部分疑惑">gorm基础使用及解决部分疑惑<a hidden class="anchor" aria-hidden="true" href="#gorm基础使用及解决部分疑惑">#</a></h1>
+<p>这是我参与「第三届青训营 -后端场」笔记创作活动的第4篇笔记。</p>
+<h2 id="01-简介">01 简介<a hidden class="anchor" aria-hidden="true" href="#01-简介">#</a></h2>
+<p>本文主要介绍在项目中集成 gorm 的大致方法、一些错误的解决方法、规范包及目录。</p>
+<h2 id="02-规范包及目录">02 规范包及目录<a hidden class="anchor" aria-hidden="true" href="#02-规范包及目录">#</a></h2>
+<p>这只是其中的一种分包方式，具体使用哪种可以根据自己需求。</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span> controller <span style="color:#78787e">//处理函数
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span> <span style="color:#ff5c57">​</span>
+</span></span><span style="display:flex;"><span> dao <span style="color:#78787e">//数据库相关，gorm相关接口
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span> <span style="color:#ff5c57">​</span>
+</span></span><span style="display:flex;"><span> router <span style="color:#78787e">//路由
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span> <span style="color:#ff5c57">​</span>
+</span></span><span style="display:flex;"><span> model <span style="color:#78787e">//生成数据表相关的结构体
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span> <span style="color:#ff5c57">​</span>
+</span></span><span style="display:flex;"><span> assets <span style="color:#78787e">//静态资源
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span> <span style="color:#ff5c57">​</span>
+</span></span><span style="display:flex;"><span> templates <span style="color:#78787e">//模板文件、HTML
+</span></span></span></code></pre></div><h2 id="03-集成gorm">03 集成gorm<a hidden class="anchor" aria-hidden="true" href="#03-集成gorm">#</a></h2>
+<p>这里分两种情况：</p>
+<ol>
+<li>如果还未建表，可以先声明结构体数据之后再使用 gorm 自动建表功能。</li>
+<li>若已经建好表了，则可以使用一些便捷的网站快速生成相应的结构体，然后再根据实际需求更改（比如外键）。</li>
+</ol>
+<h3 id="1自动建表">1.自动建表<a hidden class="anchor" aria-hidden="true" href="#1自动建表">#</a></h3>
+<p>1、go get 一下</p>
+<p>我这里使用 mysql 所以执行<code>go get -u gorm.io/driver/mysql</code>.</p>
+<p>如果你们使用其他数据库可以参考gorm官方文档：<a href="https://gorm.io/zh_CN/docs/index.html">GORM 指南 | GORM - The fantastic ORM library for Golang, aims to be developer friendly.</a></p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span> <span style="color:#ff6ac1">go</span> get <span style="color:#ff6ac1">-</span>u gorm.io<span style="color:#ff6ac1">/</span>gorm
+</span></span><span style="display:flex;"><span> <span style="color:#ff6ac1">go</span> get <span style="color:#ff6ac1">-</span>u gorm.io<span style="color:#ff6ac1">/</span>driver<span style="color:#ff6ac1">/</span>mysql
+</span></span></code></pre></div><p>2、声明结构体</p>
+<p>在这一个案例中是还没有建表的。这里后面的字段不需要指定数据库列。后边使用 <code>db.AutoMigrate(&amp;model.User{})</code> 就可以自动建表</p>
+<h4 id="modelgo">model.go<a hidden class="anchor" aria-hidden="true" href="#modelgo">#</a></h4>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span> <span style="color:#ff6ac1">package</span> model
+</span></span><span style="display:flex;"><span> <span style="color:#ff5c57">​</span>
+</span></span><span style="display:flex;"><span> <span style="color:#ff6ac1">import</span> <span style="color:#5af78e">&#34;gorm.io/gorm&#34;</span>
+</span></span><span style="display:flex;"><span> <span style="color:#ff5c57">​</span>
+</span></span><span style="display:flex;"><span> <span style="color:#ff5c57">type</span> User <span style="color:#ff5c57">struct</span> {
+</span></span><span style="display:flex;"><span>     gorm.Model
+</span></span><span style="display:flex;"><span>     Username <span style="color:#9aedfe">string</span> <span style="color:#5af78e">`json:&#34;username&#34;`</span>
+</span></span><span style="display:flex;"><span>     Password <span style="color:#9aedfe">string</span> <span style="color:#5af78e">`json:&#34;password&#34;`</span>
+</span></span><span style="display:flex;"><span> }
+</span></span></code></pre></div><p>在dsn记得换上自己的 数据库密码 。</p>
+<h4 id="daogo">dao.go<a hidden class="anchor" aria-hidden="true" href="#daogo">#</a></h4>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span> <span style="color:#ff6ac1">package</span> dao
+</span></span><span style="display:flex;"><span> <span style="color:#ff5c57">​</span>
+</span></span><span style="display:flex;"><span> <span style="color:#ff6ac1">import</span> (
+</span></span><span style="display:flex;"><span>     <span style="color:#5af78e">&#34;blog/model&#34;</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#5af78e">&#34;gorm.io/driver/mysql&#34;</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#5af78e">&#34;gorm.io/gorm&#34;</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#5af78e">&#34;log&#34;</span>
+</span></span><span style="display:flex;"><span> )
+</span></span><span style="display:flex;"><span> <span style="color:#ff5c57">​</span>
+</span></span><span style="display:flex;"><span> <span style="color:#ff5c57">type</span> Manager <span style="color:#ff5c57">interface</span> {
+</span></span><span style="display:flex;"><span>     <span style="color:#57c7ff">AddUser</span>(user <span style="color:#ff6ac1">*</span>model.User)
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span> <span style="color:#ff5c57">​</span>
+</span></span><span style="display:flex;"><span> <span style="color:#ff5c57">type</span> manager <span style="color:#ff5c57">struct</span> {
+</span></span><span style="display:flex;"><span>     db <span style="color:#ff6ac1">*</span>gorm.DB
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span> <span style="color:#ff5c57">​</span>
+</span></span><span style="display:flex;"><span> <span style="color:#ff5c57">func</span> (mgr manager) <span style="color:#57c7ff">AddUser</span>(user <span style="color:#ff6ac1">*</span>model.User) {
+</span></span><span style="display:flex;"><span>     mgr.db.<span style="color:#57c7ff">Create</span>(user)
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span> <span style="color:#ff5c57">​</span>
+</span></span><span style="display:flex;"><span> <span style="color:#ff5c57">var</span> Mgr Manager
+</span></span><span style="display:flex;"><span> <span style="color:#ff5c57">​</span>
+</span></span><span style="display:flex;"><span> <span style="color:#ff5c57">func</span> <span style="color:#57c7ff">init</span>() {
+</span></span><span style="display:flex;"><span>     <span style="color:#78787e">// 在dsn记得换上自己的 数据库密码 
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>     dsn <span style="color:#ff6ac1">:=</span> <span style="color:#5af78e">&#34;root:xxxxxx@tcp(127.0.0.1:3306)/golang_blog?charset=utf8mb4&amp;parseTime=True&amp;loc=Local&#34;</span>
+</span></span><span style="display:flex;"><span>     db, err <span style="color:#ff6ac1">:=</span> gorm.<span style="color:#57c7ff">Open</span>(mysql.<span style="color:#57c7ff">Open</span>(dsn), <span style="color:#ff6ac1">&amp;</span>gorm.Config{})
+</span></span><span style="display:flex;"><span>     <span style="color:#ff6ac1">if</span> err <span style="color:#ff6ac1">!=</span> <span style="color:#ff6ac1">nil</span> {
+</span></span><span style="display:flex;"><span>         log.<span style="color:#57c7ff">Fatal</span>(<span style="color:#5af78e">&#34;Failed to init db:&#34;</span>, err)
+</span></span><span style="display:flex;"><span>     }
+</span></span><span style="display:flex;"><span>     Mgr = <span style="color:#ff6ac1">&amp;</span>manager{db: db}
+</span></span><span style="display:flex;"><span>     err1 <span style="color:#ff6ac1">:=</span> db.<span style="color:#57c7ff">AutoMigrate</span>(<span style="color:#ff6ac1">&amp;</span>model.User{})
+</span></span><span style="display:flex;"><span>     <span style="color:#ff6ac1">if</span> err1 <span style="color:#ff6ac1">!=</span> <span style="color:#ff6ac1">nil</span> {
+</span></span><span style="display:flex;"><span>         log.<span style="color:#57c7ff">Fatal</span>(err1)
+</span></span><span style="display:flex;"><span>     }
+</span></span><span style="display:flex;"><span> }
+</span></span></code></pre></div><h4 id="maingo">main.go<a hidden class="anchor" aria-hidden="true" href="#maingo">#</a></h4>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span> <span style="color:#ff6ac1">package</span> main
+</span></span><span style="display:flex;"><span> <span style="color:#ff5c57">​</span>
+</span></span><span style="display:flex;"><span> <span style="color:#ff6ac1">import</span> (
+</span></span><span style="display:flex;"><span>     <span style="color:#5af78e">&#34;blog/dao&#34;</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#5af78e">&#34;blog/model&#34;</span>
+</span></span><span style="display:flex;"><span> )
+</span></span><span style="display:flex;"><span> <span style="color:#ff5c57">​</span>
+</span></span><span style="display:flex;"><span> <span style="color:#ff5c57">func</span> <span style="color:#57c7ff">main</span>() {
+</span></span><span style="display:flex;"><span>     user <span style="color:#ff6ac1">:=</span> model.User{
+</span></span><span style="display:flex;"><span>         Username: <span style="color:#5af78e">&#34;tom&#34;</span>,
+</span></span><span style="display:flex;"><span>         Password: <span style="color:#5af78e">&#34;123456&#34;</span>,
+</span></span><span style="display:flex;"><span>     }
+</span></span><span style="display:flex;"><span>     dao.Mgr.<span style="color:#57c7ff">AddUser</span>(<span style="color:#ff6ac1">&amp;</span>user)
+</span></span><span style="display:flex;"><span> }
+</span></span></code></pre></div><h4 id="测试">测试<a hidden class="anchor" aria-hidden="true" href="#测试">#</a></h4>
+<p>测试AddUser是否成功</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span> mysql&gt; use golang_blog
+</span></span><span style="display:flex;"><span> Database changed
+</span></span><span style="display:flex;"><span> mysql&gt; show tables;
+</span></span><span style="display:flex;"><span> +-----------------------+
+</span></span><span style="display:flex;"><span> | Tables_in_golang_blog |
+</span></span><span style="display:flex;"><span> +-----------------------+
+</span></span><span style="display:flex;"><span> | users                 |
+</span></span><span style="display:flex;"><span> +-----------------------+
+</span></span><span style="display:flex;"><span> <span style="color:#ff9f43">1</span> row in <span style="color:#ff5c57">set</span> <span style="color:#ff6ac1">(</span>0.00 sec<span style="color:#ff6ac1">)</span>
+</span></span><span style="display:flex;"><span> ​
+</span></span><span style="display:flex;"><span> mysql&gt; <span style="color:#ff6ac1">select</span> * from users;
+</span></span><span style="display:flex;"><span> +----+-------------------------+-------------------------+------------+----------+----------+
+</span></span><span style="display:flex;"><span> | id | created_at              | updated_at              | deleted_at | username | password |
+</span></span><span style="display:flex;"><span> +----+-------------------------+-------------------------+------------+----------+----------+
+</span></span><span style="display:flex;"><span> |  <span style="color:#ff9f43">1</span> | 2022-05-22 09:13:22.688 | 2022-05-22 09:13:22.688 | NULL       | tom      | <span style="color:#ff9f43">123456</span>   |
+</span></span><span style="display:flex;"><span> +----+-------------------------+-------------------------+------------+----------+----------+
+</span></span><span style="display:flex;"><span> <span style="color:#ff9f43">1</span> row in <span style="color:#ff5c57">set</span> <span style="color:#ff6ac1">(</span>0.00 sec<span style="color:#ff6ac1">)</span>
+</span></span></code></pre></div><h3 id="2手动建表">2.手动建表<a hidden class="anchor" aria-hidden="true" href="#2手动建表">#</a></h3>
+<p>这种情况先把SQL建表语句复制到这个网站：<a href="https://www.qetool.com/sql_json_go.html">在线sql转go, json转go - 球儿工具 (qetool.com)</a></p>
+<p>然后就可以愉快根据需要转成相应的结构体。</p>
+<h4 id="sql转struct">SQL转struct<a hidden class="anchor" aria-hidden="true" href="#sql转struct">#</a></h4>
+<p>1、Navicat 直接粘贴过来的 <code>t_video</code> 表的SQL :</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span> <span style="color:#ff6ac1">CREATE</span> <span style="color:#ff6ac1">TABLE</span> <span style="color:#ff6ac1">`</span>t_video<span style="color:#ff6ac1">`</span> (
+</span></span><span style="display:flex;"><span>   <span style="color:#ff6ac1">`</span>id<span style="color:#ff6ac1">`</span> <span style="color:#ff5c57">int</span>(<span style="color:#ff9f43">11</span>) <span style="color:#ff6ac1">NOT</span> <span style="color:#ff6ac1">NULL</span> AUTO_INCREMENT <span style="color:#ff6ac1">COMMENT</span> <span style="color:#5af78e">&#39;视频id&#39;</span>,
+</span></span><span style="display:flex;"><span>   <span style="color:#ff6ac1">`</span>author_id<span style="color:#ff6ac1">`</span> <span style="color:#ff5c57">int</span>(<span style="color:#ff9f43">11</span>) <span style="color:#ff6ac1">NOT</span> <span style="color:#ff6ac1">NULL</span> <span style="color:#ff6ac1">COMMENT</span> <span style="color:#5af78e">&#39;作者id&#39;</span>,
+</span></span><span style="display:flex;"><span>   <span style="color:#ff6ac1">`</span>play_url<span style="color:#ff6ac1">`</span> <span style="color:#ff5c57">varchar</span>(<span style="color:#ff9f43">512</span>) <span style="color:#ff6ac1">NOT</span> <span style="color:#ff6ac1">NULL</span> <span style="color:#ff6ac1">COMMENT</span> <span style="color:#5af78e">&#39;视频播放地址&#39;</span>,
+</span></span><span style="display:flex;"><span>   <span style="color:#ff6ac1">`</span>cover_url<span style="color:#ff6ac1">`</span> <span style="color:#ff5c57">varchar</span>(<span style="color:#ff9f43">255</span>) <span style="color:#ff6ac1">NOT</span> <span style="color:#ff6ac1">NULL</span> <span style="color:#ff6ac1">COMMENT</span> <span style="color:#5af78e">&#39;视频封面地址&#39;</span>,
+</span></span><span style="display:flex;"><span>   <span style="color:#ff6ac1">`</span>favorite_count<span style="color:#ff6ac1">`</span> <span style="color:#ff5c57">int</span>(<span style="color:#ff9f43">11</span>) unsigned <span style="color:#ff6ac1">DEFAULT</span> <span style="color:#ff6ac1">NULL</span> <span style="color:#ff6ac1">COMMENT</span> <span style="color:#5af78e">&#39;视频的点赞总数&#39;</span>,
+</span></span><span style="display:flex;"><span>   <span style="color:#ff6ac1">`</span>comment_count<span style="color:#ff6ac1">`</span> <span style="color:#ff5c57">int</span>(<span style="color:#ff9f43">11</span>) unsigned <span style="color:#ff6ac1">DEFAULT</span> <span style="color:#ff6ac1">NULL</span> <span style="color:#ff6ac1">COMMENT</span> <span style="color:#5af78e">&#39;视频的评论总数&#39;</span>,
+</span></span><span style="display:flex;"><span>   <span style="color:#ff6ac1">`</span>title<span style="color:#ff6ac1">`</span> <span style="color:#ff5c57">varchar</span>(<span style="color:#ff9f43">255</span>) <span style="color:#ff5c57">CHARACTER</span> <span style="color:#ff6ac1">SET</span> utf8 <span style="color:#ff6ac1">NOT</span> <span style="color:#ff6ac1">NULL</span> <span style="color:#ff6ac1">COMMENT</span> <span style="color:#5af78e">&#39;视频标题&#39;</span>,
+</span></span><span style="display:flex;"><span>   <span style="color:#ff6ac1">`</span>created_at<span style="color:#ff6ac1">`</span> datetime <span style="color:#ff6ac1">DEFAULT</span> <span style="color:#ff6ac1">NULL</span> <span style="color:#ff6ac1">COMMENT</span> <span style="color:#5af78e">&#39;投稿时间&#39;</span>,
+</span></span><span style="display:flex;"><span>   <span style="color:#ff6ac1">`</span>deleted_at<span style="color:#ff6ac1">`</span> datetime <span style="color:#ff6ac1">DEFAULT</span> <span style="color:#ff6ac1">NULL</span> <span style="color:#ff6ac1">COMMENT</span> <span style="color:#5af78e">&#39;删除时间&#39;</span>,
+</span></span><span style="display:flex;"><span>   <span style="color:#ff6ac1">`</span>updated_at<span style="color:#ff6ac1">`</span> datetime <span style="color:#ff6ac1">DEFAULT</span> <span style="color:#ff6ac1">NULL</span> <span style="color:#ff6ac1">COMMENT</span> <span style="color:#5af78e">&#39;更新时间&#39;</span>,
+</span></span><span style="display:flex;"><span>   <span style="color:#ff6ac1">`</span>is_favorite<span style="color:#ff6ac1">`</span> tinyint(<span style="color:#ff9f43">1</span>) <span style="color:#ff6ac1">DEFAULT</span> <span style="color:#ff6ac1">NULL</span>,
+</span></span><span style="display:flex;"><span>   <span style="color:#ff6ac1">PRIMARY</span> <span style="color:#ff6ac1">KEY</span> (<span style="color:#ff6ac1">`</span>id<span style="color:#ff6ac1">`</span>),
+</span></span><span style="display:flex;"><span>   <span style="color:#ff6ac1">KEY</span> <span style="color:#ff6ac1">`</span>author_id<span style="color:#ff6ac1">`</span> (<span style="color:#ff6ac1">`</span>author_id<span style="color:#ff6ac1">`</span>),
+</span></span><span style="display:flex;"><span>   <span style="color:#ff6ac1">KEY</span> <span style="color:#ff6ac1">`</span>normal_favorite_count<span style="color:#ff6ac1">`</span> (<span style="color:#ff6ac1">`</span>favorite_count<span style="color:#ff6ac1">`</span>) <span style="color:#ff6ac1">USING</span> BTREE,
+</span></span><span style="display:flex;"><span>   <span style="color:#ff6ac1">CONSTRAINT</span> <span style="color:#ff6ac1">`</span>author_id<span style="color:#ff6ac1">`</span> <span style="color:#ff6ac1">FOREIGN</span> <span style="color:#ff6ac1">KEY</span> (<span style="color:#ff6ac1">`</span>author_id<span style="color:#ff6ac1">`</span>) <span style="color:#ff6ac1">REFERENCES</span> <span style="color:#ff6ac1">`</span>t_userinfo<span style="color:#ff6ac1">`</span> (<span style="color:#ff6ac1">`</span>id<span style="color:#ff6ac1">`</span>)
+</span></span><span style="display:flex;"><span> )
+</span></span></code></pre></div><p>2、然后在网站勾选 json 、gorm ，就出现了：</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span> <span style="color:#ff5c57">type</span> Video <span style="color:#ff5c57">struct</span> {
+</span></span><span style="display:flex;"><span>     ID <span style="color:#9aedfe">int64</span> <span style="color:#5af78e">`gorm:&#34;column:id&#34; json:&#34;id&#34;`</span>  <span style="color:#78787e">//  视频id
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>     AuthorId <span style="color:#9aedfe">int64</span> <span style="color:#5af78e">`gorm:&#34;column:author_id&#34; json:&#34;author_id&#34;`</span>  <span style="color:#78787e">//  作者id
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>     PlayUrl <span style="color:#9aedfe">string</span> <span style="color:#5af78e">`gorm:&#34;column:play_url&#34; json:&#34;play_url&#34;`</span>  <span style="color:#78787e">//  视频播放地址
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>     CoverUrl <span style="color:#9aedfe">string</span> <span style="color:#5af78e">`gorm:&#34;column:cover_url&#34; json:&#34;cover_url&#34;`</span>  <span style="color:#78787e">//  视频封面地址
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>     FavoriteCount <span style="color:#9aedfe">int64</span> <span style="color:#5af78e">`gorm:&#34;column:favorite_count&#34; json:&#34;favorite_count&#34;`</span>  <span style="color:#78787e">//  视频的点赞总数
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>     CommentCount <span style="color:#9aedfe">int64</span> <span style="color:#5af78e">`gorm:&#34;column:comment_count&#34; json:&#34;comment_count&#34;`</span>  <span style="color:#78787e">//  视频的评论总数
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>     Title <span style="color:#9aedfe">string</span> <span style="color:#5af78e">`gorm:&#34;column:title&#34; json:&#34;title&#34;`</span>  <span style="color:#78787e">//  视频标题
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>     CreatedAt time.Time <span style="color:#5af78e">`gorm:&#34;column:created_at&#34; json:&#34;created_at&#34;`</span>  <span style="color:#78787e">//  投稿时间
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>     DeletedAt time.Time <span style="color:#5af78e">`gorm:&#34;column:deleted_at&#34; json:&#34;deleted_at&#34;`</span>  <span style="color:#78787e">//  删除时间
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>     UpdatedAt time.Time <span style="color:#5af78e">`gorm:&#34;column:updated_at&#34; json:&#34;updated_at&#34;`</span>  <span style="color:#78787e">//  更新时间
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>     IsFavorite <span style="color:#9aedfe">int64</span> <span style="color:#5af78e">`gorm:&#34;column:is_favorite&#34; json:&#34;is_favorite&#34;`</span>
+</span></span><span style="display:flex;"><span> }
+</span></span></code></pre></div><p>3、修改</p>
+<p>比如这里的需求是 <code>t_video</code> 表中需要携带作者 <code>userinfo</code> 的数据。</p>
+<ul>
+<li>这里新增 Author Userinfo 连接 Userinfo 结构体，并声明 gorm 字段为 <code>&quot;foreignKey:AuthorId;&quot;</code> 。</li>
+<li>把UpdatedAt、DeletedAt、CreatedAt字段删掉，新增 gorm.Model ，因为它自带这些参数。</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span> <span style="color:#ff5c57">type</span> Video <span style="color:#ff5c57">struct</span> {
+</span></span><span style="display:flex;"><span>     gorm.Model
+</span></span><span style="display:flex;"><span>     ID            <span style="color:#9aedfe">int64</span>     <span style="color:#5af78e">`gorm:&#34;column:id&#34; json:&#34;id&#34;`</span> <span style="color:#78787e">//  视频id
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>     Author        Userinfo  <span style="color:#5af78e">`json:&#34;author&#34; gorm:&#34;foreignKey:AuthorId;&#34;`</span>         <span style="color:#78787e">//  -新增-
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>     AuthorId      <span style="color:#9aedfe">int64</span>     <span style="color:#5af78e">`gorm:&#34;column:author_id&#34; json:&#34;author_id&#34;`</span>           <span style="color:#78787e">//  作者id
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>     PlayUrl       <span style="color:#9aedfe">string</span>    <span style="color:#5af78e">`gorm:&#34;column:play_url&#34; json:&#34;play_url&#34;`</span>             <span style="color:#78787e">//  视频播放地址
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>     CoverUrl      <span style="color:#9aedfe">string</span>    <span style="color:#5af78e">`gorm:&#34;column:cover_url&#34; json:&#34;cover_url&#34;`</span>           <span style="color:#78787e">//  视频封面地址
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>     FavoriteCount <span style="color:#9aedfe">int64</span>     <span style="color:#5af78e">`gorm:&#34;column:favorite_count&#34; json:&#34;favorite_count&#34;`</span> <span style="color:#78787e">//  视频的点赞总数
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>     CommentCount  <span style="color:#9aedfe">int64</span>     <span style="color:#5af78e">`gorm:&#34;column:comment_count&#34; json:&#34;comment_count&#34;`</span>   <span style="color:#78787e">//  视频的评论总数
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>     Title         <span style="color:#9aedfe">string</span>    <span style="color:#5af78e">`gorm:&#34;column:title&#34; json:&#34;title&#34;`</span>                   <span style="color:#78787e">//  视频标题
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>     <span style="color:#78787e">// CreatedAt  time.Time `gorm:&#34;column:created_at&#34; json:&#34;created_at&#34;`         //  投稿时间
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>     <span style="color:#78787e">// DeletedAt  time.Time `gorm:&#34;column:deleted_at&#34; json:&#34;deleted_at&#34;`         //  删除时间
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>     <span style="color:#78787e">// UpdatedAt  time.Time `gorm:&#34;column:updated_at&#34; json:&#34;updated_at&#34;`         //  更新时间
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>     IsFavorite    <span style="color:#9aedfe">int64</span>     <span style="color:#5af78e">`gorm:&#34;column:is_favorite&#34; json:&#34;is_favorite&#34;`</span>
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span> <span style="color:#ff5c57">​</span>
+</span></span></code></pre></div><h4 id="注意的问题">注意的问题<a hidden class="anchor" aria-hidden="true" href="#注意的问题">#</a></h4>
+<p>1、比如使用 Navicat 建表的表名是 <code>t_video</code> ，但是想关联的结构体名是 <code>Video</code> ， 那 gorm 怎么知道关联想要的东西呢？</p>
+<p>这里需要在连接数据库时进行一些配置，这里只需要使用前两个：</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span> dsn <span style="color:#ff6ac1">:=</span> <span style="color:#5af78e">&#34;root:xxxxxx@tcp(127.0.0.1:3306)/golang_blog?charset=utf8mb4&amp;parseTime=True&amp;loc=Local&#34;</span>
+</span></span><span style="display:flex;"><span> db, err <span style="color:#ff6ac1">:=</span> gorm.<span style="color:#57c7ff">Open</span>(mysql.<span style="color:#57c7ff">Open</span>(<span style="color:#5af78e">&#34;gorm.db&#34;</span>), <span style="color:#ff6ac1">&amp;</span>gorm.Config{
+</span></span><span style="display:flex;"><span>   NamingStrategy: schema.NamingStrategy{
+</span></span><span style="display:flex;"><span>     TablePrefix: <span style="color:#5af78e">&#34;t_&#34;</span>,   <span style="color:#78787e">// table name prefix, table for `User` would be `t_users`
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>     SingularTable: <span style="color:#ff6ac1">true</span>, <span style="color:#78787e">// use singular table name, table for `User` would be `user` with this option enabled
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>     <span style="color:#78787e">//NoLowerCase: true, // skip the snake_casing of names
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>     <span style="color:#78787e">//NameReplacer: strings.NewReplacer(&#34;CID&#34;, &#34;Cid&#34;), // use name replacer to change struct/field name before convert it to db name
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>   },
+</span></span><span style="display:flex;"><span> })
+</span></span></code></pre></div><p>2、若需要的字段可能有中文，为了避免报错，建表时设置该字段的字符集为utf8，排序规则为utf8_general_ci。</p>
+<h3 id="3preload-预加载">3.<code>Preload</code> 预加载<a hidden class="anchor" aria-hidden="true" href="#3preload-预加载">#</a></h3>
+<p>在上述嵌套的情况下，此时直接查询返回一个 video 是没有 Userinfo 的信息的，需要使用 <code>Preload</code> 。</p>
+<p>GORM 允许在 <code>Preload</code> 的其它 SQL 中直接加载关系。</p>
+<p>比如：直接链式添加 <code>.Preload(&quot;Author&quot;)</code> ：</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span> <span style="color:#ff5c57">func</span> (mgr manager) <span style="color:#57c7ff">GetAllVideo</span>(latestTime <span style="color:#9aedfe">int64</span>) ([]model.Video, <span style="color:#9aedfe">error</span>) {
+</span></span><span style="display:flex;"><span>     <span style="color:#ff5c57">var</span> videos []model.Video
+</span></span><span style="display:flex;"><span>     timeLayout <span style="color:#ff6ac1">:=</span> <span style="color:#5af78e">&#34;2006-01-02 15:04:05&#34;</span>
+</span></span><span style="display:flex;"><span>     
+</span></span><span style="display:flex;"><span>     result <span style="color:#ff6ac1">:=</span> mgr.db.<span style="color:#57c7ff">Model</span>(<span style="color:#ff6ac1">&amp;</span>model.Video{}).<span style="color:#57c7ff">Where</span>(<span style="color:#5af78e">&#34;created_at &lt;= ?&#34;</span>, time.<span style="color:#57c7ff">Unix</span>(latestTime, <span style="color:#ff9f43">0</span>).<span style="color:#57c7ff">Format</span>(timeLayout)).
+</span></span><span style="display:flex;"><span>         <span style="color:#57c7ff">Order</span>(<span style="color:#5af78e">&#34;created_at DESC&#34;</span>).<span style="color:#57c7ff">Preload</span>(<span style="color:#5af78e">&#34;Author&#34;</span>).<span style="color:#57c7ff">Limit</span>(<span style="color:#ff9f43">30</span>).<span style="color:#57c7ff">Count</span>(<span style="color:#ff6ac1">&amp;</span>count).<span style="color:#57c7ff">Find</span>(<span style="color:#ff6ac1">&amp;</span>videos)
+</span></span><span style="display:flex;"><span> <span style="color:#ff5c57">​</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#ff6ac1">return</span> videos, result.Error
+</span></span><span style="display:flex;"><span> }
+</span></span></code></pre></div><h2 id="04-总结">04 总结<a hidden class="anchor" aria-hidden="true" href="#04-总结">#</a></h2>
+<p>gorm使用下来是比较方便的orm工具，建议读者如果出问题了多看看官方文档。</p>
+<p>参考资料：</p>
+<p>gorm官方文档：<a href="https://gorm.io/zh_CN/docs/index.html">GORM 指南 | GORM - The fantastic ORM library for Golang, aims to be developer friendly.</a></p>
+
+
+        </div>
+        <div class="post-reward">
+            <div style="padding: 0 0 0 0; margin: 0 0 0 0; width: 100%; font-size:16px; text-align: center;">
+                <div id="QR" style="opacity: 0;">
+                    <div id="wechat" style="display: inline-block">
+                        <a class="fancybox" rel="group">
+                            <img id="wechat_qr" src="https://Bin-lin-rgb.github.io/img/wechat_pay.png" alt="wechat_pay"></a>
+                        <p>微信</p>
+                    </div>
+                    <div id="alipay" style="display: inline-block">
+                        <a class="fancybox" rel="group">
+                            <img id="alipay_qr" src="https://Bin-lin-rgb.github.io/img/alipay.png" alt="alipay"></a>
+                        <p>支付宝</p>
+                    </div>
+                </div>
+                <button id="rewardButton"
+                        onclick="
+                    var qr = document.getElementById('QR');
+                    if (qr.style.opacity === '0') {
+                        qr.style.opacity='1';
+                    } else {
+                        qr.style.opacity='0'
+                    }"
+                >
+                    <span>🧧 鼓励</span>
+                </button>
+            </div>
+        </div>
+
+        <footer class="post-footer">
+            
+<nav class="paginav">
+  <a class="prev" href="https://Bin-lin-rgb.github.io/posts/go/zap%E6%97%A5%E5%BF%97%E5%BA%93/">
+    <span class="title">« 上一页</span>
+    <br>
+    <span>Zap日志库</span>
+  </a>
+  <a class="next" href="https://Bin-lin-rgb.github.io/posts/go/%E4%BD%BF%E7%94%A8ffmpeg/">
+    <span class="title">下一页 »</span>
+    <br>
+    <span>使用 FFmpeg 截取视频第一帧并保存案例</span>
+  </a>
+</nav>
+
+        </footer>
+    </div>
+
+<style>
+    .comments_details summary::marker {
+        font-size: 20px;
+        content: '👉展开评论';
+        color: var(--content);
+    }
+    .comments_details[open] summary::marker{
+        font-size: 20px;
+        content: '👇关闭评论';
+        color: var(--content);
+    }
+</style>
+
+
+<div>
+    <details class="comments_details">
+        <summary style="cursor: pointer; margin: 50px 0 20px 0;width: 130px;">
+            <span style="font-size: 20px;color: var(--content);">...</span>
+        </summary>
+        <div id="tcomment"></div>
+    </details>
+    <script src="https://cdn.staticfile.org/twikoo/1.5.8/twikoo.all.min.js">
+    </script>
+    <script>
+        twikoo.init({
+            envId: 'https://twikoo-api-nine-silk.vercel.app/',
+            el: "#tcomment",
+            lang: 'zh-CN',
+            region: 'ap-guangzhou',
+            path: window.TWIKOO_MAGIC_PATH||window.location.pathname,
+        })
+    
+    
+    
+    
+    
+    
+    
+    </script>
+</div>
+</article>
+</main>
+
+<footer class="footer">
+    <span>
+        Copyright
+        &copy;
+        2021-2023
+        <a href="https://Bin-lin-rgb.github.io/" style="color:#939393;">Blaine&#39;s Blog</a>
+        All Rights Reserved
+    </span>
+    <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;">备案号</a>&nbsp;
+    <span>
+        <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=null"
+           style="display:inline-block;text-decoration:none;height:20px;color:#939393;">
+            <img src="%e5%85%ac%e5%ae%89%e5%9b%be%e6%a0%87%e9%93%be%e6%8e%a5" style="float:left;margin: 0px 5px 0px 0px;"/>
+            公网安备
+        </a>
+    </span>
+    <span id="busuanzi_container">
+        <span class="fa fa-user"></span> <span id="busuanzi_value_site_uv"></span>
+        <span class="fa fa-eye"></span> <span id="busuanzi_value_site_pv"></span>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <span class="topInner">
+        <svg class="topSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z"/>
+        </svg>
+        <span id="read_progress"></span>
+    </span>
+</a>
+
+<script>
+    document.addEventListener('scroll', function (e) {
+        const readProgress = document.getElementById("read_progress");
+        const scrollHeight = document.documentElement.scrollHeight;
+        const clientHeight = document.documentElement.clientHeight;
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        readProgress.innerText = ((scrollTop / (scrollHeight - clientHeight)).toFixed(2) * 100).toFixed(0);
+    })
+</script>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+</script>
+<script>
+    let mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        (function() {
+            document.cookie = "change-themes" + "="+ escape ("false");
+        })()
+
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    });
+</script>
+
+<script>
+    document.body.addEventListener('copy', function (e) {
+        if (window.getSelection().toString() && window.getSelection().toString().length > 50) {
+            let clipboardData = e.clipboardData || window.clipboardData;
+            if (clipboardData) {
+                e.preventDefault();
+                let htmlData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Blaine's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                let textData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Blaine's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                clipboardData.setData('text/html', htmlData);
+                clipboardData.setData('text/plain', textData);
+            }
+        }
+    });
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerText = '复制';
+
+        function copyingDone() {
+            copybutton.innerText = '已复制！';
+            setTimeout(() => {
+                copybutton.innerText = '复制';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                let text = codeblock.textContent +
+                    '\r\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Blaine's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                navigator.clipboard.writeText(text);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) {}
+            selection.removeRange(range);
+        });
+
+        let language = codeblock.className.replaceAll("language-", "")
+        let macTool = document.createElement("div")
+        let macTool1 = document.createElement("div")
+        let macTool2 = document.createElement("div")
+        let macTool3 = document.createElement("div")
+        let languageType = document.createElement("div")
+        languageType.innerText = language
+        macTool.setAttribute('class', 'mac-tool')
+        macTool1.setAttribute('class', 'mac bb1')
+        macTool2.setAttribute('class', 'mac bb2')
+        macTool3.setAttribute('class', 'mac bb3')
+        languageType.setAttribute('class', 'language-type')
+        macTool.appendChild(macTool1)
+        macTool.appendChild(macTool2)
+        macTool.appendChild(macTool3)
+        macTool.appendChild(languageType)
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        }
+    });
+</script>
+</body>
+
+</html>

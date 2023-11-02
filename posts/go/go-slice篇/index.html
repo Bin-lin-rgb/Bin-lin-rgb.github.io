@@ -5,11 +5,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="index, follow">
-<title>计算机网络之基础篇 | Blaine&#39;s Blog</title>
-<meta name="keywords" content="计算机网络">
-<meta name="description" content="计算机网络之基础篇 - Blaine&#39;s Blog">
+<title>Go Slice篇 | Blaine&#39;s Blog</title>
+<meta name="keywords" content="">
+<meta name="description" content="Slice实现原理 Slice依托数组实现，底层数组对用户屏蔽，在底层数组容量不足时可以实现自动重分配并生成新的Slice。 接下来按照实际使用场景分别介绍其实现机制。 3.1 Slice数据结构 源码包中src/runtime/slice.go:slice定义了Slice的数据结构： type slice struct {">
 <meta name="author" content="Blaine">
-<link rel="canonical" href="https://Bin-lin-rgb.github.io/posts/basics/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80%E7%AF%87/">
+<link rel="canonical" href="https://Bin-lin-rgb.github.io/posts/go/go-slice%E7%AF%87/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.css" rel="preload stylesheet" as="style">
 <script defer crossorigin="anonymous" src="/assets/js/highlight.js" onload="hljs.initHighlightingOnLoad();"></script>
 <link rel="icon" href="https://Bin-lin-rgb.github.io/img/icon.png">
@@ -73,16 +73,16 @@ var _hmt = _hmt || [];
   s.parentNode.insertBefore(hm, s);
 })();
 </script>
-<meta property="og:title" content="计算机网络之基础篇" />
-<meta property="og:description" content="" />
+<meta property="og:title" content="Go Slice篇" />
+<meta property="og:description" content="Slice实现原理 Slice依托数组实现，底层数组对用户屏蔽，在底层数组容量不足时可以实现自动重分配并生成新的Slice。 接下来按照实际使用场景分别介绍其实现机制。 3.1 Slice数据结构 源码包中src/runtime/slice.go:slice定义了Slice的数据结构： type slice struct {" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://Bin-lin-rgb.github.io/posts/basics/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80%E7%AF%87/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2023-10-29T16:34:43+08:00" />
-<meta property="article:modified_time" content="2023-10-29T16:34:43+08:00" />
+<meta property="og:url" content="https://Bin-lin-rgb.github.io/posts/go/go-slice%E7%AF%87/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-11-01T09:45:04+08:00" />
+<meta property="article:modified_time" content="2023-11-01T09:45:04+08:00" />
 
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="计算机网络之基础篇"/>
-<meta name="twitter:description" content=""/>
+<meta name="twitter:title" content="Go Slice篇"/>
+<meta name="twitter:description" content="Slice实现原理 Slice依托数组实现，底层数组对用户屏蔽，在底层数组容量不足时可以实现自动重分配并生成新的Slice。 接下来按照实际使用场景分别介绍其实现机制。 3.1 Slice数据结构 源码包中src/runtime/slice.go:slice定义了Slice的数据结构： type slice struct {"/>
 
 
 <script type="application/ld+json">
@@ -101,14 +101,14 @@ var _hmt = _hmt || [];
         {
           "@type": "ListItem",
           "position":  2 ,
-          "name": "📖 基础",
-          "item": "https://Bin-lin-rgb.github.io/posts/basics/"
+          "name": "🥇 Golang",
+          "item": "https://Bin-lin-rgb.github.io/posts/go/"
         }, 
     {
       "@type": "ListItem",
       "position":  3 ,
-      "name": "计算机网络之基础篇",
-      "item": "https://Bin-lin-rgb.github.io/posts/basics/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80%E7%AF%87/"
+      "name": "Go Slice篇",
+      "item": "https://Bin-lin-rgb.github.io/posts/go/go-slice%E7%AF%87/"
     }
   ]
 }
@@ -117,24 +117,24 @@ var _hmt = _hmt || [];
 {
   "@context": "https://schema.org",
   "@type": "BlogPosting",
-  "headline": "计算机网络之基础篇",
-  "name": "计算机网络之基础篇",
-  "description": "",
+  "headline": "Go Slice篇",
+  "name": "Go Slice篇",
+  "description": "Slice实现原理 Slice依托数组实现，底层数组对用户屏蔽，在底层数组容量不足时可以实现自动重分配并生成新的Slice。 接下来按照实际使用场景分别介绍其实现机制。 3.1 Slice数据结构 源码包中src/runtime/slice.go:slice定义了Slice的数据结构： type slice struct {",
   "keywords": [
-    "计算机网络"
+    ""
   ],
-  "articleBody": "",
-  "wordCount" : "0",
+  "articleBody": "Slice实现原理 Slice依托数组实现，底层数组对用户屏蔽，在底层数组容量不足时可以实现自动重分配并生成新的Slice。 接下来按照实际使用场景分别介绍其实现机制。\n3.1 Slice数据结构 源码包中src/runtime/slice.go:slice定义了Slice的数据结构：\ntype slice struct { array unsafe.Pointer len int cap int } 从数据结构看Slice很清晰, array指针指向底层数组，len表示切片长度，cap表示底层数组容量。\n3.2 创建Slice // 初始化方式1：直接声明 var slice1 []int // 初始化方式2：使用字面量 slice2 := []int{1, 2, 3, 4} // 初始化方式3：使用make创建slice slice3 := make([]int, 3, 5) // 初始化方式4: 从切片或数组“截取” slcie4 := arr[1:3] 3.3 Slice 扩容 使用append向Slice追加元素时，如果Slice空间不足，将会触发Slice扩容，扩容实际上是重新配一块更大的内存，将原Slice数据拷贝进新Slice，然后返回新Slice，扩容后再将数据追加进去。\n扩容容量的选择遵循以下规则：\n如果原Slice容量小于1024，则新Slice容量将扩大为原来的2倍； 如果原Slice容量大于等于1024，则新Slice容量将扩大为原来的1.25倍；\n使用append()向Slice添加一个元素的实现步骤如下：\n假如Slice容量够用，则将新元素追加进去，Slice.len++，返回原Slice 原Slice容量不够，则将Slice先扩容，扩容后得到新Slice。将新元素追加进新Slice，Slice.len++，返回新的Slice。 3.5 Slice Copy 使用copy()内置函数拷贝两个切片时，会将源切片的数据逐个拷贝到目的切片指向的数组中，拷贝数量取两个切片长度的最小值。\n例如长度为10的切片拷贝到长度为5的切片时，将会拷贝5个元素。\n也就是说，copy过程中不会发生扩容。\n3.6 特殊切片 跟据数组或切片生成新的切片一般使用slice := array[start:end]方式，这种新生成的切片并没有指定切片的容量，实际上新切片的容量是从start开始直至array的结束。\n比如下面两个切片，长度和容量都是一致的，使用共同的内存地址：\nsliceA := make([]int, 5, 10) sliceB := sliceA[0:5]\n根据数组或切片生成切片还有另一种写法，即切片同时也指定容量，即slice[start:end:cap], 其中cap即为新切片的容量，当然容量不能超过原切片实际值，如下所示：\nsliceA := make([]int, 5, 10) //length = 5; capacity = 10\rsliceB := sliceA[0:5] //length = 5; capacity = 10\rsliceC := sliceA[0:5:5] //length = 5; capacity = 5\r这切片方法不常见，在Golang源码里能够见到，不过非常利于切片的理解。\n编程Tips 创建切片时可跟据实际需要预分配容量，尽量避免追加过程中扩容操作，有利于提升性能； 切片拷贝时需要判断实际拷贝的元素个数 谨慎使用多个切片操作同一个数组，以防读写冲突 Slice总结 每个切片都指向一个底层数组 每个切片都保存了当前切片的长度、底层数组可用容量 使用len()计算切片长度时间复杂度为O(1)，不需要遍历切片 使用cap()计算切片容量时间复杂度为O(1)，不需要遍历切片 通过函数传递切片时，不会拷贝整个切片，因为切片本身只是个结构体而矣 使用append()向切片追加元素时有可能触发扩容，扩容后将会生成新的切片 ",
+  "wordCount" : "1286",
   "inLanguage": "zh",
-  "datePublished": "2023-10-29T16:34:43+08:00",
-  "dateModified": "2023-10-29T16:34:43+08:00",
+  "datePublished": "2023-11-01T09:45:04+08:00",
+  "dateModified": "2023-11-01T09:45:04+08:00",
   "author":[{
     "@type": "Person",
     "name": "Blaine"
   }],
   "mainEntityOfPage": {
     "@type": "WebPage",
-    "@id": "https://Bin-lin-rgb.github.io/posts/basics/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80%E7%AF%87/"
+    "@id": "https://Bin-lin-rgb.github.io/posts/go/go-slice%E7%AF%87/"
   },
   "publisher": {
     "@type": "Organization",
@@ -253,9 +253,9 @@ var _hmt = _hmt || [];
 <article class="post-single">
     <div id="single-content">
         <header class="post-header">
-            <div class="breadcrumbs"><a href="https://Bin-lin-rgb.github.io/">🏠 主页</a>&nbsp;»&nbsp;<a href="https://Bin-lin-rgb.github.io/posts/">📚文章</a>&nbsp;»&nbsp;<a href="https://Bin-lin-rgb.github.io/posts/basics/">📖 基础</a></div>
+            <div class="breadcrumbs"><a href="https://Bin-lin-rgb.github.io/">🏠 主页</a>&nbsp;»&nbsp;<a href="https://Bin-lin-rgb.github.io/posts/">📚文章</a>&nbsp;»&nbsp;<a href="https://Bin-lin-rgb.github.io/posts/go/">🥇 Golang</a></div>
             <h1 class="post-title">
-                计算机网络之基础篇
+                Go Slice篇
             </h1>
             <div class="post-meta">
 
@@ -276,7 +276,7 @@ var _hmt = _hmt || [];
 <span class="parent-post-meta">
     <span id="post_meta_style_1">
         <span class="fa fa-calendar-check-o"></span>
-        <span>2023-10-29
+        <span>2023-11-01
             &nbsp;&nbsp;
         </span>
     </span>
@@ -289,13 +289,13 @@ var _hmt = _hmt || [];
     
     <span id="post_meta_style_3">
         <span class="fa fa-file-word-o"></span>
-        <span>0字
+        <span>1286字
             &nbsp;&nbsp;
         </span>
     </span>
     <span id="post_meta_style_4">
         <span class="fa fa-clock-o"></span>
-        <span>0分钟
+        <span>3分钟
             &nbsp;&nbsp;
         </span>
     </span>
@@ -309,7 +309,6 @@ var _hmt = _hmt || [];
         <span class="fa fa-tags" style="opacity: 0.8"></span>
         <span>
             <span class="post-tags-meta">
-                <a href="https://Bin-lin-rgb.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" style="color: var(--secondary)!important;">计算机网络</a>
             </span>
         </span>
     </span>
@@ -362,7 +361,164 @@ var _hmt = _hmt || [];
                 </span>
 
 </div>
-        </header> 
+        </header> <aside id="toc-container" class="toc-container wide">
+    <div class="toc">
+        <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">目录</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#slice%e5%ae%9e%e7%8e%b0%e5%8e%9f%e7%90%86" aria-label="Slice实现原理">Slice实现原理</a><ul>
+                        
+                <li>
+                    <a href="#31-slice%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84" aria-label="3.1 Slice数据结构">3.1 Slice数据结构</a></li>
+                <li>
+                    <a href="#32-%e5%88%9b%e5%bb%baslice" aria-label="3.2 创建Slice">3.2 创建Slice</a></li>
+                <li>
+                    <a href="#33-slice-%e6%89%a9%e5%ae%b9" aria-label="3.3 Slice 扩容">3.3 Slice 扩容</a></li>
+                <li>
+                    <a href="#35-slice-copy" aria-label="3.5 Slice Copy">3.5 Slice Copy</a></li>
+                <li>
+                    <a href="#36-%e7%89%b9%e6%ae%8a%e5%88%87%e7%89%87" aria-label="3.6 特殊切片">3.6 特殊切片</a></li>
+                <li>
+                    <a href="#%e7%bc%96%e7%a8%8btips" aria-label="编程Tips">编程Tips</a></li>
+                <li>
+                    <a href="#slice%e6%80%bb%e7%bb%93" aria-label="Slice总结">Slice总结</a>
+                </li>
+            </ul>
+            </li>
+            </ul>
+        </div>
+        </details>
+    </div>
+</aside>
+<script>
+    let activeElement;
+    let elements;
+    window.addEventListener('DOMContentLoaded', function (event) {
+        checkTocPosition();
+
+        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+        
+        activeElement = elements[0];
+        const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
+        document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+    }, false);
+
+    window.addEventListener('resize', function(event) {
+        checkTocPosition();
+    }, false);
+
+    window.addEventListener('scroll', () => {
+        
+        if (elements) {
+            activeElement = Array.from(elements).find((element) => {
+                if ((getOffsetTop(element) - window.pageYOffset) > 0 &&
+                    (getOffsetTop(element) - window.pageYOffset) < window.innerHeight/2) {
+                    return element;
+                }
+            }) || activeElement
+
+            elements.forEach(element => {
+                const id = encodeURI(element.getAttribute('id')).toLowerCase();
+                if (element === activeElement){
+                    document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+                } else {
+                    document.querySelector(`.inner ul li a[href="#${id}"]`).classList.remove('active');
+                }
+            })
+        }
+    }, false);
+
+    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
+    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
+    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
+
+    function checkTocPosition() {
+        const width = document.body.scrollWidth;
+        if (width - main - (toc * 2) - (gap * 4) > 0) {
+            document.getElementById("toc-container").classList.add("wide");
+        } else {
+            document.getElementById("toc-container").classList.remove("wide");
+        }
+    }
+
+    function getOffsetTop(element) {
+        if (!element.getClientRects().length) {
+            return 0;
+        }
+        let rect = element.getBoundingClientRect();
+        let win = element.ownerDocument.defaultView;
+        return rect.top + win.pageYOffset;
+    }
+</script>
+        <div class="post-content"><h1 id="slice实现原理">Slice实现原理<a hidden class="anchor" aria-hidden="true" href="#slice实现原理">#</a></h1>
+<p>Slice依托数组实现，底层数组对用户屏蔽，在底层数组容量不足时可以实现自动重分配并生成新的Slice。 接下来按照实际使用场景分别介绍其实现机制。</p>
+<h2 id="31-slice数据结构">3.1 Slice数据结构<a hidden class="anchor" aria-hidden="true" href="#31-slice数据结构">#</a></h2>
+<p>源码包中src/runtime/slice.go:slice定义了Slice的数据结构：</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff5c57">type</span> slice <span style="color:#ff5c57">struct</span> {
+</span></span><span style="display:flex;"><span>    array unsafe.Pointer
+</span></span><span style="display:flex;"><span>    len   <span style="color:#9aedfe">int</span>
+</span></span><span style="display:flex;"><span>    cap   <span style="color:#9aedfe">int</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>从数据结构看Slice很清晰, array指针指向底层数组，len表示切片长度，cap表示底层数组容量。</p>
+<h2 id="32-创建slice">3.2 创建Slice<a hidden class="anchor" aria-hidden="true" href="#32-创建slice">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#78787e">// 初始化方式1：直接声明
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span><span style="color:#ff5c57">var</span> slice1 []<span style="color:#9aedfe">int</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#78787e">// 初始化方式2：使用字面量
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>slice2 <span style="color:#ff6ac1">:=</span> []<span style="color:#9aedfe">int</span>{<span style="color:#ff9f43">1</span>, <span style="color:#ff9f43">2</span>, <span style="color:#ff9f43">3</span>, <span style="color:#ff9f43">4</span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#78787e">// 初始化方式3：使用make创建slice
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>slice3 <span style="color:#ff6ac1">:=</span> <span style="color:#ff5c57">make</span>([]<span style="color:#9aedfe">int</span>, <span style="color:#ff9f43">3</span>, <span style="color:#ff9f43">5</span>)         
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#78787e">// 初始化方式4: 从切片或数组“截取”
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>slcie4 <span style="color:#ff6ac1">:=</span> arr[<span style="color:#ff9f43">1</span>:<span style="color:#ff9f43">3</span>]
+</span></span></code></pre></div><h2 id="33-slice-扩容">3.3 Slice 扩容<a hidden class="anchor" aria-hidden="true" href="#33-slice-扩容">#</a></h2>
+<p>使用append向Slice追加元素时，如果Slice空间不足，将会触发Slice扩容，扩容实际上是重新配一块更大的内存，将原Slice数据拷贝进新Slice，然后返回新Slice，扩容后再将数据追加进去。</p>
+<p>扩容容量的选择遵循以下规则：</p>
+<p>如果原Slice容量小于1024，则新Slice容量将扩大为原来的2倍；
+如果原Slice容量大于等于1024，则新Slice容量将扩大为原来的1.25倍；</p>
+<p>使用append()向Slice添加一个元素的实现步骤如下：</p>
+<ul>
+<li>假如Slice容量够用，则将新元素追加进去，Slice.len++，返回原Slice</li>
+<li>原Slice容量不够，则将Slice先扩容，扩容后得到新Slice。将新元素追加进新Slice，Slice.len++，返回新的Slice。</li>
+</ul>
+<h2 id="35-slice-copy">3.5 Slice Copy<a hidden class="anchor" aria-hidden="true" href="#35-slice-copy">#</a></h2>
+<p>使用copy()内置函数拷贝两个切片时，会将源切片的数据逐个拷贝到目的切片指向的数组中，拷贝数量取两个切片长度的最小值。</p>
+<p>例如长度为10的切片拷贝到长度为5的切片时，将会拷贝5个元素。</p>
+<p>也就是说，<strong>copy过程中不会发生扩容</strong>。</p>
+<h2 id="36-特殊切片">3.6 特殊切片<a hidden class="anchor" aria-hidden="true" href="#36-特殊切片">#</a></h2>
+<p>跟据数组或切片生成新的切片一般使用slice := array[start:end]方式，这种新生成的切片并没有指定切片的容量，实际上新切片的容量是从start开始直至array的结束。</p>
+<p>比如下面两个切片，长度和容量都是一致的，使用共同的内存地址：</p>
+<p>sliceA := make([]int, 5, 10)
+sliceB := sliceA[0:5]</p>
+<p>根据数组或切片生成切片还有另一种写法，即切片同时也指定容量，即slice[start:end:cap], 其中cap即为新切片的容量，当然容量不能超过原切片实际值，如下所示：</p>
+<pre><code>sliceA := make([]int, 5, 10)  //length = 5; capacity = 10
+sliceB := sliceA[0:5]         //length = 5; capacity = 10
+sliceC := sliceA[0:5:5]       //length = 5; capacity = 5
+</code></pre>
+<p>这切片方法不常见，在Golang源码里能够见到，不过非常利于切片的理解。</p>
+<h2 id="编程tips">编程Tips<a hidden class="anchor" aria-hidden="true" href="#编程tips">#</a></h2>
+<ul>
+<li>创建切片时可跟据实际需要预分配容量，尽量避免追加过程中扩容操作，有利于提升性能；</li>
+<li>切片拷贝时需要判断实际拷贝的元素个数</li>
+<li>谨慎使用多个切片操作同一个数组，以防读写冲突</li>
+</ul>
+<h2 id="slice总结">Slice总结<a hidden class="anchor" aria-hidden="true" href="#slice总结">#</a></h2>
+<ul>
+<li>每个切片都指向一个底层数组</li>
+<li>每个切片都保存了当前切片的长度、底层数组可用容量</li>
+<li>使用len()计算切片长度时间复杂度为O(1)，不需要遍历切片</li>
+<li>使用cap()计算切片容量时间复杂度为O(1)，不需要遍历切片</li>
+<li>通过函数传递切片时，不会拷贝整个切片，因为切片本身只是个结构体而矣</li>
+<li>使用append()向切片追加元素时有可能触发扩容，扩容后将会生成新的切片</li>
+</ul>
+
+
+        </div>
         <div class="post-reward">
             <div style="padding: 0 0 0 0; margin: 0 0 0 0; width: 100%; font-size:16px; text-align: center;">
                 <div id="QR" style="opacity: 0;">
@@ -394,15 +550,15 @@ var _hmt = _hmt || [];
         <footer class="post-footer">
             
 <nav class="paginav">
-  <a class="prev" href="https://Bin-lin-rgb.github.io/posts/go/%E9%9B%AA%E8%8A%B1id%E7%94%9F%E6%88%90%E5%89%8D%E5%90%8E%E7%AB%AF%E4%BC%A0%E8%BE%93%E4%B8%8D%E4%B8%80%E8%87%B4/">
+  <a class="prev" href="https://Bin-lin-rgb.github.io/posts/go/go-map%E7%AF%87/">
     <span class="title">« 上一页</span>
     <br>
-    <span>雪花id生成，前后端传输不一致</span>
+    <span>Go Map篇</span>
   </a>
-  <a class="next" href="https://Bin-lin-rgb.github.io/posts/leetcode/top150/">
+  <a class="next" href="https://Bin-lin-rgb.github.io/posts/go/go%E5%9F%BA%E7%A1%80%E7%AF%87/">
     <span class="title">下一页 »</span>
     <br>
-    <span>Top150</span>
+    <span>Go 基础篇</span>
   </a>
 </nav>
 

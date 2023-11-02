@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="zh" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Go Channel篇 | Blaine&#39;s Blog</title>
+<meta name="keywords" content="">
+<meta name="description" content="1.Go channel 的底层实现原理 概念： Go 中的 channel 是一个队列，遵循先进先出的原则，负责协程之间的通信（Go 语言提倡不要通过共享内存来通信，而要通过通信来实现内存共享，CSP(Communicating Sequential Process)并发模型，就是通过 goroutine 和 channel 来实现的） 使用场景： 停止信号监听 定时任务 生产方和消费方解">
+<meta name="author" content="Blaine">
+<link rel="canonical" href="https://Bin-lin-rgb.github.io/posts/go/go-channel%E7%AF%87/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.css" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.js" onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://Bin-lin-rgb.github.io/img/icon.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://Bin-lin-rgb.github.io/img/icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://Bin-lin-rgb.github.io/img/icon.png">
+<link rel="apple-touch-icon" href="https://Bin-lin-rgb.github.io/img/icon.png">
+<link rel="mask-icon" href="https://Bin-lin-rgb.github.io/img/icon.png">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+<script defer src="https://unpkg.com/mermaid@8.8.1/dist/mermaid.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+<script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.3/dist/jquery.min.js"></script>
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = ""; 
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<meta property="og:title" content="Go Channel篇" />
+<meta property="og:description" content="1.Go channel 的底层实现原理 概念： Go 中的 channel 是一个队列，遵循先进先出的原则，负责协程之间的通信（Go 语言提倡不要通过共享内存来通信，而要通过通信来实现内存共享，CSP(Communicating Sequential Process)并发模型，就是通过 goroutine 和 channel 来实现的） 使用场景： 停止信号监听 定时任务 生产方和消费方解" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://Bin-lin-rgb.github.io/posts/go/go-channel%E7%AF%87/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-11-01T09:45:23+08:00" />
+<meta property="article:modified_time" content="2023-11-01T09:45:23+08:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Go Channel篇"/>
+<meta name="twitter:description" content="1.Go channel 的底层实现原理 概念： Go 中的 channel 是一个队列，遵循先进先出的原则，负责协程之间的通信（Go 语言提倡不要通过共享内存来通信，而要通过通信来实现内存共享，CSP(Communicating Sequential Process)并发模型，就是通过 goroutine 和 channel 来实现的） 使用场景： 停止信号监听 定时任务 生产方和消费方解"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+
+        {
+          "@type": "ListItem",
+          "position":  1 ,
+          "name": "📚文章",
+          "item": "https://Bin-lin-rgb.github.io/posts/"
+        },
+
+        {
+          "@type": "ListItem",
+          "position":  2 ,
+          "name": "🥇 Golang",
+          "item": "https://Bin-lin-rgb.github.io/posts/go/"
+        }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "Go Channel篇",
+      "item": "https://Bin-lin-rgb.github.io/posts/go/go-channel%E7%AF%87/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Go Channel篇",
+  "name": "Go Channel篇",
+  "description": "1.Go channel 的底层实现原理 概念： Go 中的 channel 是一个队列，遵循先进先出的原则，负责协程之间的通信（Go 语言提倡不要通过共享内存来通信，而要通过通信来实现内存共享，CSP(Communicating Sequential Process)并发模型，就是通过 goroutine 和 channel 来实现的） 使用场景： 停止信号监听 定时任务 生产方和消费方解",
+  "keywords": [
+    ""
+  ],
+  "articleBody": "1.Go channel 的底层实现原理 概念：\nGo 中的 channel 是一个队列，遵循先进先出的原则，负责协程之间的通信（Go 语言提倡不要通过共享内存来通信，而要通过通信来实现内存共享，CSP(Communicating Sequential Process)并发模型，就是通过 goroutine 和 channel 来实现的）\n使用场景：\n停止信号监听\n定时任务\n生产方和消费方解耦\n控制并发数\n底层数据结构：\n通过 var 声明或者 make 函数创建的 channel 变量是一个存储在函数栈帧上的指针，占用 8 个字节，指向堆上的 hchan 结构体\n源码包中 src/runtime/chan.go 定义了 hchan 的数据结构：\nhchan hchan 结构体：\ntype hchan struct { closed uint32 // channel是否关闭的标志 elemtype *_type // channel中的元素类型 // channel分为无缓冲和有缓冲两种。 // 对于有缓冲的channel存储数据，使用了 ring buffer（环形缓冲区) 来缓存写入的数据，本质是循环数组 // 为啥是循环数组？普通数组不行吗，普通数组容量固定更适合指定的空间，弹出元素时，普通数组需要全部都前移 // 当下标超过数组容量后会回到第一个位置，所以需要有两个字段记录当前读和写的下标位置 buf unsafe.Pointer // 指向底层循环数组的指针（环形缓冲区） qcount uint // 循环数组中的元素数量 dataqsiz uint // 循环数组的长度 elemsize uint16 // 元素的大小 sendx uint // 下一次写下标的位置 recvx uint // 下一次读下标的位置 // 尝试读取channel或向channel写入数据而被阻塞的goroutine recvq waitq // 读等待队列 sendq waitq // 写等待队列 lock mutex //互斥锁，保证读写channel时不存在并发竞争问题 } 等待队列：\n双向链表，包含一个头结点和一个尾结点\n每个节点是一个 sudog 结构体变量，记录哪个协程在等待，等待的是哪个 channel，等待发送/接收的数据在哪里\ntype waitq struct { first *sudog last *sudog } type sudog struct { g *g next *sudog prev *sudog elem unsafe.Pointer c *hchan ... } 操作：\n创建 使用 make(chan T, cap) 来创建 channel，make 语法会在编译时，转换为 makechan64 和 makechan\nfunc makechan64(t *chantype, size int64) *hchan { if int64(int(size)) != size { panic(plainError(\"makechan: size out of range\")) } return makechan(t, int(size)) } 创建 channel 有两种，一种是带缓冲的 channel，一种是不带缓冲的 channel\n// 带缓冲\nch := make(chan int, 3)\n// 不带缓冲\nch := make(chan int)\n创建时会做一些检查:\n元素大小不能超过 64K 元素的对齐大小不能超过 maxAlign 也就是 8 字节 计算出来的内存是否超过限制 创建时的策略:\n如果是无缓冲的 channel，会直接给 hchan 分配内存 如果是有缓冲的 channel，并且元素不包含指针，那么会为 hchan 和底层数组分配一段连续的地址 如果是有缓冲的 channel，并且元素包含指针，那么会为 hchan 和底层数组分别分配地址 发送 发送操作，编译时转换为 runtime.chansend 函数\nfunc chansend(c *hchan, ep unsafe.Pointer, block bool, callerpc uintptr) bool\n阻塞式：\n调用 chansend 函数，并且 block=true\nch \u003c- 10\n非阻塞式：\n调用 chansend 函数，并且 block=false\nselect { case ch \u003c- 10: ... default } 向 channel 中发送数据时大概分为两大块：检查和数据发送，数据发送流程如下：\n如果 channel 的读等待队列存在接收者 goroutine\n将数据直接发送给第一个等待的 goroutine， 唤醒接收的 goroutine 如果 channel 的读等待队列不存在接收者 goroutine\n如果循环数组 buf 未满，那么将会把数据发送到循环数组 buf 的队尾 如果循环数组 buf 已满，这个时候就会走阻塞发送的流程，将当前 goroutine 加入写等待队列，并挂起等待唤醒 接收 接受操作，编译时转换为 runtime.chanrecv 函数\nfunc chanrecv(c *hchan, ep unsafe.Pointer, block bool) (selected, received bool)\n阻塞式：\n调用 chanrecv 函数，并且 block=true\n\u003c-ch v := ",
+  "wordCount" : "2818",
+  "inLanguage": "zh",
+  "datePublished": "2023-11-01T09:45:23+08:00",
+  "dateModified": "2023-11-01T09:45:23+08:00",
+  "author":[{
+    "@type": "Person",
+    "name": "Blaine"
+  }],
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://Bin-lin-rgb.github.io/posts/go/go-channel%E7%AF%87/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Blaine's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://Bin-lin-rgb.github.io/img/icon.png"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    (function () {
+        let  arr,reg = new RegExp("(^| )"+"change-themes"+"=([^;]*)(;|$)");
+        if(arr = document.cookie.match(reg)) {
+        } else {
+            if (new Date().getHours() >= 19 || new Date().getHours() < 6) {
+                document.body.classList.add('dark');
+                localStorage.setItem("pref-theme", 'dark');
+            } else {
+                document.body.classList.remove('dark');
+                localStorage.setItem("pref-theme", 'light');
+            }
+        }
+    })()
+
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://Bin-lin-rgb.github.io/" accesskey="h" title="Blaine&#39;s Blog (Alt + H)">
+            <img src="https://Bin-lin-rgb.github.io/img/icon.png" alt="logo" aria-label="logo"
+                 height="35">Blaine&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://Bin-lin-rgb.github.io/" title="🏠 主页">
+                <span>🏠 主页</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://Bin-lin-rgb.github.io/posts" title="📚 文章">
+                <span>📚 文章</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://Bin-lin-rgb.github.io/search" title="🔍 搜索 (Alt &#43; /)" accesskey=/>
+                <span>🔍 搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://Bin-lin-rgb.github.io/tags" title="🧩 标签">
+                <span>🧩 标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://Bin-lin-rgb.github.io/archives/" title="⏱️ 时间轴">
+                <span>⏱️ 时间轴</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://Bin-lin-rgb.github.io/about" title="🙋🏻‍♂️ 关于">
+                <span>🙋🏻‍♂️ 关于</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://Bin-lin-rgb.github.io/links" title="🤝 友链">
+                <span>🤝 友链</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main page">
+<style>
+    i[id*="post_meta_style"] {
+        display: flex;
+        align-items: center;
+        margin: 0 0 10px 0;
+    }
+</style>
+
+<article class="post-single">
+    <div id="single-content">
+        <header class="post-header">
+            <div class="breadcrumbs"><a href="https://Bin-lin-rgb.github.io/">🏠 主页</a>&nbsp;»&nbsp;<a href="https://Bin-lin-rgb.github.io/posts/">📚文章</a>&nbsp;»&nbsp;<a href="https://Bin-lin-rgb.github.io/posts/go/">🥇 Golang</a></div>
+            <h1 class="post-title">
+                Go Channel篇
+            </h1>
+            <div class="post-meta">
+
+<style>
+    i[id*="post_meta_style"] {
+        display: flex;
+        align-items: center;
+        margin: 0 0 10px 0;
+    }
+
+    .parent-post-meta {
+        display: flex;
+        flex-wrap: wrap;
+        opacity: 0.8;
+    }
+</style>
+
+<span class="parent-post-meta">
+    <span id="post_meta_style_1">
+        <span class="fa fa-calendar-check-o"></span>
+        <span>2023-11-01
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    
+    
+    
+    
+    
+    
+    
+    <span id="post_meta_style_3">
+        <span class="fa fa-file-word-o"></span>
+        <span>2818字
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_4">
+        <span class="fa fa-clock-o"></span>
+        <span>6分钟
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_5">
+        <span class="fa fa-user-o"></span>
+        <span>Blaine
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_6">
+        <span class="fa fa-tags" style="opacity: 0.8"></span>
+        <span>
+            <span class="post-tags-meta">
+            </span>
+        </span>
+    </span>
+</span>
+<span style="opacity: 0.8;">
+                    <span id="post_meta_style_7">
+                        &nbsp;&nbsp;
+                        <span class="fa fa-eye" ></span>
+                        <span>
+                            <span id="busuanzi_container_page_pv"><span id="busuanzi_value_page_pv"></span></span>
+                            &nbsp;&nbsp;
+                        </span>
+                    </span>
+                    <span id="post_meta_style_8">
+                        <span class="fa fa-commenting-o"></span>
+                        <span>
+                            <script src="https://cdn.staticfile.org/twikoo/1.5.8/twikoo.all.min.js"></script>
+                            <script>
+                                let url = document.documentURI
+                                
+                                let dnsUrl = "https://Bin-lin-rgb.github.io/"
+                                let urlSplit = url.split(dnsUrl)
+                                let finalUrl = urlSplit[1]
+                                if (finalUrl[0] !== '/') {
+                                    finalUrl = '/'+finalUrl
+                                }
+                                twikoo.getCommentsCount({
+                                    envId: "https://twikoo-api-nine-silk.vercel.app/", 
+                                region: "ap-guangzhou", 
+                                urls: [ 
+                                    
+                                    finalUrl,
+                                ],
+                                    includeReply: false 
+                                }).then(function (res) {
+                                    let count = res[0].count
+                                    const obj = document.getElementById("comment_count");
+                                    obj.innerText = count
+                                    
+                                    
+                                    
+                                }).catch(function (err) {
+                                    
+                                    console.error(err);
+                                });
+                            </script>
+                            <span id="comment_count"></span>
+                        </span>
+                    </span>
+                </span>
+
+</div>
+        </header> <aside id="toc-container" class="toc-container wide">
+    <div class="toc">
+        <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">目录</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#1go-channel-%e7%9a%84%e5%ba%95%e5%b1%82%e5%ae%9e%e7%8e%b0%e5%8e%9f%e7%90%86" aria-label="1.Go channel 的底层实现原理">1.Go channel 的底层实现原理</a><ul>
+                        
+                <li>
+                    <a href="#hchan" aria-label="hchan">hchan</a></li>
+                <li>
+                    <a href="#%e5%88%9b%e5%bb%ba" aria-label="创建">创建</a></li>
+                <li>
+                    <a href="#%e5%8f%91%e9%80%81" aria-label="发送">发送</a></li>
+                <li>
+                    <a href="#%e6%8e%a5%e6%94%b6" aria-label="接收">接收</a></li>
+                <li>
+                    <a href="#%e5%85%b3%e9%97%ad" aria-label="关闭">关闭</a></li></ul>
+                </li>
+                <li>
+                    <a href="#2go-channel%e6%9c%89%e6%97%a0%e7%bc%93%e5%86%b2%e7%9a%84%e5%8c%ba%e5%88%ab" aria-label="2.Go channel有无缓冲的区别">2.Go channel有无缓冲的区别</a></li>
+                <li>
+                    <a href="#4go-channel%e4%b8%ba%e4%bb%80%e4%b9%88%e6%98%af%e7%ba%bf%e7%a8%8b%e5%ae%89%e5%85%a8%e7%9a%84" aria-label="4.Go channel为什么是线程安全的？">4.Go channel为什么是线程安全的？</a></li>
+                <li>
+                    <a href="#5go-channel%e5%a6%82%e4%bd%95%e6%8e%a7%e5%88%b6goroutine%e5%b9%b6%e5%8f%91%e6%89%a7%e8%a1%8c%e9%a1%ba%e5%ba%8f" aria-label="5.Go channel如何控制goroutine并发执行顺序？">5.Go channel如何控制goroutine并发执行顺序？</a>
+                </li>
+            </ul>
+        </div>
+        </details>
+    </div>
+</aside>
+<script>
+    let activeElement;
+    let elements;
+    window.addEventListener('DOMContentLoaded', function (event) {
+        checkTocPosition();
+
+        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+        
+        activeElement = elements[0];
+        const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
+        document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+    }, false);
+
+    window.addEventListener('resize', function(event) {
+        checkTocPosition();
+    }, false);
+
+    window.addEventListener('scroll', () => {
+        
+        if (elements) {
+            activeElement = Array.from(elements).find((element) => {
+                if ((getOffsetTop(element) - window.pageYOffset) > 0 &&
+                    (getOffsetTop(element) - window.pageYOffset) < window.innerHeight/2) {
+                    return element;
+                }
+            }) || activeElement
+
+            elements.forEach(element => {
+                const id = encodeURI(element.getAttribute('id')).toLowerCase();
+                if (element === activeElement){
+                    document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+                } else {
+                    document.querySelector(`.inner ul li a[href="#${id}"]`).classList.remove('active');
+                }
+            })
+        }
+    }, false);
+
+    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
+    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
+    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
+
+    function checkTocPosition() {
+        const width = document.body.scrollWidth;
+        if (width - main - (toc * 2) - (gap * 4) > 0) {
+            document.getElementById("toc-container").classList.add("wide");
+        } else {
+            document.getElementById("toc-container").classList.remove("wide");
+        }
+    }
+
+    function getOffsetTop(element) {
+        if (!element.getClientRects().length) {
+            return 0;
+        }
+        let rect = element.getBoundingClientRect();
+        let win = element.ownerDocument.defaultView;
+        return rect.top + win.pageYOffset;
+    }
+</script>
+        <div class="post-content"><h1 id="1go-channel-的底层实现原理">1.Go channel 的底层实现原理<a hidden class="anchor" aria-hidden="true" href="#1go-channel-的底层实现原理">#</a></h1>
+<p>概念：</p>
+<p>Go 中的 channel 是一个队列，遵循先进先出的原则，负责协程之间的通信（Go 语言提倡不要通过共享内存来通信，而要通过通信来实现内存共享，CSP(Communicating Sequential Process)并发模型，就是通过 goroutine 和 channel 来实现的）</p>
+<p>使用场景：</p>
+<ul>
+<li>
+<p>停止信号监听</p>
+</li>
+<li>
+<p>定时任务</p>
+</li>
+<li>
+<p>生产方和消费方解耦</p>
+</li>
+<li>
+<p>控制并发数</p>
+</li>
+</ul>
+<p>底层数据结构：</p>
+<p>通过 var 声明或者 make 函数创建的 channel 变量是一个存储在函数栈帧上的指针，占用 8 个字节，指向堆上的 hchan 结构体</p>
+<p>源码包中 src/runtime/chan.go 定义了 hchan 的数据结构：</p>
+<h2 id="hchan">hchan<a hidden class="anchor" aria-hidden="true" href="#hchan">#</a></h2>
+<p>hchan 结构体：</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff5c57">type</span> hchan <span style="color:#ff5c57">struct</span> {
+</span></span><span style="display:flex;"><span>    closed   <span style="color:#9aedfe">uint32</span>   <span style="color:#78787e">// channel是否关闭的标志
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>    elemtype <span style="color:#ff6ac1">*</span>_type   <span style="color:#78787e">// channel中的元素类型
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#78787e">// channel分为无缓冲和有缓冲两种。
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>    <span style="color:#78787e">// 对于有缓冲的channel存储数据，使用了 ring buffer（环形缓冲区) 来缓存写入的数据，本质是循环数组
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>    <span style="color:#78787e">// 为啥是循环数组？普通数组不行吗，普通数组容量固定更适合指定的空间，弹出元素时，普通数组需要全部都前移
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>    <span style="color:#78787e">// 当下标超过数组容量后会回到第一个位置，所以需要有两个字段记录当前读和写的下标位置
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>    buf      unsafe.Pointer <span style="color:#78787e">// 指向底层循环数组的指针（环形缓冲区）
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>    qcount   <span style="color:#9aedfe">uint</span>           <span style="color:#78787e">// 循环数组中的元素数量
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>    dataqsiz <span style="color:#9aedfe">uint</span>           <span style="color:#78787e">// 循环数组的长度
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>    elemsize <span style="color:#9aedfe">uint16</span>         <span style="color:#78787e">// 元素的大小
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>    sendx    <span style="color:#9aedfe">uint</span>           <span style="color:#78787e">// 下一次写下标的位置
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>    recvx    <span style="color:#9aedfe">uint</span>           <span style="color:#78787e">// 下一次读下标的位置
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#78787e">// 尝试读取channel或向channel写入数据而被阻塞的goroutine
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>    recvq    waitq  <span style="color:#78787e">// 读等待队列
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>    sendq    waitq  <span style="color:#78787e">// 写等待队列
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>
+</span></span><span style="display:flex;"><span>    lock mutex <span style="color:#78787e">//互斥锁，保证读写channel时不存在并发竞争问题
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>}
+</span></span></code></pre></div><p>等待队列：</p>
+<p>双向链表，包含一个头结点和一个尾结点</p>
+<p>每个节点是一个 sudog 结构体变量，记录哪个协程在等待，等待的是哪个 channel，等待发送/接收的数据在哪里</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff5c57">type</span> waitq <span style="color:#ff5c57">struct</span> {
+</span></span><span style="display:flex;"><span>    first <span style="color:#ff6ac1">*</span>sudog
+</span></span><span style="display:flex;"><span>    last <span style="color:#ff6ac1">*</span>sudog
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff5c57">type</span> sudog <span style="color:#ff5c57">struct</span> {
+</span></span><span style="display:flex;"><span>    g <span style="color:#ff6ac1">*</span>g
+</span></span><span style="display:flex;"><span>    next <span style="color:#ff6ac1">*</span>sudog
+</span></span><span style="display:flex;"><span>    prev <span style="color:#ff6ac1">*</span>sudog
+</span></span><span style="display:flex;"><span>    elem unsafe.Pointer
+</span></span><span style="display:flex;"><span>    c <span style="color:#ff6ac1">*</span>hchan
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">...</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>操作：</p>
+<h2 id="创建">创建<a hidden class="anchor" aria-hidden="true" href="#创建">#</a></h2>
+<p>使用 make(chan T, cap) 来创建 channel，make 语法会在编译时，转换为 makechan64 和 makechan</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">makechan64</span>(t <span style="color:#ff6ac1">*</span>chantype, size <span style="color:#9aedfe">int64</span>) <span style="color:#ff6ac1">*</span>hchan {
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">if</span> <span style="color:#ff5c57">int64</span>(<span style="color:#ff5c57">int</span>(size)) <span style="color:#ff6ac1">!=</span> size {
+</span></span><span style="display:flex;"><span>        <span style="color:#ff5c57">panic</span>(<span style="color:#57c7ff">plainError</span>(<span style="color:#5af78e">&#34;makechan: size out of range&#34;</span>))
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">return</span> <span style="color:#57c7ff">makechan</span>(t, <span style="color:#ff5c57">int</span>(size))
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>创建 channel 有两种，一种是带缓冲的 channel，一种是不带缓冲的 channel</p>
+<p>// 带缓冲</p>
+<p>ch := make(chan int, 3)</p>
+<p>// 不带缓冲</p>
+<p>ch := make(chan int)</p>
+<p>创建时会做一些检查:</p>
+<ul>
+<li>元素大小不能超过 64K</li>
+<li>元素的对齐大小不能超过 maxAlign 也就是 8 字节</li>
+<li>计算出来的内存是否超过限制</li>
+</ul>
+<p>创建时的策略:</p>
+<ul>
+<li>如果是无缓冲的 channel，会直接给 hchan 分配内存</li>
+<li>如果是有缓冲的 channel，并且元素不包含指针，那么会为 hchan 和底层数组分配一段连续的地址</li>
+<li>如果是有缓冲的 channel，并且元素包含指针，那么会为 hchan 和底层数组分别分配地址</li>
+</ul>
+<h2 id="发送">发送<a hidden class="anchor" aria-hidden="true" href="#发送">#</a></h2>
+<p>发送操作，编译时转换为 runtime.chansend 函数</p>
+<p>func chansend(c *hchan, ep unsafe.Pointer, block bool, callerpc uintptr) bool</p>
+<p>阻塞式：</p>
+<p>调用 chansend 函数，并且 block=true</p>
+<p>ch &lt;- 10</p>
+<p>非阻塞式：</p>
+<p>调用 chansend 函数，并且 block=false</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff6ac1">select</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">case</span> ch <span style="color:#ff6ac1">&lt;-</span> <span style="color:#ff9f43">10</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">...</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">default</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>向 channel 中发送数据时大概分为两大块：检查和数据发送，数据发送流程如下：</p>
+<p>如果 channel 的读等待队列存在接收者 goroutine</p>
+<ul>
+<li>将数据直接发送给第一个等待的 goroutine， 唤醒接收的 goroutine</li>
+</ul>
+<p>如果 channel 的读等待队列不存在接收者 goroutine</p>
+<ul>
+<li>如果循环数组 buf 未满，那么将会把数据发送到循环数组 buf 的队尾</li>
+<li>如果循环数组 buf 已满，这个时候就会走阻塞发送的流程，将当前 goroutine 加入写等待队列，并挂起等待唤醒</li>
+</ul>
+<h2 id="接收">接收<a hidden class="anchor" aria-hidden="true" href="#接收">#</a></h2>
+<p>接受操作，编译时转换为 runtime.chanrecv 函数</p>
+<p>func chanrecv(c *hchan, ep unsafe.Pointer, block bool) (selected, received bool)</p>
+<p>阻塞式：</p>
+<p>调用 chanrecv 函数，并且 block=true</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff6ac1">&lt;-</span>ch
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>v <span style="color:#ff6ac1">:=</span> &lt;ch
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>v, ok <span style="color:#ff6ac1">:=</span> &lt;ch
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#78787e">// 当 channel 关闭时，for 循环会自动退出，无需主动监测 channel 是否关闭，可以防止读取已经关闭的 channel,造成读到数据为通道所存储的数据类型的零值
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span><span style="color:#ff6ac1">for</span> i <span style="color:#ff6ac1">:=</span> <span style="color:#ff6ac1">range</span> ch {
+</span></span><span style="display:flex;"><span>    fmt.<span style="color:#57c7ff">Println</span>(i)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>非阻塞式：</p>
+<p>调用 chanrecv 函数，并且 block=false</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff6ac1">select</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">case</span> <span style="color:#ff6ac1">&lt;-</span>ch:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">...</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">default</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>向 channel 中接收数据时大概分为两大块，检查和数据发送，而数据接收流程如下：</p>
+<p>如果 channel 的写等待队列存在发送者 goroutine</p>
+<ul>
+<li>如果是无缓冲 channel，直接从第一个发送者 goroutine 那里把数据拷贝给接收变量，唤醒发送的 goroutine</li>
+<li>如果是有缓冲 channel（已满），将循环数组 buf 的队首元素拷贝给接收变量，将第一个发送者 goroutine 的数据拷贝到 buf 循环数组队尾，唤醒发送的 goroutine</li>
+</ul>
+<p>如果 channel 的写等待队列不存在发送者 goroutine</p>
+<ul>
+<li>如果循环数组 buf 非空，将循环数组 buf 的队首元素拷贝给接收变量</li>
+<li>如果循环数组 buf 为空，这个时候就会走阻塞接收的流程，将当前 goroutine 加入读等待队列，并挂起等待唤醒</li>
+</ul>
+<h2 id="关闭">关闭<a hidden class="anchor" aria-hidden="true" href="#关闭">#</a></h2>
+<p>关闭操作，调用 close 函数，编译时转换为 runtime.closechan 函数</p>
+<p>close(ch)</p>
+<p>func closechan(c *hchan)</p>
+<p>案例分析：</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff6ac1">package</span> main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff6ac1">import</span> (
+</span></span><span style="display:flex;"><span>    <span style="color:#5af78e">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#5af78e">&#34;time&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#5af78e">&#34;unsafe&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">main</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#78787e">// ch 是长度为 4 的带缓冲的 channel
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>    <span style="color:#78787e">// 初始 hchan 结构体重的 buf 为空，sendx 和 recvx 均为 0
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>    ch <span style="color:#ff6ac1">:=</span> <span style="color:#ff5c57">make</span>(<span style="color:#ff5c57">chan</span> <span style="color:#9aedfe">string</span>, <span style="color:#ff9f43">4</span>)
+</span></span><span style="display:flex;"><span>    fmt.<span style="color:#57c7ff">Println</span>(ch, unsafe.<span style="color:#57c7ff">Sizeof</span>(ch))
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">go</span> <span style="color:#57c7ff">sendTask</span>(ch)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">go</span> <span style="color:#57c7ff">receiveTask</span>(ch)
+</span></span><span style="display:flex;"><span>    time.<span style="color:#57c7ff">Sleep</span>(<span style="color:#ff9f43">1</span> <span style="color:#ff5c57">\</span><span style="color:#ff6ac1">*</span> time.Second)
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#78787e">// G1 是发送者
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e">// 当 G1 向 ch 里发送数据时，首先会对 buf 加锁，然后将 task 存储的数据 copy 到 buf 中，然后 sendx++，然后释放对 buf 的锁
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">sendTask</span>(ch <span style="color:#ff5c57">chan</span> <span style="color:#9aedfe">string</span>) {
+</span></span><span style="display:flex;"><span>    taskList <span style="color:#ff6ac1">:=</span> []<span style="color:#9aedfe">string</span>{<span style="color:#5af78e">&#34;this&#34;</span>, <span style="color:#5af78e">&#34;is&#34;</span>, <span style="color:#5af78e">&#34;a&#34;</span>, <span style="color:#5af78e">&#34;demo&#34;</span>}
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">for</span> <span style="color:#ff5c57">\</span>_, task <span style="color:#ff6ac1">:=</span> <span style="color:#ff6ac1">range</span> taskList {
+</span></span><span style="display:flex;"><span>        ch <span style="color:#ff6ac1">&lt;-</span> task <span style="color:#78787e">//发送任务到 channel
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#78787e">// G2 是接收者
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e">// 当 G2 消费 ch 的时候，会首先对 buf 加锁，然后将 buf 中的数据 copy 到 task 变量对应的内存里，然后 recvx++,并释放锁
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">receiveTask</span>(ch <span style="color:#ff5c57">chan</span> <span style="color:#9aedfe">string</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">for</span> {
+</span></span><span style="display:flex;"><span>        task <span style="color:#ff6ac1">:=</span> <span style="color:#ff6ac1">&lt;-</span>ch <span style="color:#78787e">//接收任务
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>        fmt.<span style="color:#57c7ff">Println</span>(<span style="color:#5af78e">&#34;received&#34;</span>, task) <span style="color:#78787e">//处理任务
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>总结 hchan 结构体的主要组成部分有四个：</p>
+<ul>
+<li>用来保存 goroutine 之间传递数据的循环数组：buf</li>
+<li>用来记录此循环数组当前发送或接收数据的下标值：sendx 和 recvx</li>
+<li>用于保存向该 chan 发送和从该 chan 接收数据被阻塞的 goroutine 队列： sendq 和 recvq</li>
+<li>保证 channel 写入和读取数据时线程安全的锁：lock</li>
+</ul>
+<h1 id="2go-channel有无缓冲的区别">2.Go channel有无缓冲的区别<a hidden class="anchor" aria-hidden="true" href="#2go-channel有无缓冲的区别">#</a></h1>
+<p>无缓冲：一个送信人去你家送信，你不在家他不走，你一定要接下信，他才会走。</p>
+<p>有缓冲：一个送信人去你家送信，扔到你家的信箱转身就走，除非你的信箱满了，他必须等信箱有多余空间才会走。</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>无缓冲</th>
+<th>有缓冲</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>创建方式</td>
+<td>make(chan TYPE)</td>
+<td>make(chan TYPE, SIZE)</td>
+</tr>
+<tr>
+<td>发送阻塞</td>
+<td>数据接收前发送阻塞</td>
+<td>缓冲满时发送阻塞</td>
+</tr>
+<tr>
+<td>接收阻塞</td>
+<td>数据发送前接收阻塞</td>
+<td>缓冲空时接收阻塞</td>
+</tr>
+</tbody>
+</table>
+<p>非缓冲 channel</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff6ac1">package</span> main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff6ac1">import</span> (
+</span></span><span style="display:flex;"><span>    <span style="color:#5af78e">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#5af78e">&#34;time&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">loop</span>(ch <span style="color:#ff5c57">chan</span> <span style="color:#9aedfe">int</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">for</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#ff6ac1">select</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#ff6ac1">case</span> i <span style="color:#ff6ac1">:=</span> <span style="color:#ff6ac1">&lt;-</span>ch:
+</span></span><span style="display:flex;"><span>            fmt.<span style="color:#57c7ff">Println</span>(<span style="color:#5af78e">&#34;this  value of unbuffer channel&#34;</span>, i)
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">main</span>() {
+</span></span><span style="display:flex;"><span>    ch <span style="color:#ff6ac1">:=</span> <span style="color:#ff5c57">make</span>(<span style="color:#ff5c57">chan</span> <span style="color:#9aedfe">int</span>)
+</span></span><span style="display:flex;"><span>    ch <span style="color:#ff6ac1">&lt;-</span> <span style="color:#ff9f43">1</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">go</span> <span style="color:#57c7ff">loop</span>(ch)
+</span></span><span style="display:flex;"><span>    time.<span style="color:#57c7ff">Sleep</span>(<span style="color:#ff9f43">1</span> <span style="color:#ff6ac1">*</span> time.Millisecond)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>这里会报错 fatal error: all goroutines are asleep - deadlock! 就是因为 ch&lt;-1 发送了，但是同时没有接收者，所以就发生了阻塞</p>
+<p>但如果我们把 ch &lt;- 1 放到 go loop(ch) 下面，程序就会正常运行</p>
+<p>缓冲 channel</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff6ac1">package</span> main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff6ac1">import</span> (
+</span></span><span style="display:flex;"><span>    <span style="color:#5af78e">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#5af78e">&#34;time&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">loop</span>(ch <span style="color:#ff5c57">chan</span> <span style="color:#9aedfe">int</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">for</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#ff6ac1">select</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#ff6ac1">case</span> i <span style="color:#ff6ac1">:=</span> <span style="color:#ff6ac1">&lt;-</span>ch:
+</span></span><span style="display:flex;"><span>            fmt.<span style="color:#57c7ff">Println</span>(<span style="color:#5af78e">&#34;this  value of unbuffer channel&#34;</span>, i)
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">main</span>() {
+</span></span><span style="display:flex;"><span>    ch <span style="color:#ff6ac1">:=</span> <span style="color:#ff5c57">make</span>(<span style="color:#ff5c57">chan</span> <span style="color:#9aedfe">int</span>,<span style="color:#ff9f43">3</span>)
+</span></span><span style="display:flex;"><span>    ch <span style="color:#ff6ac1">&lt;-</span> <span style="color:#ff9f43">1</span>
+</span></span><span style="display:flex;"><span>    ch <span style="color:#ff6ac1">&lt;-</span> <span style="color:#ff9f43">2</span>
+</span></span><span style="display:flex;"><span>    ch <span style="color:#ff6ac1">&lt;-</span> <span style="color:#ff9f43">3</span>
+</span></span><span style="display:flex;"><span>    ch <span style="color:#ff6ac1">&lt;-</span> <span style="color:#ff9f43">4</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">go</span> <span style="color:#57c7ff">loop</span>(ch)
+</span></span><span style="display:flex;"><span>    time.<span style="color:#57c7ff">Sleep</span>(<span style="color:#ff9f43">1</span> <span style="color:#ff6ac1">*</span> time.Millisecond)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>这里也会报 fatal error: all goroutines are asleep - deadlock! ，这是因为 channel 的大小为 3 ，而我们要往里面塞 4 个数据，所以就会阻塞住，解决的办法有两个:</p>
+<ul>
+<li>把 channel 长度调大一点</li>
+<li>把 channel 的信息发送者 ch &lt;- 1 这些代码移动到 go loop(ch) 下面 ，让 channel 实时消费就不会导致阻塞了</li>
+</ul>
+<h1 id="4go-channel为什么是线程安全的">4.Go channel为什么是线程安全的？<a hidden class="anchor" aria-hidden="true" href="#4go-channel为什么是线程安全的">#</a></h1>
+<p>为什么设计成线程安全？</p>
+<p>不同协程通过channel进行通信，本身的使用场景就是多线程，为了保证数据的一致性，必须实现线程安全</p>
+<p>如何实现线程安全的？</p>
+<p>channel的底层实现中，hchan结构体中<strong>采用Mutex锁</strong>来保证数据读写安全。在对循环数组buf中的数据进行入队和出队操作时，必须先获取互斥锁，才能操作channel数据</p>
+<h1 id="5go-channel如何控制goroutine并发执行顺序">5.Go channel如何控制goroutine并发执行顺序？<a hidden class="anchor" aria-hidden="true" href="#5go-channel如何控制goroutine并发执行顺序">#</a></h1>
+<p>多个goroutine并发执行时，每一个goroutine抢到处理器的时间点不一致，gorouine的执行本身不能保证顺序。即代码中先写的gorouine并不能保证先执行</p>
+<p>思路：使用channel进行通信通知，用channel去传递信息，从而控制并发执行顺序</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff6ac1">package</span> main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff6ac1">import</span> (
+</span></span><span style="display:flex;"><span>    <span style="color:#5af78e">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#5af78e">&#34;sync&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#5af78e">&#34;time&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff5c57">var</span> wg sync.WaitGroup
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">main</span>() {
+</span></span><span style="display:flex;"><span>    ch1 <span style="color:#ff6ac1">:=</span> <span style="color:#ff5c57">make</span>(<span style="color:#ff5c57">chan</span> <span style="color:#ff5c57">struct</span>{}, <span style="color:#ff9f43">1</span>)
+</span></span><span style="display:flex;"><span>    ch2 <span style="color:#ff6ac1">:=</span> <span style="color:#ff5c57">make</span>(<span style="color:#ff5c57">chan</span> <span style="color:#ff5c57">struct</span>{}, <span style="color:#ff9f43">1</span>)
+</span></span><span style="display:flex;"><span>    ch3 <span style="color:#ff6ac1">:=</span> <span style="color:#ff5c57">make</span>(<span style="color:#ff5c57">chan</span> <span style="color:#ff5c57">struct</span>{}, <span style="color:#ff9f43">1</span>)
+</span></span><span style="display:flex;"><span>    ch1 <span style="color:#ff6ac1">&lt;-</span> <span style="color:#ff5c57">struct</span>{}{}
+</span></span><span style="display:flex;"><span>    wg.<span style="color:#57c7ff">Add</span>(<span style="color:#ff9f43">3</span>)
+</span></span><span style="display:flex;"><span>    start <span style="color:#ff6ac1">:=</span> time.<span style="color:#57c7ff">Now</span>().<span style="color:#57c7ff">Unix</span>()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">go</span> <span style="color:#ff5c57">print</span>(<span style="color:#5af78e">&#34;gorouine1&#34;</span>, ch1, ch2)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">go</span> <span style="color:#ff5c57">print</span>(<span style="color:#5af78e">&#34;gorouine2&#34;</span>, ch2, ch3)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">go</span> <span style="color:#ff5c57">print</span>(<span style="color:#5af78e">&#34;gorouine3&#34;</span>, ch3, ch1)
+</span></span><span style="display:flex;"><span>    wg.<span style="color:#57c7ff">Wait</span>()
+</span></span><span style="display:flex;"><span>    end <span style="color:#ff6ac1">:=</span> time.<span style="color:#57c7ff">Now</span>().<span style="color:#57c7ff">Unix</span>()
+</span></span><span style="display:flex;"><span>    fmt.<span style="color:#57c7ff">Printf</span>(<span style="color:#5af78e">&#34;duration:%d\n&#34;</span>, end<span style="color:#ff6ac1">-</span>start)
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#ff5c57">print</span>(gorouine <span style="color:#9aedfe">string</span>, inputchan <span style="color:#ff5c57">chan</span> <span style="color:#ff5c57">struct</span>{}, outchan <span style="color:#ff5c57">chan</span> <span style="color:#ff5c57">struct</span>{}) {
+</span></span><span style="display:flex;"><span>    <span style="color:#78787e">// 模拟内部操作耗时
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>    time.<span style="color:#57c7ff">Sleep</span>(<span style="color:#ff9f43">1</span> <span style="color:#ff6ac1">*</span> time.Second)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">select</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">case</span> <span style="color:#ff6ac1">&lt;-</span>inputchan:
+</span></span><span style="display:flex;"><span>        fmt.<span style="color:#57c7ff">Printf</span>(<span style="color:#5af78e">&#34;%s\n&#34;</span>, gorouine)
+</span></span><span style="display:flex;"><span>        outchan <span style="color:#ff6ac1">&lt;-</span> <span style="color:#ff5c57">struct</span>{}{}
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    wg.<span style="color:#57c7ff">Done</span>()
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>输出<span style="color:#ff5c57">：</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>gorouine1
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>gorouine2
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>gorouine3
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>duration:<span style="color:#ff9f43">1</span>
+</span></span></code></pre></div>
+
+        </div>
+        <div class="post-reward">
+            <div style="padding: 0 0 0 0; margin: 0 0 0 0; width: 100%; font-size:16px; text-align: center;">
+                <div id="QR" style="opacity: 0;">
+                    <div id="wechat" style="display: inline-block">
+                        <a class="fancybox" rel="group">
+                            <img id="wechat_qr" src="https://Bin-lin-rgb.github.io/img/wechat_pay.png" alt="wechat_pay"></a>
+                        <p>微信</p>
+                    </div>
+                    <div id="alipay" style="display: inline-block">
+                        <a class="fancybox" rel="group">
+                            <img id="alipay_qr" src="https://Bin-lin-rgb.github.io/img/alipay.png" alt="alipay"></a>
+                        <p>支付宝</p>
+                    </div>
+                </div>
+                <button id="rewardButton"
+                        onclick="
+                    var qr = document.getElementById('QR');
+                    if (qr.style.opacity === '0') {
+                        qr.style.opacity='1';
+                    } else {
+                        qr.style.opacity='0'
+                    }"
+                >
+                    <span>🧧 鼓励</span>
+                </button>
+            </div>
+        </div>
+
+        <footer class="post-footer">
+            
+<nav class="paginav">
+  <a class="prev" href="https://Bin-lin-rgb.github.io/posts/go/go-mutex%E7%AF%87/">
+    <span class="title">« 上一页</span>
+    <br>
+    <span>Go Mutex篇</span>
+  </a>
+  <a class="next" href="https://Bin-lin-rgb.github.io/posts/go/go-map%E7%AF%87/">
+    <span class="title">下一页 »</span>
+    <br>
+    <span>Go Map篇</span>
+  </a>
+</nav>
+
+        </footer>
+    </div>
+
+<style>
+    .comments_details summary::marker {
+        font-size: 20px;
+        content: '👉展开评论';
+        color: var(--content);
+    }
+    .comments_details[open] summary::marker{
+        font-size: 20px;
+        content: '👇关闭评论';
+        color: var(--content);
+    }
+</style>
+
+
+<div>
+    <details class="comments_details">
+        <summary style="cursor: pointer; margin: 50px 0 20px 0;width: 130px;">
+            <span style="font-size: 20px;color: var(--content);">...</span>
+        </summary>
+        <div id="tcomment"></div>
+    </details>
+    <script src="https://cdn.staticfile.org/twikoo/1.5.8/twikoo.all.min.js">
+    </script>
+    <script>
+        twikoo.init({
+            envId: 'https://twikoo-api-nine-silk.vercel.app/',
+            el: "#tcomment",
+            lang: 'zh-CN',
+            region: 'ap-guangzhou',
+            path: window.TWIKOO_MAGIC_PATH||window.location.pathname,
+        })
+    
+    
+    
+    
+    
+    
+    
+    </script>
+</div>
+</article>
+</main>
+
+<footer class="footer">
+    <span>
+        Copyright
+        &copy;
+        2021-2023
+        <a href="https://Bin-lin-rgb.github.io/" style="color:#939393;">Blaine&#39;s Blog</a>
+        All Rights Reserved
+    </span>
+    <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;">备案号</a>&nbsp;
+    <span>
+        <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=null"
+           style="display:inline-block;text-decoration:none;height:20px;color:#939393;">
+            <img src="%e5%85%ac%e5%ae%89%e5%9b%be%e6%a0%87%e9%93%be%e6%8e%a5" style="float:left;margin: 0px 5px 0px 0px;"/>
+            公网安备
+        </a>
+    </span>
+    <span id="busuanzi_container">
+        <span class="fa fa-user"></span> <span id="busuanzi_value_site_uv"></span>
+        <span class="fa fa-eye"></span> <span id="busuanzi_value_site_pv"></span>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <span class="topInner">
+        <svg class="topSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z"/>
+        </svg>
+        <span id="read_progress"></span>
+    </span>
+</a>
+
+<script>
+    document.addEventListener('scroll', function (e) {
+        const readProgress = document.getElementById("read_progress");
+        const scrollHeight = document.documentElement.scrollHeight;
+        const clientHeight = document.documentElement.clientHeight;
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        readProgress.innerText = ((scrollTop / (scrollHeight - clientHeight)).toFixed(2) * 100).toFixed(0);
+    })
+</script>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+</script>
+<script>
+    let mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        (function() {
+            document.cookie = "change-themes" + "="+ escape ("false");
+        })()
+
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    });
+</script>
+
+<script>
+    document.body.addEventListener('copy', function (e) {
+        if (window.getSelection().toString() && window.getSelection().toString().length > 50) {
+            let clipboardData = e.clipboardData || window.clipboardData;
+            if (clipboardData) {
+                e.preventDefault();
+                let htmlData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Blaine's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                let textData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Blaine's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                clipboardData.setData('text/html', htmlData);
+                clipboardData.setData('text/plain', textData);
+            }
+        }
+    });
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerText = '复制';
+
+        function copyingDone() {
+            copybutton.innerText = '已复制！';
+            setTimeout(() => {
+                copybutton.innerText = '复制';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                let text = codeblock.textContent +
+                    '\r\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Blaine's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                navigator.clipboard.writeText(text);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) {}
+            selection.removeRange(range);
+        });
+
+        let language = codeblock.className.replaceAll("language-", "")
+        let macTool = document.createElement("div")
+        let macTool1 = document.createElement("div")
+        let macTool2 = document.createElement("div")
+        let macTool3 = document.createElement("div")
+        let languageType = document.createElement("div")
+        languageType.innerText = language
+        macTool.setAttribute('class', 'mac-tool')
+        macTool1.setAttribute('class', 'mac bb1')
+        macTool2.setAttribute('class', 'mac bb2')
+        macTool3.setAttribute('class', 'mac bb3')
+        languageType.setAttribute('class', 'language-type')
+        macTool.appendChild(macTool1)
+        macTool.appendChild(macTool2)
+        macTool.appendChild(macTool3)
+        macTool.appendChild(languageType)
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        }
+    });
+</script>
+</body>
+
+</html>

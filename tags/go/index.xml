@@ -6,7 +6,16 @@
     <description>Recent content in go on Blaine&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <lastBuildDate>Sat, 29 Oct 2022 16:00:07 +0800</lastBuildDate><atom:link href="https://Bin-lin-rgb.github.io/tags/go/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 01 Nov 2023 09:44:29 +0800</lastBuildDate><atom:link href="https://Bin-lin-rgb.github.io/tags/go/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Go 基础篇</title>
+      <link>https://Bin-lin-rgb.github.io/posts/go/go%E5%9F%BA%E7%A1%80%E7%AF%87/</link>
+      <pubDate>Wed, 01 Nov 2023 09:44:29 +0800</pubDate>
+      
+      <guid>https://Bin-lin-rgb.github.io/posts/go/go%E5%9F%BA%E7%A1%80%E7%AF%87/</guid>
+      <description>Go 方法与函数的区别？ 在 Go 语言中，有方法（method）和函数（function）两个概念，它们之间有一些重要的区别，主要体现在以下几个方面： 定义方式： 函数：函数是一段独立的代码块，它可以在任何地方定义和调用。函数的定义是全局的，可以在不同包中调用。 方法：方法是与类型（结构体或接口</description>
+    </item>
+    
     <item>
       <title>omitempty 关键字</title>
       <link>https://Bin-lin-rgb.github.io/posts/go/omitempty/</link>

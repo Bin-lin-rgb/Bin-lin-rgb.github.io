@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>ffmpeg on Blaine&#39;s Blog</title>
+    <link>https://Bin-lin-rgb.github.io/tags/ffmpeg/</link>
+    <description>Recent content in ffmpeg on Blaine&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <lastBuildDate>Sun, 30 Oct 2022 10:26:55 +0800</lastBuildDate><atom:link href="https://Bin-lin-rgb.github.io/tags/ffmpeg/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>使用 FFmpeg 截取视频第一帧并保存案例</title>
+      <link>https://Bin-lin-rgb.github.io/posts/go/%E4%BD%BF%E7%94%A8ffmpeg/</link>
+      <pubDate>Sun, 30 Oct 2022 10:26:55 +0800</pubDate>
+      
+      <guid>https://Bin-lin-rgb.github.io/posts/go/%E4%BD%BF%E7%94%A8ffmpeg/</guid>
+      <description>运行准备 由于需要使用 FFmpeg 第三方工具来完成视频截取第一帧作为封面并存储到本机， 所以运行之前需要预先安装 FFmpeg 到本机并配置好环境变量。 我这里使用的是 ffmpeg version 5.0.1-full_build 版本。 参考链接：FFmpeg 项目结构 假设有这样一个案例：assets 文件夹中是专门存放视频的，现在的要求就是将该视频的第一帧截取为图片并</description>
+    </item>
+    
+  </channel>
+</rss>
