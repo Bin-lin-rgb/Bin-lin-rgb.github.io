@@ -22,7 +22,7 @@
       <pubDate>Wed, 01 Nov 2023 09:46:59 +0800</pubDate>
       
       <guid>https://Bin-lin-rgb.github.io/posts/go/go-%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E7%AF%87/</guid>
-      <description></description>
+      <description>1.Go 常用的并发模型 并发模型说的是系统中的线程如何协作完成并发任务，不同的并发模型，线程以不同的方式进行通信和协作。 线程间通信方式 线程间通信方式有两种：共享内存和消息传递，无论是哪种通信模型，线程或者协程最终都会从内存中获取数据，所以更为准确的说法是直接共享内存、发送消息的方式来同步</description>
     </item>
     
     <item>
@@ -31,7 +31,7 @@
       <pubDate>Wed, 01 Nov 2023 09:46:51 +0800</pubDate>
       
       <guid>https://Bin-lin-rgb.github.io/posts/go/go-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E7%AF%87/</guid>
-      <description></description>
+      <description>Go 内存分配机制 Go语言内置运行时（就是runtime），抛弃了传统的内存分配方式，改为自主管理。这样可以自主地实现更好的内存使用模式，比如内存池、预分配等等。这样，不会每次内存分配都需要进行系统调用。 设计思想 内存分配算法采用Google的TCMalloc算法，每个线程都会自行维护</description>
     </item>
     
     <item>
@@ -40,7 +40,7 @@
       <pubDate>Wed, 01 Nov 2023 09:46:37 +0800</pubDate>
       
       <guid>https://Bin-lin-rgb.github.io/posts/go/go-%E8%B0%83%E5%BA%A6%E6%A8%A1%E5%9E%8B%E7%AF%87/</guid>
-      <description></description>
+      <description>Go 线程实现模型 Go实现的是两级线程模型（M：N)，准确的说是GMP模型，是对两级线程模型的改进实现，使它能够更加灵活地进行线程之间的调度。 背景 含义 缺点 单进程时代 每个程序就是一个进程，直到一个程序运行完，才能进行下一个进程 1. 无法并发，只能串行 2. 进程阻塞所带来的 CPU 时间浪费 多进程/线程</description>
     </item>
     
     <item>
@@ -49,7 +49,7 @@
       <pubDate>Wed, 01 Nov 2023 09:46:08 +0800</pubDate>
       
       <guid>https://Bin-lin-rgb.github.io/posts/go/go-goroutine%E7%AF%87/</guid>
-      <description></description>
+      <description>Go goroutine 的底层实现原理 概念 Goroutine 可以理解为一种 Go 语言的协程（轻量级线程），是 Go 支持高并发的基础，属于用户态的线程，由 Go runtime 管理而不是操作系统。 底层数据结构 type g struct { goid int64 // 唯一的goroutine的ID sched gobuf // goroutine切换时，用于保存g的上下文 stack stack // 栈 gopc // pc of go statement that created this goroutine startpc uintptr // pc of goroutine function</description>
     </item>
     
     <item>
@@ -58,7 +58,7 @@
       <pubDate>Wed, 01 Nov 2023 09:45:41 +0800</pubDate>
       
       <guid>https://Bin-lin-rgb.github.io/posts/go/go-mutex%E7%AF%87/</guid>
-      <description></description>
+      <description>Go 互斥锁的实现原理？ 互斥锁是并发程序中对共享资源进行访问控制的主要手段，对此Go语言提供了非常简单易用的Mutex，Mutex为一结构体类型，对外暴露两个方法Lock()和Unlock()分别用于加锁和解锁。 Mutex使用起来非常方便，但其内部实现却复杂得多，这包括Mutex的几</description>
     </item>
     
     <item>
@@ -67,7 +67,7 @@
       <pubDate>Wed, 01 Nov 2023 09:45:23 +0800</pubDate>
       
       <guid>https://Bin-lin-rgb.github.io/posts/go/go-channel%E7%AF%87/</guid>
-      <description>1.Go channel 的底层实现原理 概念： Go 中的 channel 是一个队列，遵循先进先出的原则，负责协程之间的通信（Go 语言提倡不要通过共享内存来通信，而要通过通信来实现内存共享，CSP(Communicating Sequential Process)并发模型，就是通过 goroutine 和 channel 来实现的） 使用场景： 停止信号监听 定时任务 生产方和消费方解</description>
+      <description>Go channel 的底层实现原理 概念： Go 中的 channel 是一个队列，遵循先进先出的原则，负责协程之间的通信（Go 语言提倡不要通过共享内存来通信，而要通过通信来实现内存共享，CSP(Communicating Sequential Process)并发模型，就是通过 goroutine 和 channel 来实现的） 使用场景： 停止信号监听 定时任务 生产方和消费方解</description>
     </item>
     
     <item>
