@@ -6,7 +6,52 @@
     <description>Recent content in ✨ LeetCode on Blaine&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <lastBuildDate>Sat, 28 Oct 2023 21:53:51 +0800</lastBuildDate><atom:link href="https://Bin-lin-rgb.github.io/posts/leetcode/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 07 Nov 2023 09:57:55 +0800</lastBuildDate><atom:link href="https://Bin-lin-rgb.github.io/posts/leetcode/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>动态规划</title>
+      <link>https://Bin-lin-rgb.github.io/posts/leetcode/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/</link>
+      <pubDate>Tue, 07 Nov 2023 09:57:55 +0800</pubDate>
+      
+      <guid>https://Bin-lin-rgb.github.io/posts/leetcode/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/</guid>
+      <description>动态规划的解题步骤 &amp;ndash; from 代码随想录 做动规题目的时候，很多同学会陷入一个误区，就是以为把状态转移公式背下来，照葫芦画瓢改改，就开始写代码，甚至把题目 AC 之后，都不太清楚 dp[i]表示的是什么。 这就是一种朦胧的状态，然后就把题给过了，遇到稍稍难一点的，可能直接就不会了，然后看题解，然后继</description>
+    </item>
+    
+    <item>
+      <title>二叉树</title>
+      <link>https://Bin-lin-rgb.github.io/posts/leetcode/%E4%BA%8C%E5%8F%89%E6%A0%91/</link>
+      <pubDate>Mon, 06 Nov 2023 21:09:14 +0800</pubDate>
+      
+      <guid>https://Bin-lin-rgb.github.io/posts/leetcode/%E4%BA%8C%E5%8F%89%E6%A0%91/</guid>
+      <description>参考labuladong的算法笔记进行刷题</description>
+    </item>
+    
+    <item>
+      <title>排序</title>
+      <link>https://Bin-lin-rgb.github.io/posts/leetcode/%E6%8E%92%E5%BA%8F/</link>
+      <pubDate>Mon, 06 Nov 2023 21:04:31 +0800</pubDate>
+      
+      <guid>https://Bin-lin-rgb.github.io/posts/leetcode/%E6%8E%92%E5%BA%8F/</guid>
+      <description>快速排序 package main import &amp;#34;math/rand&amp;#34; func SortArray(nums []int) []int { quick(nums, 0, len(nums)-1) return nums } func quick(arr []int, i, j int) { if i &amp;gt;= j { return } mid := partition(arr, i, j) quick(arr, i, mid-1) quick(arr, mid+1, j) } func partition(nums []int, i int, j int) int { // 随机选择“支点”位置 p := rand.Intn(j-i+1) + i // 交换支点和第一个元素 nums[i], nums[p] = nums[p], nums[i] for i &amp;lt; j { // 从右向左找到第一个小于支点的元素 for nums[i] &amp;lt; nums[j] &amp;amp;&amp;amp; i &amp;lt; j { j-- } // 交换元素，将较小的元素移至左侧 if i &amp;lt; j {</description>
+    </item>
+    
+    <item>
+      <title>双指针（数组）</title>
+      <link>https://Bin-lin-rgb.github.io/posts/leetcode/%E5%8F%8C%E6%8C%87%E9%92%88%E6%95%B0%E7%BB%84/</link>
+      <pubDate>Mon, 06 Nov 2023 20:29:28 +0800</pubDate>
+      
+      <guid>https://Bin-lin-rgb.github.io/posts/leetcode/%E5%8F%8C%E6%8C%87%E9%92%88%E6%95%B0%E7%BB%84/</guid>
+      <description>参考labuladong的算法笔记进行刷题</description>
+    </item>
+    
+    <item>
+      <title>双指针（链表）</title>
+      <link>https://Bin-lin-rgb.github.io/posts/leetcode/%E5%8F%8C%E6%8C%87%E9%92%88%E9%93%BE%E8%A1%A8/</link>
+      <pubDate>Mon, 06 Nov 2023 19:13:15 +0800</pubDate>
+      
+      <guid>https://Bin-lin-rgb.github.io/posts/leetcode/%E5%8F%8C%E6%8C%87%E9%92%88%E9%93%BE%E8%A1%A8/</guid>
+      <description>参考labuladong的算法笔记进行刷题</description>
+    </item>
+    
     <item>
       <title>Top150</title>
       <link>https://Bin-lin-rgb.github.io/posts/leetcode/top150/</link>

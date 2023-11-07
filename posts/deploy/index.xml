@@ -6,7 +6,16 @@
     <description>Recent content in ⏬ Deploy on Blaine&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <lastBuildDate>Sat, 28 Oct 2023 18:35:29 +0800</lastBuildDate><atom:link href="https://Bin-lin-rgb.github.io/posts/deploy/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 07 Nov 2023 19:46:01 +0800</lastBuildDate><atom:link href="https://Bin-lin-rgb.github.io/posts/deploy/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Linux常用命令</title>
+      <link>https://Bin-lin-rgb.github.io/posts/deploy/linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</link>
+      <pubDate>Tue, 07 Nov 2023 19:46:01 +0800</pubDate>
+      
+      <guid>https://Bin-lin-rgb.github.io/posts/deploy/linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</guid>
+      <description>一般参数的意思 -a all（全部） -r recursion（递归） -f force（强制） -h 以K，M，G为单位，提高信息的可读性。 一、文件目录操作 1. ls 命令 ls 命令不仅可以查看 linux 文件夹包含的文件而且可以查看文件权限(包括目录、文件夹、文件权限)查看目录信息等等。 命令格式 ls [选项][目录名] 常用参</description>
+    </item>
+    
     <item>
       <title>Docker 基础</title>
       <link>https://Bin-lin-rgb.github.io/posts/deploy/docker/</link>

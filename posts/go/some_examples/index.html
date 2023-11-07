@@ -5,11 +5,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="index, follow">
-<title>Go Map篇 | Blaine&#39;s Blog</title>
+<title>Some_examples | Blaine&#39;s Blog</title>
 <meta name="keywords" content="">
-<meta name="description" content="1. map数据结构 Golang的map使用哈希表作为底层实现，一个哈希表里可以有多个哈希表节点，也即bucket，而每个bucket就保存了map中的一个或一组键值对。 map数据结构由runtime/map.go/hmap定义: // A header for a Go map. type hmap struct { count int // 代表哈希表中的元素个数，调">
+<meta name="description" content="协程交替打印 a1b2c3&hellip; package main import ( &#34;fmt&#34; &#34;sync&#34; ) func main() { var wg sync.WaitGroup wg.Add(1) chNumber := make(chan struct{}) chLetter := make(chan struct{}) i := 1 index := 0 a := &#34;&#34; for c := &#39;a&#39;; c &lt;= &#39;z&#39;; c&#43;&#43; { a = a &#43; string(c) } go func() { for { select { case &lt;-chNumber: fmt.Print(i) i&#43;&#43; chLetter &lt;- struct{}{} break default: break } } }() go func(wg *sync.WaitGroup) { for { select { case &lt;-chLetter: if index &gt; len(a)-1 { wg.Done() return } fmt.Print(string(a[index])) index&#43;&#43; chNumber &lt;- struct{}{} break default: break } } }(&amp;wg) chLetter &lt;- struct{}{} wg.Wait() }">
 <meta name="author" content="Blaine">
-<link rel="canonical" href="https://Bin-lin-rgb.github.io/posts/go/go-map%E7%AF%87/">
+<link rel="canonical" href="https://Bin-lin-rgb.github.io/posts/go/some_examples/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.css" rel="preload stylesheet" as="style">
 <script defer crossorigin="anonymous" src="/assets/js/highlight.js" onload="hljs.initHighlightingOnLoad();"></script>
 <link rel="icon" href="https://Bin-lin-rgb.github.io/img/icon.png">
@@ -73,16 +73,16 @@ var _hmt = _hmt || [];
   s.parentNode.insertBefore(hm, s);
 })();
 </script>
-<meta property="og:title" content="Go Map篇" />
-<meta property="og:description" content="1. map数据结构 Golang的map使用哈希表作为底层实现，一个哈希表里可以有多个哈希表节点，也即bucket，而每个bucket就保存了map中的一个或一组键值对。 map数据结构由runtime/map.go/hmap定义: // A header for a Go map. type hmap struct { count int // 代表哈希表中的元素个数，调" />
+<meta property="og:title" content="Some_examples" />
+<meta property="og:description" content="协程交替打印 a1b2c3&hellip; package main import ( &#34;fmt&#34; &#34;sync&#34; ) func main() { var wg sync.WaitGroup wg.Add(1) chNumber := make(chan struct{}) chLetter := make(chan struct{}) i := 1 index := 0 a := &#34;&#34; for c := &#39;a&#39;; c &lt;= &#39;z&#39;; c&#43;&#43; { a = a &#43; string(c) } go func() { for { select { case &lt;-chNumber: fmt.Print(i) i&#43;&#43; chLetter &lt;- struct{}{} break default: break } } }() go func(wg *sync.WaitGroup) { for { select { case &lt;-chLetter: if index &gt; len(a)-1 { wg.Done() return } fmt.Print(string(a[index])) index&#43;&#43; chNumber &lt;- struct{}{} break default: break } } }(&amp;wg) chLetter &lt;- struct{}{} wg.Wait() }" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://Bin-lin-rgb.github.io/posts/go/go-map%E7%AF%87/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2023-11-01T09:45:15+08:00" />
-<meta property="article:modified_time" content="2023-11-01T09:45:15+08:00" />
+<meta property="og:url" content="https://Bin-lin-rgb.github.io/posts/go/some_examples/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-11-06T20:09:45+08:00" />
+<meta property="article:modified_time" content="2023-11-06T20:09:45+08:00" />
 
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Go Map篇"/>
-<meta name="twitter:description" content="1. map数据结构 Golang的map使用哈希表作为底层实现，一个哈希表里可以有多个哈希表节点，也即bucket，而每个bucket就保存了map中的一个或一组键值对。 map数据结构由runtime/map.go/hmap定义: // A header for a Go map. type hmap struct { count int // 代表哈希表中的元素个数，调"/>
+<meta name="twitter:title" content="Some_examples"/>
+<meta name="twitter:description" content="协程交替打印 a1b2c3&hellip; package main import ( &#34;fmt&#34; &#34;sync&#34; ) func main() { var wg sync.WaitGroup wg.Add(1) chNumber := make(chan struct{}) chLetter := make(chan struct{}) i := 1 index := 0 a := &#34;&#34; for c := &#39;a&#39;; c &lt;= &#39;z&#39;; c&#43;&#43; { a = a &#43; string(c) } go func() { for { select { case &lt;-chNumber: fmt.Print(i) i&#43;&#43; chLetter &lt;- struct{}{} break default: break } } }() go func(wg *sync.WaitGroup) { for { select { case &lt;-chLetter: if index &gt; len(a)-1 { wg.Done() return } fmt.Print(string(a[index])) index&#43;&#43; chNumber &lt;- struct{}{} break default: break } } }(&amp;wg) chLetter &lt;- struct{}{} wg.Wait() }"/>
 
 
 <script type="application/ld+json">
@@ -107,8 +107,8 @@ var _hmt = _hmt || [];
     {
       "@type": "ListItem",
       "position":  3 ,
-      "name": "Go Map篇",
-      "item": "https://Bin-lin-rgb.github.io/posts/go/go-map%E7%AF%87/"
+      "name": "Some_examples",
+      "item": "https://Bin-lin-rgb.github.io/posts/go/some_examples/"
     }
   ]
 }
@@ -117,24 +117,24 @@ var _hmt = _hmt || [];
 {
   "@context": "https://schema.org",
   "@type": "BlogPosting",
-  "headline": "Go Map篇",
-  "name": "Go Map篇",
-  "description": "1. map数据结构 Golang的map使用哈希表作为底层实现，一个哈希表里可以有多个哈希表节点，也即bucket，而每个bucket就保存了map中的一个或一组键值对。 map数据结构由runtime/map.go/hmap定义: // A header for a Go map. type hmap struct { count int // 代表哈希表中的元素个数，调",
+  "headline": "Some_examples",
+  "name": "Some_examples",
+  "description": "协程交替打印 a1b2c3\u0026hellip; package main import ( \u0026#34;fmt\u0026#34; \u0026#34;sync\u0026#34; ) func main() { var wg sync.WaitGroup wg.Add(1) chNumber := make(chan struct{}) chLetter := make(chan struct{}) i := 1 index := 0 a := \u0026#34;\u0026#34; for c := \u0026#39;a\u0026#39;; c \u0026lt;= \u0026#39;z\u0026#39;; c++ { a = a + string(c) } go func() { for { select { case \u0026lt;-chNumber: fmt.Print(i) i++ chLetter \u0026lt;- struct{}{} break default: break } } }() go func(wg *sync.WaitGroup) { for { select { case \u0026lt;-chLetter: if index \u0026gt; len(a)-1 { wg.Done() return } fmt.Print(string(a[index])) index++ chNumber \u0026lt;- struct{}{} break default: break } } }(\u0026amp;wg) chLetter \u0026lt;- struct{}{} wg.Wait() }",
   "keywords": [
     ""
   ],
-  "articleBody": "1. map数据结构 Golang的map使用哈希表作为底层实现，一个哈希表里可以有多个哈希表节点，也即bucket，而每个bucket就保存了map中的一个或一组键值对。\nmap数据结构由runtime/map.go/hmap定义:\n// A header for a Go map. type hmap struct { count int // 代表哈希表中的元素个数，调用len(map)时，返回的就是该字段值。 flags uint8 // 状态标志（是否处于正在写入的状态等） B uint8 // buckets（桶）的对数 // 如果B=5，则buckets数组的长度 = 2^B=32，意味着有32个桶 buckets unsafe.Pointer // 指向buckets数组的指针，数组大小为2^B，如果元素个数为0，它为nil。 oldbuckets unsafe.Pointer // 如果发生扩容，oldbuckets是指向老的buckets数组的指针，老的buckets数组大小是新的buckets的1/2;非扩容状态下，它为nil。 nevacuate uintptr // 表示扩容进度，小于此地址的buckets代表已搬迁完成。 extra *mapextra // 存储溢出桶，这个字段是为了优化GC扫描而设计的 } 2. bucket数据结构 bucket数据结构由runtime/map.go/bmap定义：\ntype bmap struct { tophash [8]uint8 //存储哈希值的高8位 data byte[1] //key value数据:key/key/key/.../value/value/value... overflow *bmap //溢出bucket的地址 } 每个bucket可以存储8个键值对。\ntophash是个长度为8的数组，哈希值相同的键（准确的说是哈希值低位相同的键）存入当前bucket时会将哈希值的高位存储在该数组中，以方便后续匹配。 data区存放的是key-value数据，存放顺序是key/key/key/…value/value/value，如此存放是为了节省字节对齐带来的空间浪费。 overflow 指针指向的是下一个bucket，据此将所有冲突的键连接起来。 注意：上述中data和overflow并不是在结构体中显示定义的，而是直接通过指针运算进行访问的。 3. 哈希冲突 当有两个或以上数量的键被哈希到了同一个bucket时，我们称这些键发生了冲突。Go使用链地址法来解决键冲突。 由于每个bucket可以存放8个键值对，所以同一个bucket存放超过8个键值对时就会再创建一个键值对，用类似链表的方式将bucket连接起来。\n4. 负载因子 负载因子用于衡量一个哈希表冲突情况，公式为：\n负载因子 = 键数量/bucket数量\n例如，对于一个bucket数量为4，包含4个键值对的哈希表来说，这个哈希表的负载因子为1.\n哈希表需要将负载因子控制在合适的大小，超过其阀值需要进行rehash，也即键值对重新组织：\n哈希因子过小，说明空间利用率低 哈希因子过大，说明冲突严重，存取效率低 每个哈希表的实现对负载因子容忍程度不同，比如Redis实现中负载因子大于1时就会触发rehash，而Go则在在负载因子达到6.5时才会触发rehash，因为Redis的每个bucket只能存1个键值对，而Go的bucket可能存8个键值对，所以Go可以容忍更高的负载因子。\n5. 渐进式扩容 5.1 扩容的前提条件 为了保证访问效率，当新元素将要添加进map时，都会检查是否需要扩容，扩容实际上是以空间换时间的手段。 触发扩容的条件有二个：\n负载因子 \u003e 6.5时，也即平均每个bucket存储的键值对达到6.5个。 overflow数量 \u003e 2^15时，也即overflow数量超过32768时。\n5.2 增量扩容 当负载因子过大时，就新建一个bucket，新的bucket长度是原来的2倍，然后旧bucket数据搬迁到新的bucket。\n考虑到如果map存储了数以亿计的key-value，一次性搬迁将会造成比较大的延时\nGo采用逐步搬迁策略，即每次访问map时都会触发一次搬迁，每次搬迁2个键值对。\n5.3 等量扩容 所谓等量扩容，实际上并不是扩大容量，buckets数量不变，重新做一遍类似增量扩容的搬迁动作，把松散的键值对重新排列一次，以使bucket的使用率更高，进而保证更快的存取。 在极端场景下，比如不断的增删，而键值对正好集中在一小部分的bucket，这样会造成overflow的bucket数量增多，但负载因子又不高，从而无法执行增量搬迁的情况\n6. 查找过程 查找过程如下：\n跟据key值算出哈希值 取哈希值低位与hmpa.B取模确定bucket位置 取哈希值高位在tophash数组中查询 如果tophash[i]中存储值也哈希值相等，则去找到该bucket中的key值进行比较 当前bucket没有找到，则继续从下个overflow的bucket中查找。 如果当前处于搬迁过程，则优先从oldbuckets查找 注：如果查找不到，也不会返回空值，而是返回相应类型的0值。\n7. 插入过程 新员素插入过程如下：\n跟据key值算出哈希值 取哈希值低位与hmap.B取模确定bucket位置 查找该key是否已经存在，如果存在则直接更新值 如果没找到将key，将key插入 ",
-  "wordCount" : "1993",
+  "articleBody": "协程交替打印 a1b2c3… package main import ( \"fmt\" \"sync\" ) func main() { var wg sync.WaitGroup wg.Add(1) chNumber := make(chan struct{}) chLetter := make(chan struct{}) i := 1 index := 0 a := \"\" for c := 'a'; c \u003c= 'z'; c++ { a = a + string(c) } go func() { for { select { case \u003c-chNumber: fmt.Print(i) i++ chLetter \u003c- struct{}{} break default: break } } }() go func(wg *sync.WaitGroup) { for { select { case \u003c-chLetter: if index \u003e len(a)-1 { wg.Done() return } fmt.Print(string(a[index])) index++ chNumber \u003c- struct{}{} break default: break } } }(\u0026wg) chLetter \u003c- struct{}{} wg.Wait() } ",
+  "wordCount" : "107",
   "inLanguage": "zh",
-  "datePublished": "2023-11-01T09:45:15+08:00",
-  "dateModified": "2023-11-01T09:45:15+08:00",
+  "datePublished": "2023-11-06T20:09:45+08:00",
+  "dateModified": "2023-11-06T20:09:45+08:00",
   "author":[{
     "@type": "Person",
     "name": "Blaine"
   }],
   "mainEntityOfPage": {
     "@type": "WebPage",
-    "@id": "https://Bin-lin-rgb.github.io/posts/go/go-map%E7%AF%87/"
+    "@id": "https://Bin-lin-rgb.github.io/posts/go/some_examples/"
   },
   "publisher": {
     "@type": "Organization",
@@ -255,7 +255,7 @@ var _hmt = _hmt || [];
         <header class="post-header">
             <div class="breadcrumbs"><a href="https://Bin-lin-rgb.github.io/">🏠 主页</a>&nbsp;»&nbsp;<a href="https://Bin-lin-rgb.github.io/posts/">📚文章</a>&nbsp;»&nbsp;<a href="https://Bin-lin-rgb.github.io/posts/go/">🥇 Golang</a></div>
             <h1 class="post-title">
-                Go Map篇
+                Some_examples
             </h1>
             <div class="post-meta">
 
@@ -276,7 +276,7 @@ var _hmt = _hmt || [];
 <span class="parent-post-meta">
     <span id="post_meta_style_1">
         <span class="fa fa-calendar-check-o"></span>
-        <span>2023-11-01
+        <span>2023-11-06
             &nbsp;&nbsp;
         </span>
     </span>
@@ -289,13 +289,13 @@ var _hmt = _hmt || [];
     
     <span id="post_meta_style_3">
         <span class="fa fa-file-word-o"></span>
-        <span>1993字
+        <span>107字
             &nbsp;&nbsp;
         </span>
     </span>
     <span id="post_meta_style_4">
         <span class="fa fa-clock-o"></span>
-        <span>4分钟
+        <span>1分钟
             &nbsp;&nbsp;
         </span>
     </span>
@@ -370,19 +370,7 @@ var _hmt = _hmt || [];
 
         <div class="inner"><ul>
                 <li>
-                    <a href="#1-map%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84" aria-label="1. map数据结构">1. map数据结构</a></li>
-                <li>
-                    <a href="#2-bucket%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84" aria-label="2. bucket数据结构">2. bucket数据结构</a></li>
-                <li>
-                    <a href="#3-%e5%93%88%e5%b8%8c%e5%86%b2%e7%aa%81" aria-label="3. 哈希冲突">3. 哈希冲突</a></li>
-                <li>
-                    <a href="#4-%e8%b4%9f%e8%bd%bd%e5%9b%a0%e5%ad%90" aria-label="4. 负载因子">4. 负载因子</a></li>
-                <li>
-                    <a href="#5-%e6%b8%90%e8%bf%9b%e5%bc%8f%e6%89%a9%e5%ae%b9" aria-label="5. 渐进式扩容">5. 渐进式扩容</a></li>
-                <li>
-                    <a href="#6-%e6%9f%a5%e6%89%be%e8%bf%87%e7%a8%8b" aria-label="6. 查找过程">6. 查找过程</a></li>
-                <li>
-                    <a href="#7-%e6%8f%92%e5%85%a5%e8%bf%87%e7%a8%8b" aria-label="7. 插入过程">7. 插入过程</a>
+                    <a href="#%e5%8d%8f%e7%a8%8b%e4%ba%a4%e6%9b%bf%e6%89%93%e5%8d%b0-a1b2c3" aria-label="协程交替打印 a1b2c3&amp;hellip;">协程交替打印 a1b2c3&hellip;</a>
                 </li>
             </ul>
         </div>
@@ -449,80 +437,62 @@ var _hmt = _hmt || [];
         return rect.top + win.pageYOffset;
     }
 </script>
-        <div class="post-content"><h1 id="1-map数据结构">1. map数据结构<a hidden class="anchor" aria-hidden="true" href="#1-map数据结构">#</a></h1>
-<p>Golang的map使用哈希表作为底层实现，一个哈希表里可以有多个哈希表节点，也即bucket，而每个bucket就保存了map中的一个或一组键值对。</p>
-<p>map数据结构由runtime/map.go/hmap定义:</p>
-<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#78787e">// A header for a Go map.
-</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span><span style="color:#ff5c57">type</span> hmap <span style="color:#ff5c57">struct</span> {
-</span></span><span style="display:flex;"><span>    count     <span style="color:#9aedfe">int</span> 
-</span></span><span style="display:flex;"><span>    <span style="color:#78787e">// 代表哈希表中的元素个数，调用len(map)时，返回的就是该字段值。
-</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>    flags     <span style="color:#9aedfe">uint8</span> 
-</span></span><span style="display:flex;"><span>    <span style="color:#78787e">// 状态标志（是否处于正在写入的状态等）
-</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>    B         <span style="color:#9aedfe">uint8</span>  
-</span></span><span style="display:flex;"><span>    <span style="color:#78787e">// buckets（桶）的对数
-</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>    <span style="color:#78787e">// 如果B=5，则buckets数组的长度 = 2^B=32，意味着有32个桶
-</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>    buckets    unsafe.Pointer  <span style="color:#78787e">// 指向buckets数组的指针，数组大小为2^B，如果元素个数为0，它为nil。
-</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>    oldbuckets unsafe.Pointer  <span style="color:#78787e">// 如果发生扩容，oldbuckets是指向老的buckets数组的指针，老的buckets数组大小是新的buckets的1/2;非扩容状态下，它为nil。
-</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>    nevacuate  <span style="color:#9aedfe">uintptr</span> <span style="color:#78787e">// 表示扩容进度，小于此地址的buckets代表已搬迁完成。
-</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>    extra <span style="color:#ff6ac1">*</span>mapextra    <span style="color:#78787e">// 存储溢出桶，这个字段是为了优化GC扫描而设计的
-</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span> }
-</span></span></code></pre></div><h1 id="2-bucket数据结构">2. bucket数据结构<a hidden class="anchor" aria-hidden="true" href="#2-bucket数据结构">#</a></h1>
-<p>bucket数据结构由runtime/map.go/bmap定义：</p>
-<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff5c57">type</span> bmap <span style="color:#ff5c57">struct</span> {
-</span></span><span style="display:flex;"><span>    tophash [<span style="color:#ff9f43">8</span>]<span style="color:#9aedfe">uint8</span> <span style="color:#78787e">//存储哈希值的高8位
-</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>    data    <span style="color:#9aedfe">byte</span>[<span style="color:#ff9f43">1</span>]  <span style="color:#78787e">//key value数据:key/key/key/.../value/value/value...
-</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>    overflow <span style="color:#ff6ac1">*</span>bmap   <span style="color:#78787e">//溢出bucket的地址
-</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>}
-</span></span></code></pre></div><p>每个bucket可以存储8个键值对。</p>
-<ul>
-<li>tophash是个长度为8的数组，哈希值相同的键（准确的说是哈希值低位相同的键）存入当前bucket时会将哈希值的高位存储在该数组中，以方便后续匹配。</li>
-<li>data区存放的是key-value数据，存放顺序是key/key/key/&hellip;value/value/value，如此存放是为了节省字节对齐带来的空间浪费。</li>
-<li>overflow 指针指向的是下一个bucket，据此将所有冲突的键连接起来。
-注意：上述中data和overflow并不是在结构体中显示定义的，而是直接通过指针运算进行访问的。</li>
-</ul>
-<h1 id="3-哈希冲突">3. 哈希冲突<a hidden class="anchor" aria-hidden="true" href="#3-哈希冲突">#</a></h1>
-<p>当有两个或以上数量的键被哈希到了同一个bucket时，我们称这些键发生了冲突。Go使用链地址法来解决键冲突。 由于每个bucket可以存放8个键值对，所以同一个bucket存放超过8个键值对时就会再创建一个键值对，用类似链表的方式将bucket连接起来。</p>
-<h1 id="4-负载因子">4. 负载因子<a hidden class="anchor" aria-hidden="true" href="#4-负载因子">#</a></h1>
-<p>负载因子用于衡量一个哈希表冲突情况，公式为：</p>
-<p>负载因子 = 键数量/bucket数量</p>
-<p>例如，对于一个bucket数量为4，包含4个键值对的哈希表来说，这个哈希表的负载因子为1.</p>
-<p>哈希表需要将负载因子控制在合适的大小，超过其阀值需要进行rehash，也即键值对重新组织：</p>
-<ul>
-<li>哈希因子过小，说明空间利用率低</li>
-<li>哈希因子过大，说明冲突严重，存取效率低</li>
-</ul>
-<p>每个哈希表的实现对负载因子容忍程度不同，比如Redis实现中负载因子大于1时就会触发rehash，而Go则在在负载因子达到6.5时才会触发rehash，因为Redis的每个bucket只能存1个键值对，而Go的bucket可能存8个键值对，所以Go可以容忍更高的负载因子。</p>
-<h1 id="5-渐进式扩容">5. 渐进式扩容<a hidden class="anchor" aria-hidden="true" href="#5-渐进式扩容">#</a></h1>
-<p>5.1 扩容的前提条件
-为了保证访问效率，当新元素将要添加进map时，都会检查是否需要扩容，扩容实际上是以空间换时间的手段。 触发扩容的条件有二个：</p>
-<p>负载因子 &gt; 6.5时，也即平均每个bucket存储的键值对达到6.5个。
-overflow数量 &gt; 2^15时，也即overflow数量超过32768时。</p>
-<p>5.2 增量扩容
-当负载因子过大时，就新建一个bucket，新的bucket长度是原来的2倍，然后旧bucket数据搬迁到新的bucket。</p>
-<p>考虑到如果map存储了数以亿计的key-value，一次性搬迁将会造成比较大的延时</p>
-<p>Go采用逐步搬迁策略，即每次访问map时都会触发一次搬迁，每次搬迁2个键值对。</p>
-<p>5.3 等量扩容
-所谓等量扩容，实际上并不是扩大容量，buckets数量不变，重新做一遍类似增量扩容的搬迁动作，把松散的键值对重新排列一次，以使bucket的使用率更高，进而保证更快的存取。 在极端场景下，比如不断的增删，而键值对正好集中在一小部分的bucket，这样会造成overflow的bucket数量增多，但负载因子又不高，从而无法执行增量搬迁的情况</p>
-<h1 id="6-查找过程">6. 查找过程<a hidden class="anchor" aria-hidden="true" href="#6-查找过程">#</a></h1>
-<p>查找过程如下：</p>
-<ul>
-<li>跟据key值算出哈希值</li>
-<li>取哈希值低位与hmpa.B取模确定bucket位置</li>
-<li>取哈希值高位在tophash数组中查询</li>
-<li>如果tophash[i]中存储值也哈希值相等，则去找到该bucket中的key值进行比较</li>
-<li>当前bucket没有找到，则继续从下个overflow的bucket中查找。</li>
-<li>如果当前处于搬迁过程，则优先从oldbuckets查找</li>
-</ul>
-<p><strong>注：如果查找不到，也不会返回空值，而是返回相应类型的0值。</strong></p>
-<h1 id="7-插入过程">7. 插入过程<a hidden class="anchor" aria-hidden="true" href="#7-插入过程">#</a></h1>
-<p>新员素插入过程如下：</p>
-<ul>
-<li>跟据key值算出哈希值</li>
-<li>取哈希值低位与hmap.B取模确定bucket位置</li>
-<li>查找该key是否已经存在，如果存在则直接更新值</li>
-<li>如果没找到将key，将key插入</li>
-</ul>
-
+        <div class="post-content"><h1 id="协程交替打印-a1b2c3">协程交替打印 a1b2c3&hellip;<a hidden class="anchor" aria-hidden="true" href="#协程交替打印-a1b2c3">#</a></h1>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff6ac1">package</span> main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff6ac1">import</span> (
+</span></span><span style="display:flex;"><span>	<span style="color:#5af78e">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#5af78e">&#34;sync&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">main</span>() {
+</span></span><span style="display:flex;"><span>	<span style="color:#ff5c57">var</span> wg sync.WaitGroup
+</span></span><span style="display:flex;"><span>	wg.<span style="color:#57c7ff">Add</span>(<span style="color:#ff9f43">1</span>)
+</span></span><span style="display:flex;"><span>	chNumber <span style="color:#ff6ac1">:=</span> <span style="color:#ff5c57">make</span>(<span style="color:#ff5c57">chan</span> <span style="color:#ff5c57">struct</span>{})
+</span></span><span style="display:flex;"><span>	chLetter <span style="color:#ff6ac1">:=</span> <span style="color:#ff5c57">make</span>(<span style="color:#ff5c57">chan</span> <span style="color:#ff5c57">struct</span>{})
+</span></span><span style="display:flex;"><span>	i <span style="color:#ff6ac1">:=</span> <span style="color:#ff9f43">1</span>
+</span></span><span style="display:flex;"><span>	index <span style="color:#ff6ac1">:=</span> <span style="color:#ff9f43">0</span>
+</span></span><span style="display:flex;"><span>	a <span style="color:#ff6ac1">:=</span> <span style="color:#5af78e">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff6ac1">for</span> c <span style="color:#ff6ac1">:=</span> <span style="color:#5af78e">&#39;a&#39;</span>; c <span style="color:#ff6ac1">&lt;=</span> <span style="color:#5af78e">&#39;z&#39;</span>; c<span style="color:#ff6ac1">++</span> {
+</span></span><span style="display:flex;"><span>		a = a <span style="color:#ff6ac1">+</span> <span style="color:#ff5c57">string</span>(c)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff6ac1">go</span> <span style="color:#ff5c57">func</span>() {
+</span></span><span style="display:flex;"><span>		<span style="color:#ff6ac1">for</span> {
+</span></span><span style="display:flex;"><span>			<span style="color:#ff6ac1">select</span> {
+</span></span><span style="display:flex;"><span>			<span style="color:#ff6ac1">case</span> <span style="color:#ff6ac1">&lt;-</span>chNumber:
+</span></span><span style="display:flex;"><span>				fmt.<span style="color:#57c7ff">Print</span>(i)
+</span></span><span style="display:flex;"><span>				i<span style="color:#ff6ac1">++</span>
+</span></span><span style="display:flex;"><span>				chLetter <span style="color:#ff6ac1">&lt;-</span> <span style="color:#ff5c57">struct</span>{}{}
+</span></span><span style="display:flex;"><span>				<span style="color:#ff6ac1">break</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#ff6ac1">default</span>:
+</span></span><span style="display:flex;"><span>				<span style="color:#ff6ac1">break</span>
+</span></span><span style="display:flex;"><span>			}
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	}()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff6ac1">go</span> <span style="color:#ff5c57">func</span>(wg <span style="color:#ff6ac1">*</span>sync.WaitGroup) {
+</span></span><span style="display:flex;"><span>		<span style="color:#ff6ac1">for</span> {
+</span></span><span style="display:flex;"><span>			<span style="color:#ff6ac1">select</span> {
+</span></span><span style="display:flex;"><span>			<span style="color:#ff6ac1">case</span> <span style="color:#ff6ac1">&lt;-</span>chLetter:
+</span></span><span style="display:flex;"><span>				<span style="color:#ff6ac1">if</span> index &gt; <span style="color:#ff5c57">len</span>(a)<span style="color:#ff6ac1">-</span><span style="color:#ff9f43">1</span> {
+</span></span><span style="display:flex;"><span>					wg.<span style="color:#57c7ff">Done</span>()
+</span></span><span style="display:flex;"><span>					<span style="color:#ff6ac1">return</span>
+</span></span><span style="display:flex;"><span>				}
+</span></span><span style="display:flex;"><span>				fmt.<span style="color:#57c7ff">Print</span>(<span style="color:#ff5c57">string</span>(a[index]))
+</span></span><span style="display:flex;"><span>				index<span style="color:#ff6ac1">++</span>
+</span></span><span style="display:flex;"><span>				chNumber <span style="color:#ff6ac1">&lt;-</span> <span style="color:#ff5c57">struct</span>{}{}
+</span></span><span style="display:flex;"><span>				<span style="color:#ff6ac1">break</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#ff6ac1">default</span>:
+</span></span><span style="display:flex;"><span>				<span style="color:#ff6ac1">break</span>
+</span></span><span style="display:flex;"><span>			}
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	}(<span style="color:#ff6ac1">&amp;</span>wg)
+</span></span><span style="display:flex;"><span>	chLetter <span style="color:#ff6ac1">&lt;-</span> <span style="color:#ff5c57">struct</span>{}{}
+</span></span><span style="display:flex;"><span>	wg.<span style="color:#57c7ff">Wait</span>()
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div>
 
         </div>
         <div class="post-reward">
@@ -556,15 +526,15 @@ overflow数量 &gt; 2^15时，也即overflow数量超过32768时。</p>
         <footer class="post-footer">
             
 <nav class="paginav">
-  <a class="prev" href="https://Bin-lin-rgb.github.io/posts/go/go-mutex%E7%AF%87/">
+  <a class="prev" href="https://Bin-lin-rgb.github.io/posts/leetcode/%E5%8F%8C%E6%8C%87%E9%92%88%E6%95%B0%E7%BB%84/">
     <span class="title">« 上一页</span>
     <br>
-    <span>Go Mutex篇</span>
+    <span>双指针（数组）</span>
   </a>
-  <a class="next" href="https://Bin-lin-rgb.github.io/posts/go/go-goroutine%E7%AF%87/">
+  <a class="next" href="https://Bin-lin-rgb.github.io/posts/leetcode/%E5%8F%8C%E6%8C%87%E9%92%88%E9%93%BE%E8%A1%A8/">
     <span class="title">下一页 »</span>
     <br>
-    <span>Go Goroutine篇</span>
+    <span>双指针（链表）</span>
   </a>
 </nav>
 

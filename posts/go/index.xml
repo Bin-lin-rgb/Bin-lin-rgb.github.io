@@ -6,7 +6,7 @@
     <description>Recent content in 🥇 Golang on Blaine&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <lastBuildDate>Wed, 01 Nov 2023 09:46:59 +0800</lastBuildDate><atom:link href="https://Bin-lin-rgb.github.io/posts/go/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 06 Nov 2023 20:09:45 +0800</lastBuildDate><atom:link href="https://Bin-lin-rgb.github.io/posts/go/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Golang 基础语法</title>
       <link>https://Bin-lin-rgb.github.io/posts/go/base/</link>
@@ -17,12 +17,57 @@
     </item>
     
     <item>
-      <title>Go 并发编程篇</title>
-      <link>https://Bin-lin-rgb.github.io/posts/go/go-%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E7%AF%87/</link>
-      <pubDate>Wed, 01 Nov 2023 09:46:59 +0800</pubDate>
+      <title>Go 基础篇</title>
+      <link>https://Bin-lin-rgb.github.io/posts/go/go%E5%9F%BA%E7%A1%80%E7%AF%87/</link>
+      <pubDate>Wed, 01 Nov 2023 09:44:29 +0800</pubDate>
       
-      <guid>https://Bin-lin-rgb.github.io/posts/go/go-%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E7%AF%87/</guid>
-      <description>1.Go 常用的并发模型 并发模型说的是系统中的线程如何协作完成并发任务，不同的并发模型，线程以不同的方式进行通信和协作。 线程间通信方式 线程间通信方式有两种：共享内存和消息传递，无论是哪种通信模型，线程或者协程最终都会从内存中获取数据，所以更为准确的说法是直接共享内存、发送消息的方式来同步</description>
+      <guid>https://Bin-lin-rgb.github.io/posts/go/go%E5%9F%BA%E7%A1%80%E7%AF%87/</guid>
+      <description>Go 方法与函数的区别？ 在 Go 语言中，有方法（method）和函数（function）两个概念，它们之间有一些重要的区别，主要体现在以下几个方面： 定义方式： 函数：函数是一段独立的代码块，它可以在任何地方定义和调用。函数的定义是全局的，可以在不同包中调用。 方法：方法是与类型（结构体或接口</description>
+    </item>
+    
+    <item>
+      <title>Go Slice篇</title>
+      <link>https://Bin-lin-rgb.github.io/posts/go/go-slice%E7%AF%87/</link>
+      <pubDate>Wed, 01 Nov 2023 09:45:04 +0800</pubDate>
+      
+      <guid>https://Bin-lin-rgb.github.io/posts/go/go-slice%E7%AF%87/</guid>
+      <description>Slice实现原理 Slice依托数组实现，底层数组对用户屏蔽，在底层数组容量不足时可以实现自动重分配并生成新的Slice。 接下来按照实际使用场景分别介绍其实现机制。 3.1 Slice数据结构 源码包中src/runtime/slice.go:slice定义了Slice的数据结构： type slice struct {</description>
+    </item>
+    
+    <item>
+      <title>Go Mutex篇</title>
+      <link>https://Bin-lin-rgb.github.io/posts/go/go-mutex%E7%AF%87/</link>
+      <pubDate>Wed, 01 Nov 2023 09:45:41 +0800</pubDate>
+      
+      <guid>https://Bin-lin-rgb.github.io/posts/go/go-mutex%E7%AF%87/</guid>
+      <description>Go 互斥锁的实现原理？ 互斥锁是并发程序中对共享资源进行访问控制的主要手段，对此Go语言提供了非常简单易用的Mutex，Mutex为一结构体类型，对外暴露两个方法Lock()和Unlock()分别用于加锁和解锁。 Mutex使用起来非常方便，但其内部实现却复杂得多，这包括Mutex的几</description>
+    </item>
+    
+    <item>
+      <title>Go Map篇</title>
+      <link>https://Bin-lin-rgb.github.io/posts/go/go-map%E7%AF%87/</link>
+      <pubDate>Wed, 01 Nov 2023 09:45:15 +0800</pubDate>
+      
+      <guid>https://Bin-lin-rgb.github.io/posts/go/go-map%E7%AF%87/</guid>
+      <description>1. map数据结构 Golang的map使用哈希表作为底层实现，一个哈希表里可以有多个哈希表节点，也即bucket，而每个bucket就保存了map中的一个或一组键值对。 map数据结构由runtime/map.go/hmap定义: // A header for a Go map. type hmap struct { count int // 代表哈希表中的元素个数，调</description>
+    </item>
+    
+    <item>
+      <title>Go Goroutine篇</title>
+      <link>https://Bin-lin-rgb.github.io/posts/go/go-goroutine%E7%AF%87/</link>
+      <pubDate>Wed, 01 Nov 2023 09:46:08 +0800</pubDate>
+      
+      <guid>https://Bin-lin-rgb.github.io/posts/go/go-goroutine%E7%AF%87/</guid>
+      <description>Go goroutine 的底层实现原理 概念 Goroutine 可以理解为一种 Go 语言的协程（轻量级线程），是 Go 支持高并发的基础，属于用户态的线程，由 Go runtime 管理而不是操作系统。 底层数据结构 type g struct { goid int64 // 唯一的goroutine的ID sched gobuf // goroutine切换时，用于保存g的上下文 stack stack // 栈 gopc // pc of go statement that created this goroutine startpc uintptr // pc of goroutine function</description>
+    </item>
+    
+    <item>
+      <title>Go Channel篇</title>
+      <link>https://Bin-lin-rgb.github.io/posts/go/go-channel%E7%AF%87/</link>
+      <pubDate>Wed, 01 Nov 2023 09:45:23 +0800</pubDate>
+      
+      <guid>https://Bin-lin-rgb.github.io/posts/go/go-channel%E7%AF%87/</guid>
+      <description>Go channel 的底层实现原理 概念： Go 中的 channel 是一个队列，遵循先进先出的原则，负责协程之间的通信（Go 语言提倡不要通过共享内存来通信，而要通过通信来实现内存共享，CSP(Communicating Sequential Process)并发模型，就是通过 goroutine 和 channel 来实现的） 使用场景： 停止信号监听 定时任务 生产方和消费方解</description>
     </item>
     
     <item>
@@ -44,57 +89,21 @@
     </item>
     
     <item>
-      <title>Go Goroutine篇</title>
-      <link>https://Bin-lin-rgb.github.io/posts/go/go-goroutine%E7%AF%87/</link>
-      <pubDate>Wed, 01 Nov 2023 09:46:08 +0800</pubDate>
+      <title>Go 并发编程篇</title>
+      <link>https://Bin-lin-rgb.github.io/posts/go/go-%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E7%AF%87/</link>
+      <pubDate>Wed, 01 Nov 2023 09:46:59 +0800</pubDate>
       
-      <guid>https://Bin-lin-rgb.github.io/posts/go/go-goroutine%E7%AF%87/</guid>
-      <description>Go goroutine 的底层实现原理 概念 Goroutine 可以理解为一种 Go 语言的协程（轻量级线程），是 Go 支持高并发的基础，属于用户态的线程，由 Go runtime 管理而不是操作系统。 底层数据结构 type g struct { goid int64 // 唯一的goroutine的ID sched gobuf // goroutine切换时，用于保存g的上下文 stack stack // 栈 gopc // pc of go statement that created this goroutine startpc uintptr // pc of goroutine function</description>
+      <guid>https://Bin-lin-rgb.github.io/posts/go/go-%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E7%AF%87/</guid>
+      <description>1.Go 常用的并发模型 并发模型说的是系统中的线程如何协作完成并发任务，不同的并发模型，线程以不同的方式进行通信和协作。 线程间通信方式 线程间通信方式有两种：共享内存和消息传递，无论是哪种通信模型，线程或者协程最终都会从内存中获取数据，所以更为准确的说法是直接共享内存、发送消息的方式来同步</description>
     </item>
     
     <item>
-      <title>Go Mutex篇</title>
-      <link>https://Bin-lin-rgb.github.io/posts/go/go-mutex%E7%AF%87/</link>
-      <pubDate>Wed, 01 Nov 2023 09:45:41 +0800</pubDate>
+      <title>Some_examples</title>
+      <link>https://Bin-lin-rgb.github.io/posts/go/some_examples/</link>
+      <pubDate>Mon, 06 Nov 2023 20:09:45 +0800</pubDate>
       
-      <guid>https://Bin-lin-rgb.github.io/posts/go/go-mutex%E7%AF%87/</guid>
-      <description>Go 互斥锁的实现原理？ 互斥锁是并发程序中对共享资源进行访问控制的主要手段，对此Go语言提供了非常简单易用的Mutex，Mutex为一结构体类型，对外暴露两个方法Lock()和Unlock()分别用于加锁和解锁。 Mutex使用起来非常方便，但其内部实现却复杂得多，这包括Mutex的几</description>
-    </item>
-    
-    <item>
-      <title>Go Channel篇</title>
-      <link>https://Bin-lin-rgb.github.io/posts/go/go-channel%E7%AF%87/</link>
-      <pubDate>Wed, 01 Nov 2023 09:45:23 +0800</pubDate>
-      
-      <guid>https://Bin-lin-rgb.github.io/posts/go/go-channel%E7%AF%87/</guid>
-      <description>Go channel 的底层实现原理 概念： Go 中的 channel 是一个队列，遵循先进先出的原则，负责协程之间的通信（Go 语言提倡不要通过共享内存来通信，而要通过通信来实现内存共享，CSP(Communicating Sequential Process)并发模型，就是通过 goroutine 和 channel 来实现的） 使用场景： 停止信号监听 定时任务 生产方和消费方解</description>
-    </item>
-    
-    <item>
-      <title>Go Map篇</title>
-      <link>https://Bin-lin-rgb.github.io/posts/go/go-map%E7%AF%87/</link>
-      <pubDate>Wed, 01 Nov 2023 09:45:15 +0800</pubDate>
-      
-      <guid>https://Bin-lin-rgb.github.io/posts/go/go-map%E7%AF%87/</guid>
-      <description>1. map数据结构 Golang的map使用哈希表作为底层实现，一个哈希表里可以有多个哈希表节点，也即bucket，而每个bucket就保存了map中的一个或一组键值对。 map数据结构由runtime/map.go/hmap定义: // A header for a Go map. type hmap struct { count int // 代表哈希表中的元素个数，调</description>
-    </item>
-    
-    <item>
-      <title>Go Slice篇</title>
-      <link>https://Bin-lin-rgb.github.io/posts/go/go-slice%E7%AF%87/</link>
-      <pubDate>Wed, 01 Nov 2023 09:45:04 +0800</pubDate>
-      
-      <guid>https://Bin-lin-rgb.github.io/posts/go/go-slice%E7%AF%87/</guid>
-      <description>Slice实现原理 Slice依托数组实现，底层数组对用户屏蔽，在底层数组容量不足时可以实现自动重分配并生成新的Slice。 接下来按照实际使用场景分别介绍其实现机制。 3.1 Slice数据结构 源码包中src/runtime/slice.go:slice定义了Slice的数据结构： type slice struct {</description>
-    </item>
-    
-    <item>
-      <title>Go 基础篇</title>
-      <link>https://Bin-lin-rgb.github.io/posts/go/go%E5%9F%BA%E7%A1%80%E7%AF%87/</link>
-      <pubDate>Wed, 01 Nov 2023 09:44:29 +0800</pubDate>
-      
-      <guid>https://Bin-lin-rgb.github.io/posts/go/go%E5%9F%BA%E7%A1%80%E7%AF%87/</guid>
-      <description>Go 方法与函数的区别？ 在 Go 语言中，有方法（method）和函数（function）两个概念，它们之间有一些重要的区别，主要体现在以下几个方面： 定义方式： 函数：函数是一段独立的代码块，它可以在任何地方定义和调用。函数的定义是全局的，可以在不同包中调用。 方法：方法是与类型（结构体或接口</description>
+      <guid>https://Bin-lin-rgb.github.io/posts/go/some_examples/</guid>
+      <description>协程交替打印 a1b2c3&amp;hellip; package main import ( &amp;#34;fmt&amp;#34; &amp;#34;sync&amp;#34; ) func main() { var wg sync.WaitGroup wg.Add(1) chNumber := make(chan struct{}) chLetter := make(chan struct{}) i := 1 index := 0 a := &amp;#34;&amp;#34; for c := &amp;#39;a&amp;#39;; c &amp;lt;= &amp;#39;z&amp;#39;; c++ { a = a + string(c) } go func() { for { select { case &amp;lt;-chNumber: fmt.Print(i) i++ chLetter &amp;lt;- struct{}{} break default: break } } }() go func(wg *sync.WaitGroup) { for { select { case &amp;lt;-chLetter: if index &amp;gt; len(a)-1 { wg.Done() return } fmt.Print(string(a[index])) index++ chNumber &amp;lt;- struct{}{} break default: break } } }(&amp;amp;wg) chLetter &amp;lt;- struct{}{} wg.Wait() }</description>
     </item>
     
     <item>
