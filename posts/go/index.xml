@@ -103,7 +103,7 @@
       <pubDate>Mon, 06 Nov 2023 20:09:45 +0800</pubDate>
       
       <guid>https://Bin-lin-rgb.github.io/posts/go/some_examples/</guid>
-      <description>协程交替打印 a1b2c3&amp;hellip; package main import ( &amp;#34;fmt&amp;#34; &amp;#34;sync&amp;#34; ) func main() { var wg sync.WaitGroup wg.Add(1) chNumber := make(chan struct{}) chLetter := make(chan struct{}) i := 1 index := 0 a := &amp;#34;&amp;#34; for c := &amp;#39;a&amp;#39;; c &amp;lt;= &amp;#39;z&amp;#39;; c++ { a = a + string(c) } go func() { for { select { case &amp;lt;-chNumber: fmt.Print(i) i++ chLetter &amp;lt;- struct{}{} break default: break } } }() go func(wg *sync.WaitGroup) { for { select { case &amp;lt;-chLetter: if index &amp;gt; len(a)-1 { wg.Done() return } fmt.Print(string(a[index])) index++ chNumber &amp;lt;- struct{}{} break default: break } } }(&amp;amp;wg) chLetter &amp;lt;- struct{}{} wg.Wait() }</description>
+      <description>协程交替打印 a1b2c3&amp;hellip; package main import ( &amp;#34;fmt&amp;#34; &amp;#34;sync&amp;#34; ) func main() { var wg sync.WaitGroup wg.Add(1) chNumber := make(chan struct{}) chLetter := make(chan struct{}) i := 1 index := 0 a := &amp;#34;&amp;#34; for c := &amp;#39;a&amp;#39;; c &amp;lt;= &amp;#39;z&amp;#39;; c++ { a = a + string(c) } go func() { for { select { case &amp;lt;-chNumber: fmt.Print(i) i++ chLetter &amp;lt;- struct{}{} break default: break } } }() go func(wg *sync.WaitGroup) { for { select { case &amp;lt;-chLetter: if index &amp;gt; len(a)-1 { wg.Done() return } fmt.Print(string(a[index])) index++ chNumber &amp;lt;- struct{}{} break default: break } } }(&amp;amp;wg) chLetter &amp;lt;- struct{}{} wg.Wait() } 并发3个函数 f1()(int[],error),f2()(int[</description>
     </item>
     
     <item>

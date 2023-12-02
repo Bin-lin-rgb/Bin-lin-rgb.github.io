@@ -7,7 +7,7 @@
 <meta name="robots" content="index, follow">
 <title>Some_examples | Blaine&#39;s Blog</title>
 <meta name="keywords" content="">
-<meta name="description" content="协程交替打印 a1b2c3&hellip; package main import ( &#34;fmt&#34; &#34;sync&#34; ) func main() { var wg sync.WaitGroup wg.Add(1) chNumber := make(chan struct{}) chLetter := make(chan struct{}) i := 1 index := 0 a := &#34;&#34; for c := &#39;a&#39;; c &lt;= &#39;z&#39;; c&#43;&#43; { a = a &#43; string(c) } go func() { for { select { case &lt;-chNumber: fmt.Print(i) i&#43;&#43; chLetter &lt;- struct{}{} break default: break } } }() go func(wg *sync.WaitGroup) { for { select { case &lt;-chLetter: if index &gt; len(a)-1 { wg.Done() return } fmt.Print(string(a[index])) index&#43;&#43; chNumber &lt;- struct{}{} break default: break } } }(&amp;wg) chLetter &lt;- struct{}{} wg.Wait() }">
+<meta name="description" content="协程交替打印 a1b2c3&hellip; package main import ( &#34;fmt&#34; &#34;sync&#34; ) func main() { var wg sync.WaitGroup wg.Add(1) chNumber := make(chan struct{}) chLetter := make(chan struct{}) i := 1 index := 0 a := &#34;&#34; for c := &#39;a&#39;; c &lt;= &#39;z&#39;; c&#43;&#43; { a = a &#43; string(c) } go func() { for { select { case &lt;-chNumber: fmt.Print(i) i&#43;&#43; chLetter &lt;- struct{}{} break default: break } } }() go func(wg *sync.WaitGroup) { for { select { case &lt;-chLetter: if index &gt; len(a)-1 { wg.Done() return } fmt.Print(string(a[index])) index&#43;&#43; chNumber &lt;- struct{}{} break default: break } } }(&amp;wg) chLetter &lt;- struct{}{} wg.Wait() } 并发3个函数 f1()(int[],error),f2()(int[">
 <meta name="author" content="Blaine">
 <link rel="canonical" href="https://Bin-lin-rgb.github.io/posts/go/some_examples/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.css" rel="preload stylesheet" as="style">
@@ -74,7 +74,7 @@ var _hmt = _hmt || [];
 })();
 </script>
 <meta property="og:title" content="Some_examples" />
-<meta property="og:description" content="协程交替打印 a1b2c3&hellip; package main import ( &#34;fmt&#34; &#34;sync&#34; ) func main() { var wg sync.WaitGroup wg.Add(1) chNumber := make(chan struct{}) chLetter := make(chan struct{}) i := 1 index := 0 a := &#34;&#34; for c := &#39;a&#39;; c &lt;= &#39;z&#39;; c&#43;&#43; { a = a &#43; string(c) } go func() { for { select { case &lt;-chNumber: fmt.Print(i) i&#43;&#43; chLetter &lt;- struct{}{} break default: break } } }() go func(wg *sync.WaitGroup) { for { select { case &lt;-chLetter: if index &gt; len(a)-1 { wg.Done() return } fmt.Print(string(a[index])) index&#43;&#43; chNumber &lt;- struct{}{} break default: break } } }(&amp;wg) chLetter &lt;- struct{}{} wg.Wait() }" />
+<meta property="og:description" content="协程交替打印 a1b2c3&hellip; package main import ( &#34;fmt&#34; &#34;sync&#34; ) func main() { var wg sync.WaitGroup wg.Add(1) chNumber := make(chan struct{}) chLetter := make(chan struct{}) i := 1 index := 0 a := &#34;&#34; for c := &#39;a&#39;; c &lt;= &#39;z&#39;; c&#43;&#43; { a = a &#43; string(c) } go func() { for { select { case &lt;-chNumber: fmt.Print(i) i&#43;&#43; chLetter &lt;- struct{}{} break default: break } } }() go func(wg *sync.WaitGroup) { for { select { case &lt;-chLetter: if index &gt; len(a)-1 { wg.Done() return } fmt.Print(string(a[index])) index&#43;&#43; chNumber &lt;- struct{}{} break default: break } } }(&amp;wg) chLetter &lt;- struct{}{} wg.Wait() } 并发3个函数 f1()(int[],error),f2()(int[" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://Bin-lin-rgb.github.io/posts/go/some_examples/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2023-11-06T20:09:45+08:00" />
@@ -82,7 +82,7 @@ var _hmt = _hmt || [];
 
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Some_examples"/>
-<meta name="twitter:description" content="协程交替打印 a1b2c3&hellip; package main import ( &#34;fmt&#34; &#34;sync&#34; ) func main() { var wg sync.WaitGroup wg.Add(1) chNumber := make(chan struct{}) chLetter := make(chan struct{}) i := 1 index := 0 a := &#34;&#34; for c := &#39;a&#39;; c &lt;= &#39;z&#39;; c&#43;&#43; { a = a &#43; string(c) } go func() { for { select { case &lt;-chNumber: fmt.Print(i) i&#43;&#43; chLetter &lt;- struct{}{} break default: break } } }() go func(wg *sync.WaitGroup) { for { select { case &lt;-chLetter: if index &gt; len(a)-1 { wg.Done() return } fmt.Print(string(a[index])) index&#43;&#43; chNumber &lt;- struct{}{} break default: break } } }(&amp;wg) chLetter &lt;- struct{}{} wg.Wait() }"/>
+<meta name="twitter:description" content="协程交替打印 a1b2c3&hellip; package main import ( &#34;fmt&#34; &#34;sync&#34; ) func main() { var wg sync.WaitGroup wg.Add(1) chNumber := make(chan struct{}) chLetter := make(chan struct{}) i := 1 index := 0 a := &#34;&#34; for c := &#39;a&#39;; c &lt;= &#39;z&#39;; c&#43;&#43; { a = a &#43; string(c) } go func() { for { select { case &lt;-chNumber: fmt.Print(i) i&#43;&#43; chLetter &lt;- struct{}{} break default: break } } }() go func(wg *sync.WaitGroup) { for { select { case &lt;-chLetter: if index &gt; len(a)-1 { wg.Done() return } fmt.Print(string(a[index])) index&#43;&#43; chNumber &lt;- struct{}{} break default: break } } }(&amp;wg) chLetter &lt;- struct{}{} wg.Wait() } 并发3个函数 f1()(int[],error),f2()(int["/>
 
 
 <script type="application/ld+json">
@@ -119,12 +119,12 @@ var _hmt = _hmt || [];
   "@type": "BlogPosting",
   "headline": "Some_examples",
   "name": "Some_examples",
-  "description": "协程交替打印 a1b2c3\u0026hellip; package main import ( \u0026#34;fmt\u0026#34; \u0026#34;sync\u0026#34; ) func main() { var wg sync.WaitGroup wg.Add(1) chNumber := make(chan struct{}) chLetter := make(chan struct{}) i := 1 index := 0 a := \u0026#34;\u0026#34; for c := \u0026#39;a\u0026#39;; c \u0026lt;= \u0026#39;z\u0026#39;; c++ { a = a + string(c) } go func() { for { select { case \u0026lt;-chNumber: fmt.Print(i) i++ chLetter \u0026lt;- struct{}{} break default: break } } }() go func(wg *sync.WaitGroup) { for { select { case \u0026lt;-chLetter: if index \u0026gt; len(a)-1 { wg.Done() return } fmt.Print(string(a[index])) index++ chNumber \u0026lt;- struct{}{} break default: break } } }(\u0026amp;wg) chLetter \u0026lt;- struct{}{} wg.Wait() }",
+  "description": "协程交替打印 a1b2c3\u0026hellip; package main import ( \u0026#34;fmt\u0026#34; \u0026#34;sync\u0026#34; ) func main() { var wg sync.WaitGroup wg.Add(1) chNumber := make(chan struct{}) chLetter := make(chan struct{}) i := 1 index := 0 a := \u0026#34;\u0026#34; for c := \u0026#39;a\u0026#39;; c \u0026lt;= \u0026#39;z\u0026#39;; c++ { a = a + string(c) } go func() { for { select { case \u0026lt;-chNumber: fmt.Print(i) i++ chLetter \u0026lt;- struct{}{} break default: break } } }() go func(wg *sync.WaitGroup) { for { select { case \u0026lt;-chLetter: if index \u0026gt; len(a)-1 { wg.Done() return } fmt.Print(string(a[index])) index++ chNumber \u0026lt;- struct{}{} break default: break } } }(\u0026amp;wg) chLetter \u0026lt;- struct{}{} wg.Wait() } 并发3个函数 f1()(int[],error),f2()(int[",
   "keywords": [
     ""
   ],
-  "articleBody": "协程交替打印 a1b2c3… package main import ( \"fmt\" \"sync\" ) func main() { var wg sync.WaitGroup wg.Add(1) chNumber := make(chan struct{}) chLetter := make(chan struct{}) i := 1 index := 0 a := \"\" for c := 'a'; c \u003c= 'z'; c++ { a = a + string(c) } go func() { for { select { case \u003c-chNumber: fmt.Print(i) i++ chLetter \u003c- struct{}{} break default: break } } }() go func(wg *sync.WaitGroup) { for { select { case \u003c-chLetter: if index \u003e len(a)-1 { wg.Done() return } fmt.Print(string(a[index])) index++ chNumber \u003c- struct{}{} break default: break } } }(\u0026wg) chLetter \u003c- struct{}{} wg.Wait() } ",
-  "wordCount" : "107",
+  "articleBody": "协程交替打印 a1b2c3… package main import ( \"fmt\" \"sync\" ) func main() { var wg sync.WaitGroup wg.Add(1) chNumber := make(chan struct{}) chLetter := make(chan struct{}) i := 1 index := 0 a := \"\" for c := 'a'; c \u003c= 'z'; c++ { a = a + string(c) } go func() { for { select { case \u003c-chNumber: fmt.Print(i) i++ chLetter \u003c- struct{}{} break default: break } } }() go func(wg *sync.WaitGroup) { for { select { case \u003c-chLetter: if index \u003e len(a)-1 { wg.Done() return } fmt.Print(string(a[index])) index++ chNumber \u003c- struct{}{} break default: break } } }(\u0026wg) chLetter \u003c- struct{}{} wg.Wait() } 并发3个函数 f1()(int[],error),f2()(int[],error),f3()(int[],error)共三个函数，请使用 go channel 并发这三个函数并且将结果收集起来去重。\npackage main import ( \"fmt\" \"sync\" ) func f1() ([]int, error) { return []int{1, 2, 3}, nil } func f2() ([]int, error) { return []int{3, 4, 5}, nil } func f3() ([]int, error) { return []int{5, 6, 7}, nil } func main() { var wg sync.WaitGroup resultCh := make(chan []int) seen := make(map[int]bool) mu := sync.Mutex{} call := func(f func() ([]int, error)) { defer wg.Done() data, err := f() if err != nil { fmt.Println(\"Error:\", err) return } // 去重 mu.Lock() defer mu.Unlock() for _, v := range data { if !seen[v] { seen[v] = true resultCh \u003c- []int{v} } } } wg.Add(3) go call(f1) go call(f2) go call(f3) go func() { wg.Wait() close(resultCh) }() // 从 channel 中读取结果 for result := range resultCh { fmt.Println(\"Result:\", result) } } 删除切片中的第 n 个元素 设计一个函数，接收一个切片和一个索引 n，然后删除切片中的第 n 个元素。\npackage main import \"fmt\" func removeElement(slice []int, n int) []int { // 检查索引是否在切片范围内 if n \u003c 0 || n \u003e= len(slice) { fmt.Println(\"Index out of range.\") return slice } // 将索引 n 之后的元素复制到了索引 n 的位置，相当于把 n+1、n+2、... 等元素向前移动一个位置，覆盖了索引 n 的元素 copy(slice[n:], slice[n+1:]) // 缩短切片，删除最后一个元素 return slice[:len(slice)-1] } func main() { // 示例切片 mySlice := []int{1, 2, 3, 4, 5} // 删除切片中的第 2 个元素 result := removeElement(mySlice, 2) // 打印结果 fmt.Println(result) } 或者使用 append()\nfunc removeElement(slice []int, n int) []int { // 检查索引是否在切片范围内 if n \u003c 0 || n \u003e= len(slice) { fmt.Println(\"Index out of range.\") return slice } // 复制索引 n 之前的元素 result := append([]int{}, slice[:n]...) // 复制索引 n+1 之后的元素 result = append(result, slice[n+1:]...) // 缩短切片，删除最后一个元素 return result } map 交并集 设计2个go函数，实现输入a、b两个map，输出一个c的map，分别实现交集和并集。\npackage main import ( \"fmt\" ) // Intersection 计算两个 map 的交集 func Intersection(a, b map[string]int) map[string]int { result := make(map[string]int) for key, valueA := range a { if valueB, ok := b[key]; ok { result[key] = valueA + valueB } } return result } // Union 计算两个 map 的并集 func Union(a, b map[string]int) map[string]int { result := make(map[string]int) // 将 map a 复制到结果中 for key, value := range a { result[key] = value } // 将 map b 复制到结果中，如果有相同的键，则累加值 for key, value := range b { if existingValue, ok := result[key]; ok { result[key] = existingValue + value } else { result[key] = value } } return result } func main() { // 示例 map mapA := map[string]int{\"apple\": 3, \"banana\": 2, \"orange\": 1} mapB := map[string]int{\"banana\": 1, \"orange\": 2, \"grape\": 4} // 计算并输出交集 intersection := Intersection(mapA, mapB) fmt.Println(\"Intersection:\", intersection) // 计算并输出并集 union := Union(mapA, mapB) fmt.Println(\"Union:\", union) } panic 和 defer package main import ( \"fmt\" ) func main() { defer func() { fmt.Println(\"打印 1\") }() defer func() { fmt.Println(\"打印 2\") }() defer func() { fmt.Println(\"打印 3\") }() panic(\"打印 4\") } panic(“打印 4”) 会导致程序发生 panic。当 panic 发生时，Go 语言会立即停止当前函数的执行，但会执行该函数中的所有 defer 语句，然后将控制权传递给调用该函数的函数，依此类推，直到达到了程序的最顶层，此时程序会终止并输出 panic 的信息。\n在你的例子中，虽然发生了 panic，但是由于在每个 defer 语句中都有输出，所以每个 defer 语句都会被执行。由于 defer 是后进先出（LIFO）的顺序 因此，程序的输出结果将是：\n打印 3 打印 2 打印 1 panic: 打印 4 select 和 channel package main import ( \"fmt\" ) func main() { ch1 := make(chan int, 1) ch2 := make(chan string, 1) ch1 \u003c- 1 ch2 \u003c- \"Hello\" select { case x := \u003c-ch1: fmt.Println(x) case y := \u003c-ch2: fmt.Println(y) } } 这只会选择一个 case 随机打印，若果想执行多个 case ，可以使用 for\nfunc main() { ch1 := make(chan int, 1) ch2 := make(chan string, 1) ch1 \u003c- 1 ch2 \u003c- \"Hello\" for { select { case x := \u003c-ch1: fmt.Println(\"Received from ch1:\", x) case y := \u003c-ch2: fmt.Println(\"Received from ch2:\", y) default: // 如果没有通道就绪，退出循环 return } } } Slice 的传递 先来看一下这段代码输出什么：\npackage main import ( \"fmt\" ) func add(arr []int) { arr = append(arr, 10) } func modify(arr []int) { arr[0] = 10 } func main() { array := []int{1, 2, 3} fmt.Println(array) add(array) fmt.Println(array) fmt.Println(\"--------------------\") fmt.Println(array) modify(array) fmt.Println(array) } 在这里，你有两个函数add和modify，它们都接收一个切片作为参数。我将分别解释它们的行为。\nadd 函数: 这个函数的目的是将一个整数10追加到传入的切片arr的末尾。然而，这里的arr是传递进来的切片的一个副本。在函数内部，append操作对副本进行了修改，但这对原始切片没有影响，因为arr只是传递进来的副本。当函数返回时，对原始切片没有做任何更改。\nmodify 函数:这个函数的目的是将传入切片arr的第一个元素修改为10。与add不同，这里修改的是切片中的原始数据，因为切片是引用传递。即使我们传递的是切片的副本，由于底层数据是共享的，对副本的修改会影响原始切片。所以，当modify函数执行完毕后，原始切片中的第一个元素被修改为10。\n在main函数中，你可以测试这两个函数的效果：\n[1 2 3] [1 2 3] -------------------- [1 2 3] [10 2 3] 总结：add函数对传入的切片副本进行了修改，但没有影响原始切片；而modify函数通过引用修改了原始切片的数据。\nstrconv 转换 strconv包实现了基本数据类型与其字符串表示的转换，主要有以下常用函数： Atoi()、Itoa()、parse系列、format系列、append系列。\n更多函数请查看官方文档。\nstring与int类型转换 这一组函数是我们平时编程中用的最多的。\n1.1.2. Atoi()\nAtoi()函数用于将字符串类型的整数转换为int类型，函数签名如下。\nfunc Atoi(s string) (i int, err error) 如果传入的字符串参数无法转换为int类型，就会返回错误。\ns1 := \"100\" i1, err := strconv.Atoi(s1) if err != nil { fmt.Println(\"can't convert to int\") } else { fmt.Printf(\"type:%T value:%#v\\n\", i1, i1) //type:int value:100 } 1.1.3. Itoa()\nItoa()函数用于将int类型数据转换为对应的字符串表示，具体的函数签名如下。\nfunc Itoa(i int) string 示例代码如下：\ni2 := 200 s2 := strconv.Itoa(i2) fmt.Printf(\"type:%T value:%#v\\n\", s2, s2) //type:string value:\"200\" Parse系列函数 Parse类函数用于转换字符串为给定类型的值：ParseBool()、ParseFloat()、ParseInt()、ParseUint()。\n1.1.6. ParseBool()\nfunc ParseBool(str string) (value bool, err error) 返回字符串表示的bool值。它接受1、0、t、f、T、F、true、false、True、False、TRUE、FALSE；否则返回错误。\n1.1.7. ParseInt()\nfunc ParseInt(s string, base int, bitSize int) (i int64, err error) 返回字符串表示的整数值，接受正负号。\nbase指定进制（2到36），如果base为0，则会从字符串前置判断，”0x”是16进制，”0”是8进制，否则是10进制；\nbitSize指定结果必须能无溢出赋值的整数类型，0、8、16、32、64 分别代表 int、int8、int16、int32、int64；\n返回的err是*NumErr类型的，如果语法有误，err.Error = ErrSyntax；如果结果超出类型范围err.Error = ErrRange。\n1.1.8. ParseUnit()\nfunc ParseUint(s string, base int, bitSize int) (n uint64, err error) ParseUint类似ParseInt但不接受正负号，用于无符号整型。\n1.1.9. ParseFloat()\nfunc ParseFloat(s string, bitSize int) (f float64, err error) 解析一个表示浮点数的字符串并返回其值。\n如果s合乎语法规则，函数会返回最为接近s表示值的一个浮点数（使用IEEE754规范舍入）。\nbitSize指定了期望的接收类型，32是float32（返回值可以不改变精确值的赋值给float32），64是float64；\n返回值err是*NumErr类型的，语法有误的，err.Error=ErrSyntax；结果超出表示范围的，返回值f为±Inf，err.Error= ErrRange。\n1.1.10. 代码示例\nb, err := strconv.ParseBool(\"true\") f, err := strconv.ParseFloat(\"3.1415\", 64) i, err := strconv.ParseInt(\"-2\", 10, 64) u, err := strconv.ParseUint(\"2\", 10, 64) 这些函数都有两个返回值，第一个返回值是转换后的值，第二个返回值为转化失败的错误信息。\nFormat系列函数 Format系列函数实现了将给定类型数据格式化为string类型数据的功能。\n1.1.12. FormatBool()\nfunc FormatBool(b bool) string 根据b的值返回”true”或”false”。\n1.1.13. FormatInt()\nfunc FormatInt(i int64, base int) string 返回i的base进制的字符串表示。base 必须在2到36之间，结果中会使用小写字母’a’到’z’表示大于10的数字。\n1.1.14. FormatUint()\nfunc FormatUint(i uint64, base int) string 是FormatInt的无符号整数版本。\n1.1.15. FormatFloat()\nfunc FormatFloat(f float64, fmt byte, prec, bitSize int) string 函数将浮点数表示为字符串并返回。\nbitSize表示f的来源类型（32：float32、64：float64），会据此进行舍入。\nfmt表示格式：’f’（-ddd.dddd）、’b’（-ddddp±ddd，指数为二进制）、’e’（-d.dddde±dd，十进制指数）、’E’（-d.ddddE±dd，十进制指数）、’g’（指数很大时用’e’格式，否则’f’格式）、’G’（指数很大时用’E’格式，否则’f’格式）。\nprec控制精度（排除指数部分）：对’f’、’e’、’E’，它表示小数点后的数字个数；对’g’、’G’，它控制总的数字个数。如果prec 为-1，则代表使用最少数量的、但又必需的数字来表示f。\n1.1.16. 代码示例\ns1 := strconv.FormatBool(true) s2 := strconv.FormatFloat(3.1415, 'E', -1, 64) s3 := strconv.FormatInt(-2, 16) s4 := strconv.FormatUint(2, 16) time 包的使用 时间和日期是我们编程中经常会用到的，以下介绍了Go语言内置的time包的基本用法。\ntime包提供了时间的显示和测量用的函数。日历的计算采用的是公历。\n时间类型\ntime.Time类型表示时间。我们可以通过time.Now()函数获取当前的时间对象，然后获取时间对象的年月日时分秒等信息。示例代码如下：\nfunc timeDemo() { now := time.Now() //获取当前时间 fmt.Printf(\"current time:%v\\n\", now) year := now.Year() //年 month := now.Month() //月 day := now.Day() //日 hour := now.Hour() //小时 minute := now.Minute() //分钟 second := now.Second() //秒 fmt.Printf(\"%d-%02d-%02d %02d:%02d:%02d\\n\", year, month, day, hour, minute, second) } 时间戳\n时间戳是自1970年1月1日（08:00:00GMT）至当前时间的总毫秒数。它也被称为Unix时间戳（UnixTimestamp）。\n基于时间对象获取时间戳的示例代码如下：\nfunc timestampDemo() { now := time.Now() //获取当前时间 timestamp1 := now.Unix() //时间戳 timestamp2 := now.UnixNano() //纳秒时间戳 fmt.Printf(\"current timestamp1:%v\\n\", timestamp1) fmt.Printf(\"current timestamp2:%v\\n\", timestamp2) } 使用time.Unix()函数可以将时间戳转为时间格式。\nfunc timestampDemo2(timestamp int64) { timeObj := time.Unix(timestamp, 0) //将时间戳转为时间格式 fmt.Println(timeObj) year := timeObj.Year() //年 month := timeObj.Month() //月 day := timeObj.Day() //日 hour := timeObj.Hour() //小时 minute := timeObj.Minute() //分钟 second := timeObj.Second() //秒 fmt.Printf(\"%d-%02d-%02d %02d:%02d:%02d\\n\", year, month, day, hour, minute, second) } 时间间隔\ntime.Duration是time包定义的一个类型，它代表两个时间点之间经过的时间，以纳秒为单位。time.Duration表示一段时间间隔，可表示的最长时间段大约290年。\ntime包中定义的时间间隔类型的常量如下：\nconst ( Nanosecond Duration = 1 Microsecond = 1000 * Nanosecond Millisecond = 1000 * Microsecond Second = 1000 * Millisecond Minute = 60 * Second Hour = 60 * Minute ) 例如：time.Duration表示1纳秒，time.Second表示1秒。\n时间操作\n1、Add\n我们在日常的编码过程中可能会遇到要求时间+时间间隔的需求，Go语言的时间对象有提供Add方法如下：\nfunc (t Time) Add(d Duration) Time 举个例子，求一个小时之后的时间：\nfunc main() { now := time.Now() later := now.Add(time.Hour) // 当前时间加1小时后的时间 fmt.Println(later) } 2、Sub\n求两个时间之间的差值：\nfunc (t Time) Sub(u Time) Duration 返回一个时间段t-u。如果结果超出了Duration可以表示的最大值/最小值，将返回最大值/最小值。要获取时间点t-d（d为Duration），可以使用t.Add(-d)。\n3、Equal\nfunc (t Time) Equal(u Time) bool 判断两个时间是否相同，会考虑时区的影响，因此不同时区标准的时间也可以正确比较。本方法和用t==u不同，这种方法还会比较地点和时区信息。\n4、Before\nfunc (t Time) Before(u Time) bool 如果t代表的时间点在u之前，返回真；否则返回假。\n5、After\nfunc (t Time) After(u Time) bool 如果t代表的时间点在u之后，返回真；否则返回假。\n1.1.6. 定时器\n使用time.Tick(时间间隔)来设置定时器，定时器的本质上是一个通道（channel）。\nfunc tickDemo() { ticker := time.Tick(time.Second) //定义一个1秒间隔的定时器 for i := range ticker { fmt.Println(i)//每秒都会执行的任务 } } 1.1.7. 时间格式化\n时间类型有一个自带的方法Format进行格式化，需要注意的是Go语言中格式化时间模板不是常见的Y-m-d H:M:S而是使用Go的诞生时间2006年1月2号15点04分（记忆口诀为2006 1 2 3 4）。也许这就是技术人员的浪漫吧。\n补充：如果想格式化为12小时方式，需指定PM。\nfunc formatDemo() { now := time.Now() // 格式化的模板为Go的出生时间2006年1月2号15点04分 Mon Jan // 24小时制 fmt.Println(now.Format(\"2006-01-02 15:04:05.000 Mon Jan\")) // 12小时制 fmt.Println(now.Format(\"2006-01-02 03:04:05.000 PM Mon Jan\")) fmt.Println(now.Format(\"2006/01/02 15:04\")) fmt.Println(now.Format(\"15:04 2006/01/02\")) fmt.Println(now.Format(\"2006/01/02\")) } /* 2022-12-01 08:30:47.872 Fri Dec 2022-12-01 08:30:47.872 AM Fri Dec 2022/12/01 08:30 08:30 2022/12/01 2022/12/01 */ 解析字符串格式的时间\npackage main import ( \"fmt\" \"time\" ) func main() { // 加载时区 loc, err := time.LoadLocation(\"Asia/Shanghai\") if err != nil { fmt.Println(err) return } // 按照指定时区和指定格式解析字符串时间 timeObj, err := time.ParseInLocation(\"日期：2006/01/02 时间： 15:04:05\", \"日期：2019/08/04 时间： 14:15:20\", loc) if err != nil { fmt.Println(err) return } fmt.Println(timeObj) // 2019-08-04 14:15:20 +0800 CST } 遍历 map 的时候可以删除吗？ Go语言规范允许在遍历map的过程中删除元素。这是因为map在Go语言中是无序的，删除一个元素后不会导致迭代器失效。\npackage main import \"fmt\" func main() { myMap := map[string]int{\"a\": 1, \"b\": 2, \"c\": 3} for key := range myMap { if key == \"a\" { delete(myMap, key) } } fmt.Println(myMap) } 这个代码片段将正常运行，不会导致panic。在遍历过程中删除元素后，map的迭代器仍然有效，因为map的遍历顺序是无序的，删除一个元素不会影响后续的迭代。\n但是，如果在多协程下，由于 map 并不是一个线程安全的数据结构。同时读写一个 map 是未定义的行为，如果被检测到，会直接 panic。\n上面说的是发生在多个协程同时读写同一个 map 的情况下。 如果在同一个协程内边遍历边删除，并不会检测到同时读写，理论上是可以这样做的。但是，遍历的结果就可能不会是相同的了，有可能结果遍历结果集中包含了删除的 key，也有可能不包含，这取决于删除 key 的时间：是在遍历到 key 所在的 bucket 时刻前或者后。\n一般而言，有两种方式：\n这可以通过读写锁来解决：sync.RWMutex。读之前调用 RLock() 函数，读完之后调用 RUnlock() 函数解锁；写之前调用 Lock() 函数，写完之后，调用 Unlock() 解锁。\n另外，sync.Map 是线程安全的 map，也可以使用。\n下面是一个错误的示例，然后分别使用两种方式去解决它\npackage main import ( \"fmt\" \"strconv\" \"sync\" ) var m = make(map[string]int) func get(key string) int { return m[key] } func set(key string, value int) { m[key] = value } func main() { wg := sync.WaitGroup{} for i := 0; i \u003c 100; i++ { wg.Add(1) go func(n int) { key := strconv.Itoa(n) set(key, n) fmt.Printf(\"k=:%v, v:=%v\\n\", key, get(key)) wg.Done() }(i) } wg.Wait() } 运行结果：\n...... k=:66,v:=66 k=:43,v:=43 k=:44,v:=44 ...... k=:49,v:=49 k=:50,v:=50 k=:51,v:=51 fatal error: concurrent map writes fatal error: concurrent map writes fatal error: concurrent map writes 我们不能在多个 goroutine 中并发对内置的 map 进行读写操作，否则会存在数据竞争问题。\n像这种场景下就需要为 map 加锁来保证并发的安全性了，Go语言的sync包中提供了一个开箱即用的并发安全版 map——sync.Map。开箱即用表示其不用像内置的 map 一样使用 make 函数初始化就能直接使用。同时sync.Map内置了诸如Store、Load、LoadOrStore、Delete、Range等操作方法。\n方法名 功能 func (m *Map) Store(key, value interface{}) 存储key-value数据 func (m *Map) Load(key interface{}) (value interface{}, ok bool) 查询key对应的value func (m *Map) LoadOrStore(key, value interface{}) (actual interface{}, loaded bool) 查询或存储key对应的value func (m *Map) LoadAndDelete(key interface{}) (value interface{}, loaded bool) 查询并删除key func (m *Map) Delete(key interface{}) 删除key func (m *Map) Range(f func(key, value interface{}) bool) 对map中的每个key-value依次调用f 下面的代码示例演示了并发读写sync.Map。\npackage main import ( \"fmt\" \"strconv\" \"sync\" ) // 并发安全的map var m = sync.Map{} func main() { wg := sync.WaitGroup{} // 对m执行20个并发的读写操作 for i := 0; i \u003c 20; i++ { wg.Add(1) go func(n int) { key := strconv.Itoa(n) m.Store(key, n) // 存储key-value value, _ := m.Load(key) // 根据key取值 fmt.Printf(\"k=:%v,v:=%v\\n\", key, value) wg.Done() }(i) } wg.Wait() } 使用 锁\npackage main import ( \"fmt\" \"strconv\" \"sync\" ) var mu sync.RWMutex var m = make(map[string]int) func get(key string) int { return m[key] } func set(key string, value int) { m[key] = value } func main() { wg := sync.WaitGroup{} for i := 0; i \u003c 80; i++ { wg.Add(1) go func(n int) { key := strconv.Itoa(n) mu.Lock() set(key, n) mu.Unlock() mu.RLock() fmt.Printf(\"k=:%v, v:=%v\\n\", key, get(key)) mu.RUnlock() wg.Done() }(i) } wg.Wait() } map 的扩容和收缩容量 ",
+  "wordCount" : "5842",
   "inLanguage": "zh",
   "datePublished": "2023-11-06T20:09:45+08:00",
   "dateModified": "2023-11-06T20:09:45+08:00",
@@ -289,13 +289,13 @@ var _hmt = _hmt || [];
     
     <span id="post_meta_style_3">
         <span class="fa fa-file-word-o"></span>
-        <span>107字
+        <span>5842字
             &nbsp;&nbsp;
         </span>
     </span>
     <span id="post_meta_style_4">
         <span class="fa fa-clock-o"></span>
-        <span>1分钟
+        <span>12分钟
             &nbsp;&nbsp;
         </span>
     </span>
@@ -370,7 +370,35 @@ var _hmt = _hmt || [];
 
         <div class="inner"><ul>
                 <li>
-                    <a href="#%e5%8d%8f%e7%a8%8b%e4%ba%a4%e6%9b%bf%e6%89%93%e5%8d%b0-a1b2c3" aria-label="协程交替打印 a1b2c3&amp;hellip;">协程交替打印 a1b2c3&hellip;</a>
+                    <a href="#%e5%8d%8f%e7%a8%8b%e4%ba%a4%e6%9b%bf%e6%89%93%e5%8d%b0-a1b2c3" aria-label="协程交替打印 a1b2c3&amp;hellip;">协程交替打印 a1b2c3&hellip;</a></li>
+                <li>
+                    <a href="#%e5%b9%b6%e5%8f%913%e4%b8%aa%e5%87%bd%e6%95%b0" aria-label="并发3个函数">并发3个函数</a></li>
+                <li>
+                    <a href="#%e5%88%a0%e9%99%a4%e5%88%87%e7%89%87%e4%b8%ad%e7%9a%84%e7%ac%ac-n-%e4%b8%aa%e5%85%83%e7%b4%a0" aria-label="删除切片中的第 n 个元素">删除切片中的第 n 个元素</a></li>
+                <li>
+                    <a href="#map-%e4%ba%a4%e5%b9%b6%e9%9b%86" aria-label="map 交并集">map 交并集</a></li>
+                <li>
+                    <a href="#panic-%e5%92%8c-defer" aria-label="panic 和 defer">panic 和 defer</a></li>
+                <li>
+                    <a href="#select-%e5%92%8c-channel" aria-label="select 和 channel">select 和 channel</a></li>
+                <li>
+                    <a href="#slice-%e7%9a%84%e4%bc%a0%e9%80%92" aria-label="Slice 的传递">Slice 的传递</a></li>
+                <li>
+                    <a href="#strconv-%e8%bd%ac%e6%8d%a2" aria-label="strconv 转换">strconv 转换</a><ul>
+                        
+                <li>
+                    <a href="#string%e4%b8%8eint%e7%b1%bb%e5%9e%8b%e8%bd%ac%e6%8d%a2" aria-label="string与int类型转换">string与int类型转换</a></li>
+                <li>
+                    <a href="#parse%e7%b3%bb%e5%88%97%e5%87%bd%e6%95%b0" aria-label="Parse系列函数">Parse系列函数</a></li>
+                <li>
+                    <a href="#format%e7%b3%bb%e5%88%97%e5%87%bd%e6%95%b0" aria-label="Format系列函数">Format系列函数</a></li></ul>
+                </li>
+                <li>
+                    <a href="#time-%e5%8c%85%e7%9a%84%e4%bd%bf%e7%94%a8" aria-label="time 包的使用">time 包的使用</a></li>
+                <li>
+                    <a href="#%e9%81%8d%e5%8e%86-map-%e7%9a%84%e6%97%b6%e5%80%99%e5%8f%af%e4%bb%a5%e5%88%a0%e9%99%a4%e5%90%97" aria-label="遍历 map 的时候可以删除吗？">遍历 map 的时候可以删除吗？</a></li>
+                <li>
+                    <a href="#map-%e7%9a%84%e6%89%a9%e5%ae%b9%e5%92%8c%e6%94%b6%e7%bc%a9%e5%ae%b9%e9%87%8f" aria-label="map 的扩容和收缩容量">map 的扩容和收缩容量</a>
                 </li>
             </ul>
         </div>
@@ -492,7 +520,688 @@ var _hmt = _hmt || [];
 </span></span><span style="display:flex;"><span>	chLetter <span style="color:#ff6ac1">&lt;-</span> <span style="color:#ff5c57">struct</span>{}{}
 </span></span><span style="display:flex;"><span>	wg.<span style="color:#57c7ff">Wait</span>()
 </span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div>
+</span></span></code></pre></div><h1 id="并发3个函数">并发3个函数<a hidden class="anchor" aria-hidden="true" href="#并发3个函数">#</a></h1>
+<p>f1()(int[],error),f2()(int[],error),f3()(int[],error)共三个函数，请使用 go channel 并发这三个函数并且将结果收集起来去重。</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff6ac1">package</span> main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff6ac1">import</span> (
+</span></span><span style="display:flex;"><span>  <span style="color:#5af78e">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#5af78e">&#34;sync&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">f1</span>() ([]<span style="color:#9aedfe">int</span>, <span style="color:#9aedfe">error</span>) {
+</span></span><span style="display:flex;"><span>  <span style="color:#ff6ac1">return</span> []<span style="color:#9aedfe">int</span>{<span style="color:#ff9f43">1</span>, <span style="color:#ff9f43">2</span>, <span style="color:#ff9f43">3</span>}, <span style="color:#ff6ac1">nil</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">f2</span>() ([]<span style="color:#9aedfe">int</span>, <span style="color:#9aedfe">error</span>) {
+</span></span><span style="display:flex;"><span>  <span style="color:#ff6ac1">return</span> []<span style="color:#9aedfe">int</span>{<span style="color:#ff9f43">3</span>, <span style="color:#ff9f43">4</span>, <span style="color:#ff9f43">5</span>}, <span style="color:#ff6ac1">nil</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">f3</span>() ([]<span style="color:#9aedfe">int</span>, <span style="color:#9aedfe">error</span>) {
+</span></span><span style="display:flex;"><span>  <span style="color:#ff6ac1">return</span> []<span style="color:#9aedfe">int</span>{<span style="color:#ff9f43">5</span>, <span style="color:#ff9f43">6</span>, <span style="color:#ff9f43">7</span>}, <span style="color:#ff6ac1">nil</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">main</span>() {
+</span></span><span style="display:flex;"><span>  <span style="color:#ff5c57">var</span> wg sync.WaitGroup
+</span></span><span style="display:flex;"><span>  resultCh <span style="color:#ff6ac1">:=</span> <span style="color:#ff5c57">make</span>(<span style="color:#ff5c57">chan</span> []<span style="color:#9aedfe">int</span>)
+</span></span><span style="display:flex;"><span>  seen <span style="color:#ff6ac1">:=</span> <span style="color:#ff5c57">make</span>(<span style="color:#ff5c57">map</span>[<span style="color:#9aedfe">int</span>]<span style="color:#9aedfe">bool</span>)
+</span></span><span style="display:flex;"><span>  mu <span style="color:#ff6ac1">:=</span> sync.Mutex{}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  call <span style="color:#ff6ac1">:=</span> <span style="color:#ff5c57">func</span>(f <span style="color:#ff5c57">func</span>() ([]<span style="color:#9aedfe">int</span>, <span style="color:#9aedfe">error</span>)) {
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">defer</span> wg.<span style="color:#57c7ff">Done</span>()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    data, err <span style="color:#ff6ac1">:=</span> <span style="color:#57c7ff">f</span>()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">if</span> err <span style="color:#ff6ac1">!=</span> <span style="color:#ff6ac1">nil</span> {
+</span></span><span style="display:flex;"><span>      fmt.<span style="color:#57c7ff">Println</span>(<span style="color:#5af78e">&#34;Error:&#34;</span>, err)
+</span></span><span style="display:flex;"><span>      <span style="color:#ff6ac1">return</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#78787e">// 去重
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>    mu.<span style="color:#57c7ff">Lock</span>()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">defer</span> mu.<span style="color:#57c7ff">Unlock</span>()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">for</span> _, v <span style="color:#ff6ac1">:=</span> <span style="color:#ff6ac1">range</span> data {
+</span></span><span style="display:flex;"><span>      <span style="color:#ff6ac1">if</span> !seen[v] {
+</span></span><span style="display:flex;"><span>        seen[v] = <span style="color:#ff6ac1">true</span>
+</span></span><span style="display:flex;"><span>        resultCh <span style="color:#ff6ac1">&lt;-</span> []<span style="color:#9aedfe">int</span>{v}
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  wg.<span style="color:#57c7ff">Add</span>(<span style="color:#ff9f43">3</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff6ac1">go</span> <span style="color:#57c7ff">call</span>(f1)
+</span></span><span style="display:flex;"><span>  <span style="color:#ff6ac1">go</span> <span style="color:#57c7ff">call</span>(f2)
+</span></span><span style="display:flex;"><span>  <span style="color:#ff6ac1">go</span> <span style="color:#57c7ff">call</span>(f3)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff6ac1">go</span> <span style="color:#ff5c57">func</span>() {
+</span></span><span style="display:flex;"><span>    wg.<span style="color:#57c7ff">Wait</span>()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff5c57">close</span>(resultCh)
+</span></span><span style="display:flex;"><span>  }()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#78787e">// 从 channel 中读取结果
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>  <span style="color:#ff6ac1">for</span> result <span style="color:#ff6ac1">:=</span> <span style="color:#ff6ac1">range</span> resultCh {
+</span></span><span style="display:flex;"><span>    fmt.<span style="color:#57c7ff">Println</span>(<span style="color:#5af78e">&#34;Result:&#34;</span>, result)
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h1 id="删除切片中的第-n-个元素">删除切片中的第 n 个元素<a hidden class="anchor" aria-hidden="true" href="#删除切片中的第-n-个元素">#</a></h1>
+<p>设计一个函数，接收一个切片和一个索引 n，然后删除切片中的第 n 个元素。</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff6ac1">package</span> main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff6ac1">import</span> <span style="color:#5af78e">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">removeElement</span>(slice []<span style="color:#9aedfe">int</span>, n <span style="color:#9aedfe">int</span>) []<span style="color:#9aedfe">int</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#78787e">// 检查索引是否在切片范围内
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>  <span style="color:#ff6ac1">if</span> n &lt; <span style="color:#ff9f43">0</span> <span style="color:#ff6ac1">||</span> n <span style="color:#ff6ac1">&gt;=</span> <span style="color:#ff5c57">len</span>(slice) {
+</span></span><span style="display:flex;"><span>    fmt.<span style="color:#57c7ff">Println</span>(<span style="color:#5af78e">&#34;Index out of range.&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">return</span> slice
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#78787e">// 将索引 n 之后的元素复制到了索引 n 的位置，相当于把 n+1、n+2、... 等元素向前移动一个位置，覆盖了索引 n 的元素
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>  <span style="color:#ff5c57">copy</span>(slice[n:], slice[n<span style="color:#ff6ac1">+</span><span style="color:#ff9f43">1</span>:])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#78787e">// 缩短切片，删除最后一个元素
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>  <span style="color:#ff6ac1">return</span> slice[:<span style="color:#ff5c57">len</span>(slice)<span style="color:#ff6ac1">-</span><span style="color:#ff9f43">1</span>]
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">main</span>() {
+</span></span><span style="display:flex;"><span>  <span style="color:#78787e">// 示例切片
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>  mySlice <span style="color:#ff6ac1">:=</span> []<span style="color:#9aedfe">int</span>{<span style="color:#ff9f43">1</span>, <span style="color:#ff9f43">2</span>, <span style="color:#ff9f43">3</span>, <span style="color:#ff9f43">4</span>, <span style="color:#ff9f43">5</span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#78787e">// 删除切片中的第 2 个元素
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>  result <span style="color:#ff6ac1">:=</span> <span style="color:#57c7ff">removeElement</span>(mySlice, <span style="color:#ff9f43">2</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#78787e">// 打印结果
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>  fmt.<span style="color:#57c7ff">Println</span>(result)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>或者使用 append()</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">removeElement</span>(slice []<span style="color:#9aedfe">int</span>, n <span style="color:#9aedfe">int</span>) []<span style="color:#9aedfe">int</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#78787e">// 检查索引是否在切片范围内
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>  <span style="color:#ff6ac1">if</span> n &lt; <span style="color:#ff9f43">0</span> <span style="color:#ff6ac1">||</span> n <span style="color:#ff6ac1">&gt;=</span> <span style="color:#ff5c57">len</span>(slice) {
+</span></span><span style="display:flex;"><span>    fmt.<span style="color:#57c7ff">Println</span>(<span style="color:#5af78e">&#34;Index out of range.&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">return</span> slice
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#78787e">// 复制索引 n 之前的元素
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>  result <span style="color:#ff6ac1">:=</span> <span style="color:#ff5c57">append</span>([]<span style="color:#9aedfe">int</span>{}, slice[:n]<span style="color:#ff6ac1">...</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#78787e">// 复制索引 n+1 之后的元素
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>  result = <span style="color:#ff5c57">append</span>(result, slice[n<span style="color:#ff6ac1">+</span><span style="color:#ff9f43">1</span>:]<span style="color:#ff6ac1">...</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#78787e">// 缩短切片，删除最后一个元素
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>  <span style="color:#ff6ac1">return</span> result
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h1 id="map-交并集">map 交并集<a hidden class="anchor" aria-hidden="true" href="#map-交并集">#</a></h1>
+<p>设计2个go函数，实现输入a、b两个map，输出一个c的map，分别实现交集和并集。</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff6ac1">package</span> main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff6ac1">import</span> (
+</span></span><span style="display:flex;"><span>  <span style="color:#5af78e">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#78787e">// Intersection 计算两个 map 的交集
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">Intersection</span>(a, b <span style="color:#ff5c57">map</span>[<span style="color:#9aedfe">string</span>]<span style="color:#9aedfe">int</span>) <span style="color:#ff5c57">map</span>[<span style="color:#9aedfe">string</span>]<span style="color:#9aedfe">int</span> {
+</span></span><span style="display:flex;"><span>  result <span style="color:#ff6ac1">:=</span> <span style="color:#ff5c57">make</span>(<span style="color:#ff5c57">map</span>[<span style="color:#9aedfe">string</span>]<span style="color:#9aedfe">int</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff6ac1">for</span> key, valueA <span style="color:#ff6ac1">:=</span> <span style="color:#ff6ac1">range</span> a {
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">if</span> valueB, ok <span style="color:#ff6ac1">:=</span> b[key]; ok {
+</span></span><span style="display:flex;"><span>      result[key] = valueA <span style="color:#ff6ac1">+</span> valueB
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff6ac1">return</span> result
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#78787e">// Union 计算两个 map 的并集
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">Union</span>(a, b <span style="color:#ff5c57">map</span>[<span style="color:#9aedfe">string</span>]<span style="color:#9aedfe">int</span>) <span style="color:#ff5c57">map</span>[<span style="color:#9aedfe">string</span>]<span style="color:#9aedfe">int</span> {
+</span></span><span style="display:flex;"><span>  result <span style="color:#ff6ac1">:=</span> <span style="color:#ff5c57">make</span>(<span style="color:#ff5c57">map</span>[<span style="color:#9aedfe">string</span>]<span style="color:#9aedfe">int</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#78787e">// 将 map a 复制到结果中
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>  <span style="color:#ff6ac1">for</span> key, value <span style="color:#ff6ac1">:=</span> <span style="color:#ff6ac1">range</span> a {
+</span></span><span style="display:flex;"><span>    result[key] = value
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#78787e">// 将 map b 复制到结果中，如果有相同的键，则累加值
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>  <span style="color:#ff6ac1">for</span> key, value <span style="color:#ff6ac1">:=</span> <span style="color:#ff6ac1">range</span> b {
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">if</span> existingValue, ok <span style="color:#ff6ac1">:=</span> result[key]; ok {
+</span></span><span style="display:flex;"><span>      result[key] = existingValue <span style="color:#ff6ac1">+</span> value
+</span></span><span style="display:flex;"><span>    } <span style="color:#ff6ac1">else</span> {
+</span></span><span style="display:flex;"><span>      result[key] = value
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff6ac1">return</span> result
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">main</span>() {
+</span></span><span style="display:flex;"><span>  <span style="color:#78787e">// 示例 map
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>  mapA <span style="color:#ff6ac1">:=</span> <span style="color:#ff5c57">map</span>[<span style="color:#9aedfe">string</span>]<span style="color:#9aedfe">int</span>{<span style="color:#5af78e">&#34;apple&#34;</span>: <span style="color:#ff9f43">3</span>, <span style="color:#5af78e">&#34;banana&#34;</span>: <span style="color:#ff9f43">2</span>, <span style="color:#5af78e">&#34;orange&#34;</span>: <span style="color:#ff9f43">1</span>}
+</span></span><span style="display:flex;"><span>  mapB <span style="color:#ff6ac1">:=</span> <span style="color:#ff5c57">map</span>[<span style="color:#9aedfe">string</span>]<span style="color:#9aedfe">int</span>{<span style="color:#5af78e">&#34;banana&#34;</span>: <span style="color:#ff9f43">1</span>, <span style="color:#5af78e">&#34;orange&#34;</span>: <span style="color:#ff9f43">2</span>, <span style="color:#5af78e">&#34;grape&#34;</span>: <span style="color:#ff9f43">4</span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#78787e">// 计算并输出交集
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>  intersection <span style="color:#ff6ac1">:=</span> <span style="color:#57c7ff">Intersection</span>(mapA, mapB)
+</span></span><span style="display:flex;"><span>  fmt.<span style="color:#57c7ff">Println</span>(<span style="color:#5af78e">&#34;Intersection:&#34;</span>, intersection)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#78787e">// 计算并输出并集
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>  union <span style="color:#ff6ac1">:=</span> <span style="color:#57c7ff">Union</span>(mapA, mapB)
+</span></span><span style="display:flex;"><span>  fmt.<span style="color:#57c7ff">Println</span>(<span style="color:#5af78e">&#34;Union:&#34;</span>, union)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h1 id="panic-和-defer">panic 和 defer<a hidden class="anchor" aria-hidden="true" href="#panic-和-defer">#</a></h1>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff6ac1">package</span> main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff6ac1">import</span> (
+</span></span><span style="display:flex;"><span>	<span style="color:#5af78e">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">main</span>() {
+</span></span><span style="display:flex;"><span>	<span style="color:#ff6ac1">defer</span> <span style="color:#ff5c57">func</span>() { fmt.<span style="color:#57c7ff">Println</span>(<span style="color:#5af78e">&#34;打印 1&#34;</span>) }()
+</span></span><span style="display:flex;"><span>	<span style="color:#ff6ac1">defer</span> <span style="color:#ff5c57">func</span>() { fmt.<span style="color:#57c7ff">Println</span>(<span style="color:#5af78e">&#34;打印 2&#34;</span>) }()
+</span></span><span style="display:flex;"><span>	<span style="color:#ff6ac1">defer</span> <span style="color:#ff5c57">func</span>() { fmt.<span style="color:#57c7ff">Println</span>(<span style="color:#5af78e">&#34;打印 3&#34;</span>) }()
+</span></span><span style="display:flex;"><span>	<span style="color:#ff5c57">panic</span>(<span style="color:#5af78e">&#34;打印 4&#34;</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>panic(&ldquo;打印 4&rdquo;) 会导致程序发生 panic。当 panic 发生时，Go 语言会立即停止当前函数的执行，但会执行该函数中的所有 defer 语句，然后将控制权传递给调用该函数的函数，依此类推，直到达到了程序的最顶层，此时程序会终止并输出 panic 的信息。</p>
+<p>在你的例子中，虽然发生了 panic，但是由于在每个 defer 语句中都有输出，所以每个 defer 语句都会被执行。由于 defer 是后进先出（LIFO）的顺序
+因此，程序的输出结果将是：</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>打印 3
+</span></span><span style="display:flex;"><span>打印 2
+</span></span><span style="display:flex;"><span>打印 1
+</span></span><span style="display:flex;"><span>panic: 打印 4
+</span></span></code></pre></div><h1 id="select-和-channel">select 和 channel<a hidden class="anchor" aria-hidden="true" href="#select-和-channel">#</a></h1>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff6ac1">package</span> main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff6ac1">import</span> (
+</span></span><span style="display:flex;"><span>	<span style="color:#5af78e">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">main</span>() {
+</span></span><span style="display:flex;"><span>	ch1 <span style="color:#ff6ac1">:=</span> <span style="color:#ff5c57">make</span>(<span style="color:#ff5c57">chan</span> <span style="color:#9aedfe">int</span>, <span style="color:#ff9f43">1</span>)
+</span></span><span style="display:flex;"><span>	ch2 <span style="color:#ff6ac1">:=</span> <span style="color:#ff5c57">make</span>(<span style="color:#ff5c57">chan</span> <span style="color:#9aedfe">string</span>, <span style="color:#ff9f43">1</span>)
+</span></span><span style="display:flex;"><span>	ch1 <span style="color:#ff6ac1">&lt;-</span> <span style="color:#ff9f43">1</span>
+</span></span><span style="display:flex;"><span>	ch2 <span style="color:#ff6ac1">&lt;-</span> <span style="color:#5af78e">&#34;Hello&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff6ac1">select</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#ff6ac1">case</span> x <span style="color:#ff6ac1">:=</span> <span style="color:#ff6ac1">&lt;-</span>ch1:
+</span></span><span style="display:flex;"><span>		fmt.<span style="color:#57c7ff">Println</span>(x)
+</span></span><span style="display:flex;"><span>	<span style="color:#ff6ac1">case</span> y <span style="color:#ff6ac1">:=</span> <span style="color:#ff6ac1">&lt;-</span>ch2:
+</span></span><span style="display:flex;"><span>		fmt.<span style="color:#57c7ff">Println</span>(y)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>这只会选择一个 case 随机打印，若果想执行多个 case ，可以使用 for</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">main</span>() {
+</span></span><span style="display:flex;"><span>  ch1 <span style="color:#ff6ac1">:=</span> <span style="color:#ff5c57">make</span>(<span style="color:#ff5c57">chan</span> <span style="color:#9aedfe">int</span>, <span style="color:#ff9f43">1</span>)
+</span></span><span style="display:flex;"><span>  ch2 <span style="color:#ff6ac1">:=</span> <span style="color:#ff5c57">make</span>(<span style="color:#ff5c57">chan</span> <span style="color:#9aedfe">string</span>, <span style="color:#ff9f43">1</span>)
+</span></span><span style="display:flex;"><span>  ch1 <span style="color:#ff6ac1">&lt;-</span> <span style="color:#ff9f43">1</span>
+</span></span><span style="display:flex;"><span>  ch2 <span style="color:#ff6ac1">&lt;-</span> <span style="color:#5af78e">&#34;Hello&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff6ac1">for</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">select</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">case</span> x <span style="color:#ff6ac1">:=</span> <span style="color:#ff6ac1">&lt;-</span>ch1:
+</span></span><span style="display:flex;"><span>      fmt.<span style="color:#57c7ff">Println</span>(<span style="color:#5af78e">&#34;Received from ch1:&#34;</span>, x)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">case</span> y <span style="color:#ff6ac1">:=</span> <span style="color:#ff6ac1">&lt;-</span>ch2:
+</span></span><span style="display:flex;"><span>      fmt.<span style="color:#57c7ff">Println</span>(<span style="color:#5af78e">&#34;Received from ch2:&#34;</span>, y)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">default</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#78787e">// 如果没有通道就绪，退出循环
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>      <span style="color:#ff6ac1">return</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h1 id="slice-的传递">Slice 的传递<a hidden class="anchor" aria-hidden="true" href="#slice-的传递">#</a></h1>
+<p>先来看一下这段代码输出什么：</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff6ac1">package</span> main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff6ac1">import</span> (
+</span></span><span style="display:flex;"><span>	<span style="color:#5af78e">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">add</span>(arr []<span style="color:#9aedfe">int</span>) {
+</span></span><span style="display:flex;"><span>  arr = <span style="color:#ff5c57">append</span>(arr, <span style="color:#ff9f43">10</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">modify</span>(arr []<span style="color:#9aedfe">int</span>) {
+</span></span><span style="display:flex;"><span>  arr[<span style="color:#ff9f43">0</span>] = <span style="color:#ff9f43">10</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">main</span>() {
+</span></span><span style="display:flex;"><span>	array <span style="color:#ff6ac1">:=</span> []<span style="color:#9aedfe">int</span>{<span style="color:#ff9f43">1</span>, <span style="color:#ff9f43">2</span>, <span style="color:#ff9f43">3</span>}
+</span></span><span style="display:flex;"><span>  fmt.<span style="color:#57c7ff">Println</span>(array)
+</span></span><span style="display:flex;"><span>  <span style="color:#57c7ff">add</span>(array)
+</span></span><span style="display:flex;"><span>  fmt.<span style="color:#57c7ff">Println</span>(array)
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>  fmt.<span style="color:#57c7ff">Println</span>(<span style="color:#5af78e">&#34;--------------------&#34;</span>)
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>  fmt.<span style="color:#57c7ff">Println</span>(array)
+</span></span><span style="display:flex;"><span>  <span style="color:#57c7ff">modify</span>(array)
+</span></span><span style="display:flex;"><span>  fmt.<span style="color:#57c7ff">Println</span>(array)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>在这里，你有两个函数add和modify，它们都接收一个切片作为参数。我将分别解释它们的行为。</p>
+<p>add 函数: 这个函数的目的是将一个整数10追加到传入的切片arr的末尾。然而，这里的arr是传递进来的切片的一个副本。在函数内部，append操作对副本进行了修改，但这对原始切片没有影响，因为arr只是传递进来的副本。当函数返回时，对原始切片没有做任何更改。</p>
+<p>modify 函数:这个函数的目的是将传入切片arr的第一个元素修改为10。与add不同，这里修改的是切片中的原始数据，因为切片是引用传递。即使我们传递的是切片的副本，由于底层数据是共享的，对副本的修改会影响原始切片。所以，当modify函数执行完毕后，原始切片中的第一个元素被修改为10。</p>
+<p>在main函数中，你可以测试这两个函数的效果：</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>[1 2 3]
+</span></span><span style="display:flex;"><span>[1 2 3]
+</span></span><span style="display:flex;"><span>--------------------
+</span></span><span style="display:flex;"><span>[1 2 3]
+</span></span><span style="display:flex;"><span>[10 2 3]
+</span></span></code></pre></div><p>总结：add函数对传入的切片副本进行了修改，但没有影响原始切片；而modify函数通过引用修改了原始切片的数据。</p>
+<h1 id="strconv-转换">strconv 转换<a hidden class="anchor" aria-hidden="true" href="#strconv-转换">#</a></h1>
+<p>strconv包实现了基本数据类型与其字符串表示的转换，主要有以下常用函数： Atoi()、Itoa()、parse系列、format系列、append系列。</p>
+<p>更多函数请查看<a href="https://golang.org/pkg/strconv/">官方文档</a>。</p>
+<h2 id="string与int类型转换">string与int类型转换<a hidden class="anchor" aria-hidden="true" href="#string与int类型转换">#</a></h2>
+<p>这一组函数是我们平时编程中用的最多的。</p>
+<blockquote>
+<p>1.1.2. Atoi()</p>
+</blockquote>
+<p>Atoi()函数用于将字符串类型的整数转换为int类型，函数签名如下。</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">Atoi</span>(s <span style="color:#9aedfe">string</span>) (i <span style="color:#9aedfe">int</span>, err <span style="color:#9aedfe">error</span>)
+</span></span></code></pre></div><p>如果传入的字符串参数无法转换为int类型，就会返回错误。</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span>s1 <span style="color:#ff6ac1">:=</span> <span style="color:#5af78e">&#34;100&#34;</span>
+</span></span><span style="display:flex;"><span>i1, err <span style="color:#ff6ac1">:=</span> strconv.<span style="color:#57c7ff">Atoi</span>(s1)
+</span></span><span style="display:flex;"><span><span style="color:#ff6ac1">if</span> err <span style="color:#ff6ac1">!=</span> <span style="color:#ff6ac1">nil</span> {
+</span></span><span style="display:flex;"><span>    fmt.<span style="color:#57c7ff">Println</span>(<span style="color:#5af78e">&#34;can&#39;t convert to int&#34;</span>)
+</span></span><span style="display:flex;"><span>} <span style="color:#ff6ac1">else</span> {
+</span></span><span style="display:flex;"><span>    fmt.<span style="color:#57c7ff">Printf</span>(<span style="color:#5af78e">&#34;type:%T value:%#v\n&#34;</span>, i1, i1) <span style="color:#78787e">//type:int value:100
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>}
+</span></span></code></pre></div><blockquote>
+<p>1.1.3. Itoa()</p>
+</blockquote>
+<p>Itoa()函数用于将int类型数据转换为对应的字符串表示，具体的函数签名如下。</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">Itoa</span>(i <span style="color:#9aedfe">int</span>) <span style="color:#9aedfe">string</span>
+</span></span></code></pre></div><p>示例代码如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span>i2 <span style="color:#ff6ac1">:=</span> <span style="color:#ff9f43">200</span>
+</span></span><span style="display:flex;"><span>s2 <span style="color:#ff6ac1">:=</span> strconv.<span style="color:#57c7ff">Itoa</span>(i2)
+</span></span><span style="display:flex;"><span>fmt.<span style="color:#57c7ff">Printf</span>(<span style="color:#5af78e">&#34;type:%T value:%#v\n&#34;</span>, s2, s2) <span style="color:#78787e">//type:string value:&#34;200&#34;
+</span></span></span></code></pre></div><h2 id="parse系列函数">Parse系列函数<a hidden class="anchor" aria-hidden="true" href="#parse系列函数">#</a></h2>
+<p>Parse类函数用于转换字符串为给定类型的值：ParseBool()、ParseFloat()、ParseInt()、ParseUint()。</p>
+<blockquote>
+<p>1.1.6. ParseBool()</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">ParseBool</span>(str <span style="color:#9aedfe">string</span>) (value <span style="color:#9aedfe">bool</span>, err <span style="color:#9aedfe">error</span>)
+</span></span></code></pre></div><p>返回字符串表示的bool值。它接受1、0、t、f、T、F、true、false、True、False、TRUE、FALSE；否则返回错误。</p>
+<blockquote>
+<p>1.1.7. ParseInt()</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">ParseInt</span>(s <span style="color:#9aedfe">string</span>, base <span style="color:#9aedfe">int</span>, bitSize <span style="color:#9aedfe">int</span>) (i <span style="color:#9aedfe">int64</span>, err <span style="color:#9aedfe">error</span>)
+</span></span></code></pre></div><p>返回字符串表示的整数值，接受正负号。</p>
+<p>base指定进制（2到36），如果base为0，则会从字符串前置判断，”0x”是16进制，”0”是8进制，否则是10进制；</p>
+<p>bitSize指定结果必须能无溢出赋值的整数类型，0、8、16、32、64 分别代表 int、int8、int16、int32、int64；</p>
+<p>返回的err是<code>*NumErr</code>类型的，如果语法有误，err.Error = ErrSyntax；如果结果超出类型范围err.Error = ErrRange。</p>
+<blockquote>
+<p>1.1.8. ParseUnit()</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">ParseUint</span>(s <span style="color:#9aedfe">string</span>, base <span style="color:#9aedfe">int</span>, bitSize <span style="color:#9aedfe">int</span>) (n <span style="color:#9aedfe">uint64</span>, err <span style="color:#9aedfe">error</span>)
+</span></span></code></pre></div><p>ParseUint类似ParseInt但不接受正负号，用于无符号整型。</p>
+<blockquote>
+<p>1.1.9. ParseFloat()</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">ParseFloat</span>(s <span style="color:#9aedfe">string</span>, bitSize <span style="color:#9aedfe">int</span>) (f <span style="color:#9aedfe">float64</span>, err <span style="color:#9aedfe">error</span>)
+</span></span></code></pre></div><p>解析一个表示浮点数的字符串并返回其值。</p>
+<p>如果s合乎语法规则，函数会返回最为接近s表示值的一个浮点数（使用IEEE754规范舍入）。</p>
+<p>bitSize指定了期望的接收类型，32是float32（返回值可以不改变精确值的赋值给float32），64是float64；</p>
+<p>返回值err是<code>*NumErr</code>类型的，语法有误的，err.Error=ErrSyntax；结果超出表示范围的，返回值f为±Inf，err.Error= ErrRange。</p>
+<blockquote>
+<p>1.1.10. 代码示例</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span>b, err <span style="color:#ff6ac1">:=</span> strconv.<span style="color:#57c7ff">ParseBool</span>(<span style="color:#5af78e">&#34;true&#34;</span>)
+</span></span><span style="display:flex;"><span>f, err <span style="color:#ff6ac1">:=</span> strconv.<span style="color:#57c7ff">ParseFloat</span>(<span style="color:#5af78e">&#34;3.1415&#34;</span>, <span style="color:#ff9f43">64</span>)
+</span></span><span style="display:flex;"><span>i, err <span style="color:#ff6ac1">:=</span> strconv.<span style="color:#57c7ff">ParseInt</span>(<span style="color:#5af78e">&#34;-2&#34;</span>, <span style="color:#ff9f43">10</span>, <span style="color:#ff9f43">64</span>)
+</span></span><span style="display:flex;"><span>u, err <span style="color:#ff6ac1">:=</span> strconv.<span style="color:#57c7ff">ParseUint</span>(<span style="color:#5af78e">&#34;2&#34;</span>, <span style="color:#ff9f43">10</span>, <span style="color:#ff9f43">64</span>)
+</span></span></code></pre></div><p>这些函数都有两个返回值，第一个返回值是转换后的值，第二个返回值为转化失败的错误信息。</p>
+<h2 id="format系列函数">Format系列函数<a hidden class="anchor" aria-hidden="true" href="#format系列函数">#</a></h2>
+<p>Format系列函数实现了将给定类型数据格式化为string类型数据的功能。</p>
+<blockquote>
+<p>1.1.12. FormatBool()</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">FormatBool</span>(b <span style="color:#9aedfe">bool</span>) <span style="color:#9aedfe">string</span>
+</span></span></code></pre></div><p>根据b的值返回”true”或”false”。</p>
+<blockquote>
+<p>1.1.13. FormatInt()</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">FormatInt</span>(i <span style="color:#9aedfe">int64</span>, base <span style="color:#9aedfe">int</span>) <span style="color:#9aedfe">string</span>
+</span></span></code></pre></div><p>返回i的base进制的字符串表示。base 必须在2到36之间，结果中会使用小写字母’a’到’z’表示大于10的数字。</p>
+<blockquote>
+<p>1.1.14. FormatUint()</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">FormatUint</span>(i <span style="color:#9aedfe">uint64</span>, base <span style="color:#9aedfe">int</span>) <span style="color:#9aedfe">string</span>
+</span></span></code></pre></div><p>是FormatInt的无符号整数版本。</p>
+<blockquote>
+<p>1.1.15. FormatFloat()</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">FormatFloat</span>(f <span style="color:#9aedfe">float64</span>, fmt <span style="color:#9aedfe">byte</span>, prec, bitSize <span style="color:#9aedfe">int</span>) <span style="color:#9aedfe">string</span>
+</span></span></code></pre></div><p>函数将浮点数表示为字符串并返回。</p>
+<p>bitSize表示f的来源类型（32：float32、64：float64），会据此进行舍入。</p>
+<p>fmt表示格式：’f’（-ddd.dddd）、’b’（-ddddp±ddd，指数为二进制）、’e’（-d.dddde±dd，十进制指数）、’E’（-d.ddddE±dd，十进制指数）、’g’（指数很大时用’e’格式，否则’f’格式）、’G’（指数很大时用’E’格式，否则’f’格式）。</p>
+<p>prec控制精度（排除指数部分）：对’f’、’e’、’E’，它表示小数点后的数字个数；对’g’、’G’，它控制总的数字个数。如果prec 为-1，则代表使用最少数量的、但又必需的数字来表示f。</p>
+<blockquote>
+<p>1.1.16. 代码示例</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span>s1 <span style="color:#ff6ac1">:=</span> strconv.<span style="color:#57c7ff">FormatBool</span>(<span style="color:#ff6ac1">true</span>)
+</span></span><span style="display:flex;"><span>s2 <span style="color:#ff6ac1">:=</span> strconv.<span style="color:#57c7ff">FormatFloat</span>(<span style="color:#ff9f43">3.1415</span>, <span style="color:#5af78e">&#39;E&#39;</span>, <span style="color:#ff6ac1">-</span><span style="color:#ff9f43">1</span>, <span style="color:#ff9f43">64</span>)
+</span></span><span style="display:flex;"><span>s3 <span style="color:#ff6ac1">:=</span> strconv.<span style="color:#57c7ff">FormatInt</span>(<span style="color:#ff6ac1">-</span><span style="color:#ff9f43">2</span>, <span style="color:#ff9f43">16</span>)
+</span></span><span style="display:flex;"><span>s4 <span style="color:#ff6ac1">:=</span> strconv.<span style="color:#57c7ff">FormatUint</span>(<span style="color:#ff9f43">2</span>, <span style="color:#ff9f43">16</span>)
+</span></span></code></pre></div><h1 id="time-包的使用">time 包的使用<a hidden class="anchor" aria-hidden="true" href="#time-包的使用">#</a></h1>
+<p>时间和日期是我们编程中经常会用到的，以下介绍了Go语言内置的time包的基本用法。</p>
+<p>time包提供了时间的显示和测量用的函数。日历的计算采用的是公历。</p>
+<blockquote>
+<p>时间类型</p>
+</blockquote>
+<p>time.Time类型表示时间。我们可以通过time.Now()函数获取当前的时间对象，然后获取时间对象的年月日时分秒等信息。示例代码如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">timeDemo</span>() {
+</span></span><span style="display:flex;"><span>    now <span style="color:#ff6ac1">:=</span> time.<span style="color:#57c7ff">Now</span>() <span style="color:#78787e">//获取当前时间
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>    fmt.<span style="color:#57c7ff">Printf</span>(<span style="color:#5af78e">&#34;current time:%v\n&#34;</span>, now)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    year <span style="color:#ff6ac1">:=</span> now.<span style="color:#57c7ff">Year</span>()     <span style="color:#78787e">//年
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>    month <span style="color:#ff6ac1">:=</span> now.<span style="color:#57c7ff">Month</span>()   <span style="color:#78787e">//月
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>    day <span style="color:#ff6ac1">:=</span> now.<span style="color:#57c7ff">Day</span>()       <span style="color:#78787e">//日
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>    hour <span style="color:#ff6ac1">:=</span> now.<span style="color:#57c7ff">Hour</span>()     <span style="color:#78787e">//小时
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>    minute <span style="color:#ff6ac1">:=</span> now.<span style="color:#57c7ff">Minute</span>() <span style="color:#78787e">//分钟
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>    second <span style="color:#ff6ac1">:=</span> now.<span style="color:#57c7ff">Second</span>() <span style="color:#78787e">//秒
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>    fmt.<span style="color:#57c7ff">Printf</span>(<span style="color:#5af78e">&#34;%d-%02d-%02d %02d:%02d:%02d\n&#34;</span>, year, month, day, hour, minute, second)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><blockquote>
+<p>时间戳</p>
+</blockquote>
+<p>时间戳是自1970年1月1日（08:00:00GMT）至当前时间的总毫秒数。它也被称为Unix时间戳（UnixTimestamp）。</p>
+<p>基于时间对象获取时间戳的示例代码如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">timestampDemo</span>() {
+</span></span><span style="display:flex;"><span>    now <span style="color:#ff6ac1">:=</span> time.<span style="color:#57c7ff">Now</span>()            <span style="color:#78787e">//获取当前时间
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>    timestamp1 <span style="color:#ff6ac1">:=</span> now.<span style="color:#57c7ff">Unix</span>()     <span style="color:#78787e">//时间戳
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>    timestamp2 <span style="color:#ff6ac1">:=</span> now.<span style="color:#57c7ff">UnixNano</span>() <span style="color:#78787e">//纳秒时间戳
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>    fmt.<span style="color:#57c7ff">Printf</span>(<span style="color:#5af78e">&#34;current timestamp1:%v\n&#34;</span>, timestamp1)
+</span></span><span style="display:flex;"><span>    fmt.<span style="color:#57c7ff">Printf</span>(<span style="color:#5af78e">&#34;current timestamp2:%v\n&#34;</span>, timestamp2)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>使用time.Unix()函数可以将时间戳转为时间格式。</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">timestampDemo2</span>(timestamp <span style="color:#9aedfe">int64</span>) {
+</span></span><span style="display:flex;"><span>    timeObj <span style="color:#ff6ac1">:=</span> time.<span style="color:#57c7ff">Unix</span>(timestamp, <span style="color:#ff9f43">0</span>) <span style="color:#78787e">//将时间戳转为时间格式
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>    fmt.<span style="color:#57c7ff">Println</span>(timeObj)
+</span></span><span style="display:flex;"><span>    year <span style="color:#ff6ac1">:=</span> timeObj.<span style="color:#57c7ff">Year</span>()     <span style="color:#78787e">//年
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>    month <span style="color:#ff6ac1">:=</span> timeObj.<span style="color:#57c7ff">Month</span>()   <span style="color:#78787e">//月
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>    day <span style="color:#ff6ac1">:=</span> timeObj.<span style="color:#57c7ff">Day</span>()       <span style="color:#78787e">//日
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>    hour <span style="color:#ff6ac1">:=</span> timeObj.<span style="color:#57c7ff">Hour</span>()     <span style="color:#78787e">//小时
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>    minute <span style="color:#ff6ac1">:=</span> timeObj.<span style="color:#57c7ff">Minute</span>() <span style="color:#78787e">//分钟
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>    second <span style="color:#ff6ac1">:=</span> timeObj.<span style="color:#57c7ff">Second</span>() <span style="color:#78787e">//秒
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>    fmt.<span style="color:#57c7ff">Printf</span>(<span style="color:#5af78e">&#34;%d-%02d-%02d %02d:%02d:%02d\n&#34;</span>, year, month, day, hour, minute, second)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><blockquote>
+<p>时间间隔</p>
+</blockquote>
+<p>time.Duration是time包定义的一个类型，它代表两个时间点之间经过的时间，以纳秒为单位。time.Duration表示一段时间间隔，可表示的最长时间段大约290年。</p>
+<p>time包中定义的时间间隔类型的常量如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff5c57">const</span> (
+</span></span><span style="display:flex;"><span>    Nanosecond  Duration = <span style="color:#ff9f43">1</span>
+</span></span><span style="display:flex;"><span>    Microsecond          = <span style="color:#ff9f43">1000</span> <span style="color:#ff6ac1">*</span> Nanosecond
+</span></span><span style="display:flex;"><span>    Millisecond          = <span style="color:#ff9f43">1000</span> <span style="color:#ff6ac1">*</span> Microsecond
+</span></span><span style="display:flex;"><span>    Second               = <span style="color:#ff9f43">1000</span> <span style="color:#ff6ac1">*</span> Millisecond
+</span></span><span style="display:flex;"><span>    Minute               = <span style="color:#ff9f43">60</span> <span style="color:#ff6ac1">*</span> Second
+</span></span><span style="display:flex;"><span>    Hour                 = <span style="color:#ff9f43">60</span> <span style="color:#ff6ac1">*</span> Minute
+</span></span><span style="display:flex;"><span>)
+</span></span></code></pre></div><p>例如：time.Duration表示1纳秒，time.Second表示1秒。</p>
+<blockquote>
+<p>时间操作</p>
+</blockquote>
+<p>1、Add</p>
+<p>我们在日常的编码过程中可能会遇到要求时间+时间间隔的需求，Go语言的时间对象有提供Add方法如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>    func (t Time) Add(d Duration) Time
+</span></span></code></pre></div><p>举个例子，求一个小时之后的时间：</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">main</span>() {
+</span></span><span style="display:flex;"><span>    now <span style="color:#ff6ac1">:=</span> time.<span style="color:#57c7ff">Now</span>()
+</span></span><span style="display:flex;"><span>    later <span style="color:#ff6ac1">:=</span> now.<span style="color:#57c7ff">Add</span>(time.Hour) <span style="color:#78787e">// 当前时间加1小时后的时间
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>    fmt.<span style="color:#57c7ff">Println</span>(later)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>2、Sub</p>
+<p>求两个时间之间的差值：</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>    func (t Time) Sub(u Time) Duration
+</span></span></code></pre></div><p>返回一个时间段t-u。如果结果超出了Duration可以表示的最大值/最小值，将返回最大值/最小值。要获取时间点t-d（d为Duration），可以使用t.Add(-d)。</p>
+<p>3、Equal</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>    func (t Time) Equal(u Time) bool
+</span></span></code></pre></div><p>判断两个时间是否相同，会考虑时区的影响，因此不同时区标准的时间也可以正确比较。本方法和用t==u不同，这种方法还会比较地点和时区信息。</p>
+<p>4、Before</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>    func (t Time) Before(u Time) bool
+</span></span></code></pre></div><p>如果t代表的时间点在u之前，返回真；否则返回假。</p>
+<p>5、After</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>    func (t Time) After(u Time) bool
+</span></span></code></pre></div><p>如果t代表的时间点在u之后，返回真；否则返回假。</p>
+<blockquote>
+<p>1.1.6. 定时器</p>
+</blockquote>
+<p>使用time.Tick(时间间隔)来设置定时器，定时器的本质上是一个通道（channel）。</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">tickDemo</span>() {
+</span></span><span style="display:flex;"><span>    ticker <span style="color:#ff6ac1">:=</span> time.<span style="color:#57c7ff">Tick</span>(time.Second) <span style="color:#78787e">//定义一个1秒间隔的定时器
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>    <span style="color:#ff6ac1">for</span> i <span style="color:#ff6ac1">:=</span> <span style="color:#ff6ac1">range</span> ticker {
+</span></span><span style="display:flex;"><span>        fmt.<span style="color:#57c7ff">Println</span>(i)<span style="color:#78787e">//每秒都会执行的任务
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><blockquote>
+<p>1.1.7. 时间格式化</p>
+</blockquote>
+<p>时间类型有一个自带的方法Format进行格式化，需要注意的是Go语言中格式化时间模板不是常见的Y-m-d H:M:S而是使用Go的诞生时间2006年1月2号15点04分（记忆口诀为2006 1 2 3 4）。也许这就是技术人员的浪漫吧。</p>
+<p>补充：如果想格式化为12小时方式，需指定PM。</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">formatDemo</span>() {
+</span></span><span style="display:flex;"><span>    now <span style="color:#ff6ac1">:=</span> time.<span style="color:#57c7ff">Now</span>()
+</span></span><span style="display:flex;"><span>    <span style="color:#78787e">// 格式化的模板为Go的出生时间2006年1月2号15点04分 Mon Jan
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>    <span style="color:#78787e">// 24小时制
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>    fmt.<span style="color:#57c7ff">Println</span>(now.<span style="color:#57c7ff">Format</span>(<span style="color:#5af78e">&#34;2006-01-02 15:04:05.000 Mon Jan&#34;</span>))
+</span></span><span style="display:flex;"><span>    <span style="color:#78787e">// 12小时制
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>    fmt.<span style="color:#57c7ff">Println</span>(now.<span style="color:#57c7ff">Format</span>(<span style="color:#5af78e">&#34;2006-01-02 03:04:05.000 PM Mon Jan&#34;</span>))
+</span></span><span style="display:flex;"><span>    fmt.<span style="color:#57c7ff">Println</span>(now.<span style="color:#57c7ff">Format</span>(<span style="color:#5af78e">&#34;2006/01/02 15:04&#34;</span>))
+</span></span><span style="display:flex;"><span>    fmt.<span style="color:#57c7ff">Println</span>(now.<span style="color:#57c7ff">Format</span>(<span style="color:#5af78e">&#34;15:04 2006/01/02&#34;</span>))
+</span></span><span style="display:flex;"><span>    fmt.<span style="color:#57c7ff">Println</span>(now.<span style="color:#57c7ff">Format</span>(<span style="color:#5af78e">&#34;2006/01/02&#34;</span>))
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#78787e">/*
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e">    2022-12-01 08:30:47.872 Fri Dec
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e">    2022-12-01 08:30:47.872 AM Fri Dec
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e">    2022/12/01 08:30
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e">    08:30 2022/12/01
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e">    2022/12/01
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e">*/</span>
+</span></span></code></pre></div><blockquote>
+<p>解析字符串格式的时间</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff6ac1">package</span> main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff6ac1">import</span> (
+</span></span><span style="display:flex;"><span>	<span style="color:#5af78e">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#5af78e">&#34;time&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">main</span>() {
+</span></span><span style="display:flex;"><span>	<span style="color:#78787e">// 加载时区
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>	loc, err <span style="color:#ff6ac1">:=</span> time.<span style="color:#57c7ff">LoadLocation</span>(<span style="color:#5af78e">&#34;Asia/Shanghai&#34;</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#ff6ac1">if</span> err <span style="color:#ff6ac1">!=</span> <span style="color:#ff6ac1">nil</span> {
+</span></span><span style="display:flex;"><span>		fmt.<span style="color:#57c7ff">Println</span>(err)
+</span></span><span style="display:flex;"><span>		<span style="color:#ff6ac1">return</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#78787e">// 按照指定时区和指定格式解析字符串时间
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>	timeObj, err <span style="color:#ff6ac1">:=</span> time.<span style="color:#57c7ff">ParseInLocation</span>(<span style="color:#5af78e">&#34;日期：2006/01/02 时间： 15:04:05&#34;</span>, <span style="color:#5af78e">&#34;日期：2019/08/04 时间： 14:15:20&#34;</span>, loc)
+</span></span><span style="display:flex;"><span>	<span style="color:#ff6ac1">if</span> err <span style="color:#ff6ac1">!=</span> <span style="color:#ff6ac1">nil</span> {
+</span></span><span style="display:flex;"><span>		fmt.<span style="color:#57c7ff">Println</span>(err)
+</span></span><span style="display:flex;"><span>		<span style="color:#ff6ac1">return</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	fmt.<span style="color:#57c7ff">Println</span>(timeObj)
+</span></span><span style="display:flex;"><span>  <span style="color:#78787e">// 2019-08-04 14:15:20 +0800 CST
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>}
+</span></span></code></pre></div><h1 id="遍历-map-的时候可以删除吗">遍历 map 的时候可以删除吗？<a hidden class="anchor" aria-hidden="true" href="#遍历-map-的时候可以删除吗">#</a></h1>
+<p>Go语言规范允许在遍历map的过程中删除元素。这是因为map在Go语言中是无序的，删除一个元素后不会导致迭代器失效。</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff6ac1">package</span> main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff6ac1">import</span> <span style="color:#5af78e">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">main</span>() {
+</span></span><span style="display:flex;"><span>    myMap <span style="color:#ff6ac1">:=</span> <span style="color:#ff5c57">map</span>[<span style="color:#9aedfe">string</span>]<span style="color:#9aedfe">int</span>{<span style="color:#5af78e">&#34;a&#34;</span>: <span style="color:#ff9f43">1</span>, <span style="color:#5af78e">&#34;b&#34;</span>: <span style="color:#ff9f43">2</span>, <span style="color:#5af78e">&#34;c&#34;</span>: <span style="color:#ff9f43">3</span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">for</span> key <span style="color:#ff6ac1">:=</span> <span style="color:#ff6ac1">range</span> myMap {
+</span></span><span style="display:flex;"><span>        <span style="color:#ff6ac1">if</span> key <span style="color:#ff6ac1">==</span> <span style="color:#5af78e">&#34;a&#34;</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#ff5c57">delete</span>(myMap, key)
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    fmt.<span style="color:#57c7ff">Println</span>(myMap)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>这个代码片段将正常运行，不会导致panic。在遍历过程中删除元素后，map的迭代器仍然有效，因为map的遍历顺序是无序的，删除一个元素不会影响后续的迭代。</p>
+<p>但是，如果在多协程下，由于 map 并不是一个线程安全的数据结构。同时读写一个 map 是未定义的行为，如果被检测到，会直接 panic。</p>
+<p>上面说的是发生在多个协程同时读写同一个 map 的情况下。 如果在同一个协程内边遍历边删除，并不会检测到同时读写，理论上是可以这样做的。但是，遍历的结果就可能不会是相同的了，有可能结果遍历结果集中包含了删除的 key，也有可能不包含，这取决于删除 key 的时间：是在遍历到 key 所在的 bucket 时刻前或者后。</p>
+<p>一般而言，有两种方式：</p>
+<ul>
+<li>
+<p>这可以通过读写锁来解决：sync.RWMutex。读之前调用 RLock() 函数，读完之后调用 RUnlock() 函数解锁；写之前调用 Lock() 函数，写完之后，调用 Unlock() 解锁。</p>
+</li>
+<li>
+<p>另外，sync.Map 是线程安全的 map，也可以使用。</p>
+</li>
+</ul>
+<p>下面是一个错误的示例，然后分别使用两种方式去解决它</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff6ac1">package</span> main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff6ac1">import</span> (
+</span></span><span style="display:flex;"><span>	<span style="color:#5af78e">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#5af78e">&#34;strconv&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#5af78e">&#34;sync&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff5c57">var</span> m = <span style="color:#ff5c57">make</span>(<span style="color:#ff5c57">map</span>[<span style="color:#9aedfe">string</span>]<span style="color:#9aedfe">int</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">get</span>(key <span style="color:#9aedfe">string</span>) <span style="color:#9aedfe">int</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#ff6ac1">return</span> m[key]
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">set</span>(key <span style="color:#9aedfe">string</span>, value <span style="color:#9aedfe">int</span>) {
+</span></span><span style="display:flex;"><span>	m[key] = value
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">main</span>() {
+</span></span><span style="display:flex;"><span>	wg <span style="color:#ff6ac1">:=</span> sync.WaitGroup{}
+</span></span><span style="display:flex;"><span>	<span style="color:#ff6ac1">for</span> i <span style="color:#ff6ac1">:=</span> <span style="color:#ff9f43">0</span>; i &lt; <span style="color:#ff9f43">100</span>; i<span style="color:#ff6ac1">++</span> {
+</span></span><span style="display:flex;"><span>		wg.<span style="color:#57c7ff">Add</span>(<span style="color:#ff9f43">1</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#ff6ac1">go</span> <span style="color:#ff5c57">func</span>(n <span style="color:#9aedfe">int</span>) {
+</span></span><span style="display:flex;"><span>			key <span style="color:#ff6ac1">:=</span> strconv.<span style="color:#57c7ff">Itoa</span>(n)
+</span></span><span style="display:flex;"><span>			<span style="color:#57c7ff">set</span>(key, n)
+</span></span><span style="display:flex;"><span>			fmt.<span style="color:#57c7ff">Printf</span>(<span style="color:#5af78e">&#34;k=:%v, v:=%v\n&#34;</span>, key, <span style="color:#57c7ff">get</span>(key))
+</span></span><span style="display:flex;"><span>			wg.<span style="color:#57c7ff">Done</span>()
+</span></span><span style="display:flex;"><span>		}(i)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	wg.<span style="color:#57c7ff">Wait</span>()
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>运行结果：</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>......
+</span></span><span style="display:flex;"><span>k=:66,v:=66
+</span></span><span style="display:flex;"><span>k=:43,v:=43
+</span></span><span style="display:flex;"><span>k=:44,v:=44
+</span></span><span style="display:flex;"><span>......
+</span></span><span style="display:flex;"><span>k=:49,v:=49
+</span></span><span style="display:flex;"><span>k=:50,v:=50
+</span></span><span style="display:flex;"><span>k=:51,v:=51
+</span></span><span style="display:flex;"><span>fatal error: concurrent map writes
+</span></span><span style="display:flex;"><span>fatal error: concurrent map writes
+</span></span><span style="display:flex;"><span>fatal error: concurrent map writes
+</span></span></code></pre></div><p>我们不能在多个 goroutine 中并发对内置的 map 进行读写操作，否则会存在数据竞争问题。</p>
+<p>像这种场景下就需要为 map 加锁来保证并发的安全性了，Go语言的<code>sync</code>包中提供了一个开箱即用的并发安全版 map——<code>sync.Map</code>。开箱即用表示其不用像内置的 map 一样使用 make 函数初始化就能直接使用。同时<code>sync.Map</code>内置了诸如<code>Store</code>、<code>Load</code>、<code>LoadOrStore</code>、<code>Delete</code>、<code>Range</code>等操作方法。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">方法名</th>
+<th style="text-align:center">功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">func (m *Map) Store(key, value interface{})</td>
+<td style="text-align:center">存储key-value数据</td>
+</tr>
+<tr>
+<td style="text-align:center">func (m *Map) Load(key interface{}) (value interface{}, ok bool)</td>
+<td style="text-align:center">查询key对应的value</td>
+</tr>
+<tr>
+<td style="text-align:center">func (m *Map) LoadOrStore(key, value interface{}) (actual interface{}, loaded bool)</td>
+<td style="text-align:center">查询或存储key对应的value</td>
+</tr>
+<tr>
+<td style="text-align:center">func (m *Map) LoadAndDelete(key interface{}) (value interface{}, loaded bool)</td>
+<td style="text-align:center">查询并删除key</td>
+</tr>
+<tr>
+<td style="text-align:center">func (m *Map) Delete(key interface{})</td>
+<td style="text-align:center">删除key</td>
+</tr>
+<tr>
+<td style="text-align:center">func (m *Map) Range(f func(key, value interface{}) bool)</td>
+<td style="text-align:center">对map中的每个key-value依次调用f</td>
+</tr>
+</tbody>
+</table>
+<p>下面的代码示例演示了并发读写<code>sync.Map</code>。</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff6ac1">package</span> main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff6ac1">import</span> (
+</span></span><span style="display:flex;"><span>	<span style="color:#5af78e">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#5af78e">&#34;strconv&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#5af78e">&#34;sync&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#78787e">// 并发安全的map
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span><span style="color:#ff5c57">var</span> m = sync.Map{}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">main</span>() {
+</span></span><span style="display:flex;"><span>	wg <span style="color:#ff6ac1">:=</span> sync.WaitGroup{}
+</span></span><span style="display:flex;"><span>	<span style="color:#78787e">// 对m执行20个并发的读写操作
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>	<span style="color:#ff6ac1">for</span> i <span style="color:#ff6ac1">:=</span> <span style="color:#ff9f43">0</span>; i &lt; <span style="color:#ff9f43">20</span>; i<span style="color:#ff6ac1">++</span> {
+</span></span><span style="display:flex;"><span>		wg.<span style="color:#57c7ff">Add</span>(<span style="color:#ff9f43">1</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#ff6ac1">go</span> <span style="color:#ff5c57">func</span>(n <span style="color:#9aedfe">int</span>) {
+</span></span><span style="display:flex;"><span>			key <span style="color:#ff6ac1">:=</span> strconv.<span style="color:#57c7ff">Itoa</span>(n)
+</span></span><span style="display:flex;"><span>			m.<span style="color:#57c7ff">Store</span>(key, n)         <span style="color:#78787e">// 存储key-value
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>			value, _ <span style="color:#ff6ac1">:=</span> m.<span style="color:#57c7ff">Load</span>(key) <span style="color:#78787e">// 根据key取值
+</span></span></span><span style="display:flex;"><span><span style="color:#78787e"></span>			fmt.<span style="color:#57c7ff">Printf</span>(<span style="color:#5af78e">&#34;k=:%v,v:=%v\n&#34;</span>, key, value)
+</span></span><span style="display:flex;"><span>			wg.<span style="color:#57c7ff">Done</span>()
+</span></span><span style="display:flex;"><span>		}(i)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	wg.<span style="color:#57c7ff">Wait</span>()
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>使用 锁</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff6ac1">package</span> main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff6ac1">import</span> (
+</span></span><span style="display:flex;"><span>	<span style="color:#5af78e">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#5af78e">&#34;strconv&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#5af78e">&#34;sync&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff5c57">var</span> mu sync.RWMutex
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff5c57">var</span> m = <span style="color:#ff5c57">make</span>(<span style="color:#ff5c57">map</span>[<span style="color:#9aedfe">string</span>]<span style="color:#9aedfe">int</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">get</span>(key <span style="color:#9aedfe">string</span>) <span style="color:#9aedfe">int</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#ff6ac1">return</span> m[key]
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">set</span>(key <span style="color:#9aedfe">string</span>, value <span style="color:#9aedfe">int</span>) {
+</span></span><span style="display:flex;"><span>	m[key] = value
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff5c57">func</span> <span style="color:#57c7ff">main</span>() {
+</span></span><span style="display:flex;"><span>	wg <span style="color:#ff6ac1">:=</span> sync.WaitGroup{}
+</span></span><span style="display:flex;"><span>	<span style="color:#ff6ac1">for</span> i <span style="color:#ff6ac1">:=</span> <span style="color:#ff9f43">0</span>; i &lt; <span style="color:#ff9f43">80</span>; i<span style="color:#ff6ac1">++</span> {
+</span></span><span style="display:flex;"><span>		wg.<span style="color:#57c7ff">Add</span>(<span style="color:#ff9f43">1</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#ff6ac1">go</span> <span style="color:#ff5c57">func</span>(n <span style="color:#9aedfe">int</span>) {
+</span></span><span style="display:flex;"><span>			key <span style="color:#ff6ac1">:=</span> strconv.<span style="color:#57c7ff">Itoa</span>(n)
+</span></span><span style="display:flex;"><span>			mu.<span style="color:#57c7ff">Lock</span>()
+</span></span><span style="display:flex;"><span>			<span style="color:#57c7ff">set</span>(key, n)
+</span></span><span style="display:flex;"><span>			mu.<span style="color:#57c7ff">Unlock</span>()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>			mu.<span style="color:#57c7ff">RLock</span>()
+</span></span><span style="display:flex;"><span>			fmt.<span style="color:#57c7ff">Printf</span>(<span style="color:#5af78e">&#34;k=:%v, v:=%v\n&#34;</span>, key, <span style="color:#57c7ff">get</span>(key))
+</span></span><span style="display:flex;"><span>			mu.<span style="color:#57c7ff">RUnlock</span>()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>			wg.<span style="color:#57c7ff">Done</span>()
+</span></span><span style="display:flex;"><span>		}(i)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	wg.<span style="color:#57c7ff">Wait</span>()
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h1 id="map-的扩容和收缩容量">map 的扩容和收缩容量<a hidden class="anchor" aria-hidden="true" href="#map-的扩容和收缩容量">#</a></h1>
+
 
         </div>
         <div class="post-reward">

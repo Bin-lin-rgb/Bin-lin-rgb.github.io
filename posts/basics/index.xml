@@ -6,14 +6,41 @@
     <description>Recent content in 📖 基础 on Blaine&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <lastBuildDate>Sun, 29 Oct 2023 16:34:43 +0800</lastBuildDate><atom:link href="https://Bin-lin-rgb.github.io/posts/basics/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 08 Nov 2023 21:18:50 +0800</lastBuildDate><atom:link href="https://Bin-lin-rgb.github.io/posts/basics/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>计算机网络之基础篇</title>
-      <link>https://Bin-lin-rgb.github.io/posts/basics/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80%E7%AF%87/</link>
+      <title>Redis</title>
+      <link>https://Bin-lin-rgb.github.io/posts/basics/redis/</link>
+      <pubDate>Wed, 08 Nov 2023 21:18:50 +0800</pubDate>
+      
+      <guid>https://Bin-lin-rgb.github.io/posts/basics/redis/</guid>
+      <description>持续更新中&amp;hellip; 感觉这篇写的不错 Others 缓存击穿、穿透</description>
+    </item>
+    
+    <item>
+      <title>MySQL</title>
+      <link>https://Bin-lin-rgb.github.io/posts/basics/mysql/</link>
+      <pubDate>Wed, 08 Nov 2023 21:18:41 +0800</pubDate>
+      
+      <guid>https://Bin-lin-rgb.github.io/posts/basics/mysql/</guid>
+      <description>Basic 执行一条 SQL 查询语句，期间发生了什么？ 连接器：建立连接，管理连接、校验用户身份； 查询缓存：查询语句如果命中查询缓存则直接返回，否则继续往下执行。MySQL 8.0 已删除该模块； 解析 SQL，通过解析器对 SQL 查询语句进行词法分析、语法分析，然后构建语法树，方便后续模块读取表名、字段、语句类型</description>
+    </item>
+    
+    <item>
+      <title>操作系统</title>
+      <link>https://Bin-lin-rgb.github.io/posts/basics/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/</link>
+      <pubDate>Wed, 08 Nov 2023 21:18:35 +0800</pubDate>
+      
+      <guid>https://Bin-lin-rgb.github.io/posts/basics/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>计算机网络</title>
+      <link>https://Bin-lin-rgb.github.io/posts/basics/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/</link>
       <pubDate>Sun, 29 Oct 2023 16:34:43 +0800</pubDate>
       
-      <guid>https://Bin-lin-rgb.github.io/posts/basics/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80%E7%AF%87/</guid>
-      <description></description>
+      <guid>https://Bin-lin-rgb.github.io/posts/basics/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/</guid>
+      <description>基础篇 OSI 七层参考模型 它是⼀个七层的、抽象的模型体，不仅包括⼀系列抽象的术语或概念，也包括具体的协议。 物理层：它的主要作⽤是传输⽐特流 数据链路层：建⽴逻辑连接、进⾏硬件地址寻址、差错校验等功能。定义了如何让格式化数据以帧为单位进⾏传 输，以及如何控制对物理介质的访问。将⽐特组合成字节</description>
     </item>
     
   </channel>

@@ -1,0 +1,1257 @@
+<!DOCTYPE html>
+<html lang="zh" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>MySQL | Blaine&#39;s Blog</title>
+<meta name="keywords" content="">
+<meta name="description" content="Basic 执行一条 SQL 查询语句，期间发生了什么？ 连接器：建立连接，管理连接、校验用户身份； 查询缓存：查询语句如果命中查询缓存则直接返回，否则继续往下执行。MySQL 8.0 已删除该模块； 解析 SQL，通过解析器对 SQL 查询语句进行词法分析、语法分析，然后构建语法树，方便后续模块读取表名、字段、语句类型">
+<meta name="author" content="Blaine">
+<link rel="canonical" href="https://Bin-lin-rgb.github.io/posts/basics/mysql/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.css" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.js" onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://Bin-lin-rgb.github.io/img/icon.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://Bin-lin-rgb.github.io/img/icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://Bin-lin-rgb.github.io/img/icon.png">
+<link rel="apple-touch-icon" href="https://Bin-lin-rgb.github.io/img/icon.png">
+<link rel="mask-icon" href="https://Bin-lin-rgb.github.io/img/icon.png">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+<script defer src="https://unpkg.com/mermaid@8.8.1/dist/mermaid.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+<script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.3/dist/jquery.min.js"></script>
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = ""; 
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<meta property="og:title" content="MySQL" />
+<meta property="og:description" content="Basic 执行一条 SQL 查询语句，期间发生了什么？ 连接器：建立连接，管理连接、校验用户身份； 查询缓存：查询语句如果命中查询缓存则直接返回，否则继续往下执行。MySQL 8.0 已删除该模块； 解析 SQL，通过解析器对 SQL 查询语句进行词法分析、语法分析，然后构建语法树，方便后续模块读取表名、字段、语句类型" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://Bin-lin-rgb.github.io/posts/basics/mysql/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-11-08T21:18:41+08:00" />
+<meta property="article:modified_time" content="2023-11-08T21:18:41+08:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="MySQL"/>
+<meta name="twitter:description" content="Basic 执行一条 SQL 查询语句，期间发生了什么？ 连接器：建立连接，管理连接、校验用户身份； 查询缓存：查询语句如果命中查询缓存则直接返回，否则继续往下执行。MySQL 8.0 已删除该模块； 解析 SQL，通过解析器对 SQL 查询语句进行词法分析、语法分析，然后构建语法树，方便后续模块读取表名、字段、语句类型"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+
+        {
+          "@type": "ListItem",
+          "position":  1 ,
+          "name": "📚文章",
+          "item": "https://Bin-lin-rgb.github.io/posts/"
+        },
+
+        {
+          "@type": "ListItem",
+          "position":  2 ,
+          "name": "📖 基础",
+          "item": "https://Bin-lin-rgb.github.io/posts/basics/"
+        }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "MySQL",
+      "item": "https://Bin-lin-rgb.github.io/posts/basics/mysql/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "MySQL",
+  "name": "MySQL",
+  "description": "Basic 执行一条 SQL 查询语句，期间发生了什么？ 连接器：建立连接，管理连接、校验用户身份； 查询缓存：查询语句如果命中查询缓存则直接返回，否则继续往下执行。MySQL 8.0 已删除该模块； 解析 SQL，通过解析器对 SQL 查询语句进行词法分析、语法分析，然后构建语法树，方便后续模块读取表名、字段、语句类型",
+  "keywords": [
+    ""
+  ],
+  "articleBody": "Basic 执行一条 SQL 查询语句，期间发生了什么？\n连接器：建立连接，管理连接、校验用户身份； 查询缓存：查询语句如果命中查询缓存则直接返回，否则继续往下执行。MySQL 8.0 已删除该模块； 解析 SQL，通过解析器对 SQL 查询语句进行词法分析、语法分析，然后构建语法树，方便后续模块读取表名、字段、语句类型； 执行 SQL：执行 SQL 共有三个阶段： 预处理阶段：检查表或字段是否存在；将 select * 中的 * 符号扩展为表上的所有列。 优化阶段：基于查询成本的考虑， 选择查询成本最小的执行计划； 执行阶段：根据执行计划执行 SQL 查询语句，从存储引擎读取记录，返回给客户端； MySQL 的 NULL 值是怎么存放的？\nMySQL 的 Compact 行格式中会用「NULL值列表」来标记值为 NULL 的列，NULL 值并不会存储在行格式中的真实数据部分。\nNULL值列表会占用 1 字节空间，当表中所有字段都定义成 NOT NULL，行格式中就不会有 NULL值列表，这样可节省 1 字节的空间。\nMySQL 怎么知道 varchar(n) 实际占用数据的大小？\nMySQL 的 Compact 行格式中会用「变长字段长度列表」存储变长字段实际占用的数据大小。\nvarchar(n) 中 n 最大取值为多少？\n一行记录最大能存储 65535 字节的数据，但是这个是包含「变长字段字节数列表所占用的字节数」和「NULL值列表所占用的字节数」。所以， 我们在算 varchar(n) 中 n 最大值时，需要减去这两个列表所占用的字节数。\n如果一张表只有一个 varchar(n) 字段，且允许为 NULL，字符集为 ascii。varchar(n) 中 n 最大取值为 65532。\n计算公式：65535 - 变长字段字节数列表所占用的字节数 - NULL值列表所占用的字节数 = 65535 - 2 - 1 = 65532。\n如果有多个字段的话，要保证所有字段的长度 + 变长字段字节数列表所占用的字节数 + NULL值列表所占用的字节数 \u003c= 65535。\n行溢出后，MySQL 是怎么处理的？\n如果一个数据页存不了一条记录，InnoDB 存储引擎会自动将溢出的数据存放到「溢出页」中。\nCompact 行格式针对行溢出的处理是这样的：当发生行溢出时，在记录的真实数据处只会保存该列的一部分数据，而把剩余的数据放在「溢出页」中，然后真实数据处用 20 字节存储指向溢出页的地址，从而可以找到剩余数据所在的页。\nCompressed 和 Dynamic 这两种格式采用完全的行溢出方式，记录的真实数据处不会存储该列的一部分数据，只存储 20 个字节的指针来指向溢出页。而实际的数据都存储在溢出页中。\n索引 B+Tree vs B Tree B+Tree 只在叶子节点存储数据，而 B 树 的非叶子节点也要存储数据，所以 B+Tree 的单个节点的数据量更小，在相同的磁盘 I/O 次数下，就能查询更多的节点。\n另外，B+Tree 叶子节点采用的是双链表连接，适合 MySQL 中常见的基于范围的顺序查找，而 B 树无法做到这一点。\n按物理存储分类 从物理存储的角度来看，索引分为聚簇索引（主键索引）、二级索引（辅助索引）。\n这两个区别在前面也提到了：\n主键索引的 B+Tree 的叶子节点存放的是实际数据，所有完整的用户记录都存放在主键索引的 B+Tree 的叶子节点里； 二级索引的 B+Tree 的叶子节点存放的是主键值，而不是实际数据。 所以，在查询时使用了二级索引，如果查询的数据能在二级索引里查询的到，那么就不需要回表，这个过程就是覆盖索引。如果查询的数据不在二级索引里，就会先检索二级索引，找到对应的叶子节点，获取到主键值后，然后再检索主键索引，就能查询到数据了，这个过程就是回表。\n按字段个数分类 从字段个数的角度来看，索引分为单列索引、联合索引（复合索引）。\n建立在单列上的索引称为单列索引，比如主键索引； 建立在多列上的索引称为联合索引； 联合索引 使用联合索引时，存在最左匹配原则，也就是按照最左优先的方式进行索引的匹配。在使用联合索引进行查询的时候，如果不遵循「最左匹配原则」，联合索引会失效，这样就无法利用到索引快速查询的特性了。\n比如，如果创建了一个 (a, b, c) 联合索引，如果查询条件是以下这几种，就可以匹配上联合索引：\nwhere a=1； where a=1 and b=2 and c=3； where a=1 and b=2； 需要注意的是，因为有查询优化器，所以 a 字段在 where 子句的顺序并不重要。\n但是，如果查询条件是以下这几种，因为不符合最左匹配原则，所以就无法匹配上联合索引，联合索引就会失效:\nwhere b=2； where c=3； where b=2 and c=3； 上面这些查询条件之所以会失效，是因为(a, b, c) 联合索引，是先按 a 排序，在 a 相同的情况再按 b 排序，在 b 相同的情况再按 c 排序。所以，b 和 c 是全局无序，局部相对有序的，这样在没有遵循最左匹配原则的情况下，是无法利用到索引的。\n联合索引有一些特殊情况，并不是查询过程使用了联合索引查询，就代表联合索引中的所有字段都用到了联合索引进行索引查询，也就是可能存在部分字段用到联合索引的 B+Tree，部分字段没有用到联合索引的 B+Tree 的情况。\nQ1：select * from t_table where a \u003e 1 and b = 2，联合索引（a, b）哪一个字段用到了联合索引的 B+Tree？\nQ1 这条查询语句只有 a 字段用到了联合索引进行索引查询，而 b 字段并没有使用到联合索引\nQ2: select * from t_table where a \u003e= 1 and b = 2，联合索引（a, b）哪一个字段用到了联合索引的 B+Tree？\nQ2 和 Q1 的查询语句很像，唯一的区别就是 a 字段的查询条件「大于等于」。\n虽然在符合 a\u003e= 1 条件的二级索引记录的范围里，b 字段的值是「无序」的，但是对于符合 a = 1 的二级索引记录的范围里，b 字段的值是「有序」的（因为对于联合索引，是先按照 a 字段的值排序，然后在 a 字段的值相同的情况下，再按照 b 字段的值进行排序）。\n于是，在确定需要扫描的二级索引的范围时，当二级索引记录的 a 字段值为 1 时，可以通过 b = 2 条件减少需要扫描的二级索引记录范围（b 字段可以利用联合索引进行索引查询的意思）。也就是说，从符合 a = 1 and b = 2 条件的第一条记录开始扫描，而不需要从第一个 a 字段值为 1 的记录开始扫描。所以，Q2 这条查询语句 a 和 b 字段都用到了联合索引进行索引查询。\nQ3: SELECT * FROM t_table WHERE a BETWEEN 2 AND 8 AND b = 2，联合索引（a, b）哪一个字段用到了联合索引的 B+Tree？\nQ3 查询条件中 a BETWEEN 2 AND 8 的意思是查询 a 字段的值在 2 和 8 之间的记录。不同的数据库对 BETWEEN … AND 处理方式是有差异的。在 MySQL 中，BETWEEN 包含了 value1 和 value2 边界值，类似于 \u003e= and =\u003c。而有的数据库则不包含 value1 和 value2 边界值（类似于 \u003e and \u003c）。\n这里我们只讨论 MySQL。由于 MySQL 的 BETWEEN 包含 value1 和 value2 边界值，所以类似于 Q2 查询语句，因此 Q3 这条查询语句 a 和 b 字段都用到了联合索引进行索引查询。\n综上所示，联合索引的最左匹配原则，在遇到范围查询（如 \u003e、\u003c）的时候，就会停止匹配，也就是范围查询的字段可以用到联合索引，但是在范围查询字段的后面的字段无法用到联合索引。注意，对于 \u003e=、\u003c=、BETWEEN、like 前缀匹配的范围查询，并不会停止匹配\n索引下推 现在我们知道，对于联合索引（a, b），在执行 select * from table where a \u003e 1 and b = 2 语句的时候，只有 a 字段能用到索引，那在联合索引的 B+Tree 找到第一个满足条件的主键值（ID 为 2）后，还需要判断其他条件是否满足（看 b 是否等于 2），那是在联合索引里判断？还是回主键索引去判断呢？\n在 MySQL 5.6 之前，只能从 ID2 （主键值）开始一个个回表，到「主键索引」上找出数据行，再对比 b 字段值。 而 MySQL 5.6 引入的索引下推优化（index condition pushdown)， 可以在联合索引遍历过程中，对联合索引中包含的字段先做判断，直接过滤掉不满足条件的记录，减少回表次数。 当你的查询语句的执行计划里，出现了 Extra 为 Using index condition，那么说明使用了索引下推的优化。\n什么时候适用索引？ 字段有唯一性限制的，比如商品编码； 经常用于 WHERE 查询条件的字段，这样能够提高整个表的查询速度，如果查询条件不是一个字段，可以建立联合索引。 经常用于 GROUP BY 和 ORDER BY 的字段，这样在查询的时候就不需要再去做一次排序了，因为我们都已经知道了建立索引之后在 B+Tree 中的记录都是排序好的。 什么时候不需要创建索引？ WHERE 条件，GROUP BY，ORDER BY 里用不到的字段，索引的价值是快速定位，如果起不到定位的字段通常是不需要创建索引的，因为索引是会占用物理空间的。 字段中存在大量重复数据，不需要创建索引，比如性别字段，只有男女，如果数据库表中，男女的记录分布均匀，那么无论搜索哪个值都可能得到一半的数据。在这些情况下，还不如不要索引，因为 MySQL 还有一个查询优化器，查询优化器发现某个值出现在表的数据行中的百分比很高的时候，它一般会忽略索引，进行全表扫描。 表数据太少的时候，不需要创建索引； 经常更新的字段不用创建索引，比如不要对电商项目的用户余额建立索引，因为索引字段频繁修改，由于要维护 B+Tree的有序性，那么就需要频繁的重建索引，这个过程是会影响数据库性能的。 有什么优化索引的方法？ 前缀索引优化； 覆盖索引优化； 主键索引最好是自增的； 防止索引失效； 发生索引失效的情况：\n当我们使用左或者左右模糊匹配的时候，也就是 like %xx 或者 like %xx%这两种方式都会造成索引失效； 当我们在查询条件中对索引列做了计算、函数、类型转换操作，这些情况下都会造成索引失效； 联合索引要能正确使用需要遵循最左匹配原则，也就是按照最左优先的方式进行索引的匹配，否则就会导致索引失效。 在 WHERE 子句中，如果在 OR 前的条件列是索引列，而在 OR 后的条件列不是索引列，那么索引会失效。 单表数据 MySQL 的表数据是以页的形式存放的，页在磁盘中不一定是连续的。 页的空间是 16K, 并不是所有的空间都是用来存放数据的，会有一些固定的信息，如，页头，页尾，页码，校验码等等。 在 B+ 树中，叶子节点和非叶子节点的数据结构是一样的，区别在于，叶子节点存放的是实际的行数据，而非叶子节点存放的是主键和页号。 索引结构不会影响单表最大行数，2000W 也只是推荐值，超过了这个值可能会导致 B + 树层级更高，影响查询性能。 count(*) count(1)、 count(*)、 count(主键字段)在执行的时候，如果表里存在二级索引，优化器就会选择二级索引进行扫描。\n所以，如果要执行 count(1)、 count(*)、 count(主键字段) 时，尽量在数据表上建立二级索引，这样优化器会自动采用 key_len 最小的二级索引进行扫描，相比于扫描主键索引效率会高一些。\n再来，就是不要使用 count(字段) 来统计记录个数，因为它的效率是最差的，会采用全表扫描的方式来统计。如果你非要统计表中该字段不为 NULL 的记录个数，建议给这个字段建立一个二级索引。\n优化：使用 explain 近似计算 OR 使用格外的计数表。\n事务 InnoDB 引擎通过什么技术来保证事务的这四个特性的呢？\n持久性是通过 redo log （重做日志）来保证的； 原子性是通过 undo log（回滚日志） 来保证的； 隔离性是通过 MVCC（多版本并发控制） 或锁机制来保证的； 一致性则是通过持久性+原子性+隔离性来保证； 并行事务会引发什么问题？ MySQL 服务端是允许多个客户端连接的，这意味着 MySQL 会出现同时处理多个事务的情况。\n那么在同时处理多个事务的时候，就可能出现脏读（dirty read）、不可重复读（non-repeatable read）、幻读（phantom read）的问题。\n接下来，通过举例子给大家说明，这些问题是如何发生的。\n脏读 如果一个事务「读到」了另一个「未提交事务修改过的数据」，就意味着发生了「脏读」现象。\n不可重复读 在一个事务内多次读取同一个数据，如果出现前后两次读到的数据不一样的情况，就意味着发生了「不可重复读」现象。\n幻读 在一个事务内多次查询某个符合查询条件的「记录数量」，如果出现前后两次查询到的记录数量不一样的情况，就意味着发生了「幻读」现象。\nSQL 标准提出了四种隔离级别来规避这些现象，隔离级别越高，性能效率就越低，这四个隔离级别如下：\n读未提交（*read uncommitted*），指一个事务还没提交时，它做的变更就能被其他事务看到； 读提交（*read committed*），指一个事务提交之后，它做的变更才能被其他事务看到； 可重复读（*repeatable read*），指一个事务执行过程中看到的数据，一直跟这个事务启动时看到的数据是一致的，MySQL InnoDB 引擎的默认隔离级别； 串行化（*serializable* ）；会对记录加上读写锁，在多个事务对这条记录进行读写操作时，如果发生了读写冲突的时候，后访问的事务必须等前一个事务执行完成，才能继续执行； 锁 行级锁有哪些种类？ 不同隔离级别下，行级锁的种类是不同的。\n在读已提交隔离级别下，行级锁的种类只有记录锁，也就是仅仅把一条记录锁上。\n在可重复读隔离级别下，行级锁的种类除了有记录锁，还有间隙锁（目的是为了避免幻读），所以行级锁的种类主要有三类：\nRecord Lock，记录锁，也就是仅仅把一条记录锁上； Gap Lock，间隙锁，锁定一个范围，但是不包含记录本身； Next-Key Lock：Record Lock + Gap Lock 的组合，锁定一个范围，并且锁定记录本身。 接下来，分别介绍这三种行级锁。\nRecord Lock Record Lock 称为记录锁，锁住的是一条记录。而且记录锁是有 S 锁和 X 锁之分的：\n当一个事务对一条记录加了 S 型记录锁后，其他事务也可以继续对该记录加 S 型记录锁（S 型与 S 锁兼容），但是不可以对该记录加 X 型记录锁（S 型与 X 锁不兼容）; 当一个事务对一条记录加了 X 型记录锁后，其他事务既不可以对该记录加 S 型记录锁（S 型与 X 锁不兼容），也不可以对该记录加 X 型记录锁（X 型与 X 锁不兼容）。 举个例子，当一个事务执行了下面这条语句：\nmysql \u003e begin; mysql \u003e select * from t_test where id = 1 for update; 事务会对表中主键 id = 1 的这条记录加上 X 型的记录锁，如果这时候其他事务对这条记录进行删除或者更新操作，那么这些操作都会被阻塞。注意，其他事务插入一条 id = 1 的新记录并不会被阻塞，而是会报主键冲突的错误，这是因为主键有唯一性的约束。\n当事务执行 commit 后，事务过程中生成的锁都会被释放。\nGap Lock Gap Lock 称为间隙锁，只存在于可重复读隔离级别，目的是为了解决可重复读隔离级别下幻读的现象。\n假设，表中有一个范围 id 为（3，5）间隙锁，那么其他事务就无法插入 id = 4 这条记录了，这样就有效的防止幻读现象的发生。\n间隙锁虽然存在 X 型间隙锁和 S 型间隙锁，但是并没有什么区别，间隙锁之间是兼容的，即两个事务可以同时持有包含共同间隙范围的间隙锁，并不存在互斥关系，因为间隙锁的目的是防止插入幻影记录而提出的。\nNext-Key Lock Next-Key Lock 称为临键锁，是 Record Lock + Gap Lock 的组合，锁定一个范围，并且锁定记录本身。\n假设，表中有一个范围 id 为（3，5] 的 next-key lock，那么其他事务即不能插入 id = 4 记录，也不能修改和删除 id = 5 这条记录。\n所以，next-key lock 即能保护该记录，又能阻止其他事务将新记录插入到被保护记录前面的间隙中。\nnext-key lock 是包含间隙锁+记录锁的，如果一个事务获取了 X 型的 next-key lock，那么另外一个事务在获取相同范围的 X 型的 next-key lock 时，是会被阻塞的。\n比如，一个事务持有了范围为 (1, 10] 的 X 型的 next-key lock，那么另外一个事务在获取相同范围的 X 型的 next-key lock 时，就会被阻塞。\n虽然相同范围的间隙锁是多个事务相互兼容的，但对于记录锁，我们是要考虑 X 型与 S 型关系，X 型的记录锁与 X 型的记录锁是冲突的。\nMySQL 行级锁的加锁规则 唯一索引等值查询：\n当查询的记录是「存在」的，在索引树上定位到这一条记录后，将该记录的索引中的 next-key lock 会退化成「记录锁」。 当查询的记录是「不存在」的，在索引树找到第一条大于该查询记录的记录后，将该记录的索引中的 next-key lock 会退化成「间隙锁」。 非唯一索引等值查询：\n当查询的记录「存在」时，由于不是唯一索引，所以肯定存在索引值相同的记录，于是非唯一索引等值查询的过程是一个扫描的过程，直到扫描到第一个不符合条件的二级索引记录就停止扫描，然后在扫描的过程中，对扫描到的二级索引记录加的是 next-key 锁，而对于第一个不符合条件的二级索引记录，该二级索引的 next-key 锁会退化成间隙锁。同时，在符合查询条件的记录的主键索引上加记录锁。 当查询的记录「不存在」时，扫描到第一条不符合条件的二级索引记录，该二级索引的 next-key 锁会退化成间隙锁。因为不存在满足查询条件的记录，所以不会对主键索引加锁。 非唯一索引和主键索引的范围查询的加锁规则不同之处在于：\n唯一索引在满足一些条件的时候，索引的 next-key lock 退化为间隙锁或者记录锁。 非唯一索引范围查询，索引的 next-key lock 不会退化为间隙锁和记录锁。 其实理解 MySQL 为什么要这样加锁，主要要以避免幻读角度去分析，这样就很容易理解这些加锁的规则了。\n还有一件很重要的事情，在线上在执行 update、delete、select … for update 等具有加锁性质的语句，一定要检查语句是否走了索引，如果是全表扫描的话，会对每一个索引加 next-key 锁，相当于把整个表锁住了，这是挺严重的问题。\nupdate 当 sql_safe_updates 设置为 1 时。\nupdate 语句必须满足如下条件之一才能执行成功：\n使用 where，并且 where 条件中必须有索引列； 使用 limit； 同时使用 where 和 limit，此时 where 条件中可以没有索引列； delete 语句必须满足以下条件能执行成功：\n同时使用 where 和 limit，此时 where 条件中可以没有索引列； 如果 where 条件带上了索引列，但是优化器最终扫描选择的是全表，而不是索引的话，我们可以使用 force index([index_name]) 可以告诉优化器使用哪个索引，以此避免有几率锁全表带来的隐患。\n如何避免死锁？ 死锁的四个必要条件：互斥、占有且等待、不可强占用、循环等待。只要系统发生死锁，这些条件必然成立，但是只要破坏任意一个条件就死锁就不会成立。\n在数据库层面，有两种策略通过「打破循环等待条件」来解除死锁状态：\n设置事务等待锁的超时时间。当一个事务的等待时间超过该值后，就对这个事务进行回滚，于是锁就释放了，另一个事务就可以继续执行了。在 InnoDB 中，参数 innodb_lock_wait_timeout 是用来设置超时时间的，默认值时 50 秒。\n开启主动死锁检测。主动死锁检测在发现死锁后，主动回滚死锁链条中的某一个事务，让其他事务得以继续执行。将参数 innodb_deadlock_detect 设置为 on，表示开启这个逻辑，默认就开启。\n上面这个两种策略是「当有死锁发生时」的避免方式。\n我们可以回归业务的角度来预防死锁，对订单做幂等性校验的目的是为了保证不会出现重复的订单，那我们可以直接将 order_no 字段设置为唯一索引列，利用它的唯一性来保证订单表不会出现重复的订单，不过有一点不好的地方就是在我们插入一个已经存在的订单记录时就会抛出异常。\n日志 更新语句的流程会涉及到 undo log（回滚日志）、redo log（重做日志） 、binlog （归档日志）这三种日志：\nundo log（回滚日志）：是 Innodb 存储引擎层生成的日志，实现了事务中的原子性，主要用于事务回滚和 MVCC。 redo log（重做日志）：是 Innodb 存储引擎层生成的日志，实现了事务中的持久性，主要用于掉电等故障恢复； binlog （归档日志）：是 Server 层生成的日志，主要用于数据备份和主从复制； redo log 和 undo log 区别在哪？\n这两种日志是属于 InnoDB 存储引擎的日志，它们的区别在于：\nredo log 记录了此次事务「完成后」的数据状态，记录的是更新之后的值； undo log 记录了此次事务「开始前」的数据状态，记录的是更新之前的值； 总结 具体更新一条记录 UPDATE t_user SET name = 'xiaolin' WHERE id = 1; 的流程如下:\n执行器负责具体执行，会调用存储引擎的接口，通过主键索引树搜索获取 id = 1 这一行记录： 如果 id=1 这一行所在的数据页本来就在 buffer pool 中，就直接返回给执行器更新； 如果记录不在 buffer pool，将数据页从磁盘读入到 buffer pool，返回记录给执行器。 执行器得到聚簇索引记录后，会看一下更新前的记录和更新后的记录是否一样： 如果一样的话就不进行后续更新流程； 如果不一样的话就把更新前的记录和更新后的记录都当作参数传给 InnoDB 层，让 InnoDB 真正的执行更新记录的操作； 开启事务， InnoDB 层更新记录前，首先要记录相应的 undo log，因为这是更新操作，需要把被更新的列的旧值记下来，也就是要生成一条 undo log，undo log 会写入 Buffer Pool 中的 Undo 页面，不过在内存修改该 Undo 页面后，需要记录对应的 redo log。 InnoDB 层开始更新记录，会先更新内存（同时标记为脏页），然后将记录写到 redo log 里面，这个时候更新就算完成了。为了减少磁盘I/O，不会立即将脏页写入磁盘，后续由后台线程选择一个合适的时机将脏页写入到磁盘。这就是 WAL 技术，MySQL 的写操作并不是立刻写到磁盘上，而是先写 redo 日志，然后在合适的时间再将修改的行数据写到磁盘上。 至此，一条记录更新完了。 在一条更新语句执行完成后，然后开始记录该语句对应的 binlog，此时记录的 binlog 会被保存到 binlog cache，并没有刷新到硬盘上的 binlog 文件，在事务提交时才会统一将该事务运行过程中的所有 binlog 刷新到硬盘。 事务提交（为了方便说明，这里不说组提交的过程，只说两阶段提交）： prepare 阶段：将 redo log 对应的事务状态设置为 prepare，然后将 redo log 刷新到硬盘； commit 阶段：将 binlog 刷新到磁盘，接着调用引擎的提交事务接口，将 redo log 状态设置为 commit（将事务设置为 commit 状态后，刷入到磁盘 redo log 文件）； 至此，一条更新语句执行完成。 其他 having与where的区别 having是在分组后对数据进行过滤，where是在分组前对数据进行过滤 having后面可以使用聚合函数，where后面不可以使用聚合 在查询过程中执行顺序：from\u003ewhere\u003egroup（含聚合）\u003ehaving\u003eorder\u003eselect。\n聚合语句(sum,min,max,avg,count)要比having子句优先执行，所有having后面可以使用聚合函数。而where子句在查询过程中执行优先级别优先于聚合语句(sum,min,max,avg,count)，所有where条件中不能使用聚合函数。\nselect sum(num) as rmb from order where id\u003e10; //先查询出id大于10的数据，再执行聚合语句sum(num) //执行以下语句会报错，因为where子句先于sum(num)执行，执行where子句的时候还没有sum(num)，所以会报错。 select sum(num) as rmb from order where sum(num)\u003e10; 对分组数据再次判断时要用having select reports，count(*) from employees group by reports having count(*) \u003e 4; //首先查询了select reports，count() from employees group by reports，在此基础上查找count() \u003e 4的数据。 行转列 先执行以下SQL获得基础数据：\nCREATE TABLE Student ( `id` INT PRIMARY KEY AUTO_INCREMENT, `name` VARCHAR ( 255 ) DEFAULT NULL, `class` VARCHAR ( 255 ) DEFAULT NULL, `score` INT ( 255 ) DEFAULT NULL ); INSERT INTO Student ( id, NAME, class, score ) VALUES ( 1, '张三', '数学', 78 ), ( 2, '张三', '英语', 93 ), ( 3, '张三', '语文', 65 ), ( 4, '李四', '数学', 87 ), ( 5, '李四', '英语', 90 ), ( 6, '李四', '语文', 76 ), ( 7, '李四', '历史', 69 ); 使用 max 和 case when ：\nselect name, max(case when class = '数学' then score else null end) as math_score, max(case when class = '英语' then score else null end) as engilsh_score, max(case when class = '语文' then score else null end) as chinese_score, max(case when class = '历史' then score else null end) as history_score from Student group by name; 结果：\nname math_score engilsh_score chinese_score history_score 张三 78 93 65 李四 87 90 76 69 或者使用 group_concat\nselect name, group_concat(score separator ',') as 'scores' from student_x group by name; 列转行 准备初始化表结构和数据 CREATE TABLE `student_2` ( `id` INT ( 11 ) DEFAULT NULL, `name` VARCHAR ( 255 ) DEFAULT NULL, `math_score` BIGINT ( 255 ) DEFAULT NULL, `engilsh_score` BIGINT ( 255 ) DEFAULT NULL, `chinese_score` BIGINT ( 255 ) DEFAULT NULL, `history_score` BIGINT ( 255 ) DEFAULT NULL ) ENGINE = INNODB DEFAULT CHARSET = utf8mb4; INSERT INTO `student_2` ( `id`, `name`, `math_score`, `engilsh_score`, `chinese_score`, `history_score` ) VALUES ( 1, '张三', 78, 93, 65, NULL ), ( 2, '李四', 87, 90, 76, 69 ); 使用 union all\nselect * from ( select name, math_score as score from student_2 union all select name, engilsh_score as score from student_2 union all select name, chinese_score as score from student_2 union all select name, history_score as score from student_2 ) as x order by name; 每个日期中的第一行 现在有一张 orders 表，编写SQL查询每日中的第一条语句。\nCREATE TABLE orders ( order_id INT PRIMARY KEY AUTO_INCREMENT, customer_id INT, order_date DATE, total_amount DECIMAL(10, 2), status VARCHAR(20), shipping_address VARCHAR(255) ); 使用 窗口函数 ROW_NUMBER() OVER (PARTITION BY order_date ORDER BY order_date)：\nSELECT order_id, total_amount, order_date FROM ( SELECT order_id, total_amount, order_date, ROW_NUMBER() OVER (PARTITION BY order_date ORDER BY order_date) AS row_num FROM orders ) AS ranked WHERE row_num = 1; 结果如下：\norder_id total_amount order_date 14 600.11 2023-11-06 3 327.30 2023-11-07 13 723.60 2023-11-08 71 334.39 2023-11-09 115 515.49 2023-11-10 2 440.92 2023-11-11 85 4.07 2023-11-12 27 150.63 2023-11-13 ",
+  "wordCount" : "9427",
+  "inLanguage": "zh",
+  "datePublished": "2023-11-08T21:18:41+08:00",
+  "dateModified": "2023-11-08T21:18:41+08:00",
+  "author":[{
+    "@type": "Person",
+    "name": "Blaine"
+  }],
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://Bin-lin-rgb.github.io/posts/basics/mysql/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Blaine's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://Bin-lin-rgb.github.io/img/icon.png"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    (function () {
+        let  arr,reg = new RegExp("(^| )"+"change-themes"+"=([^;]*)(;|$)");
+        if(arr = document.cookie.match(reg)) {
+        } else {
+            if (new Date().getHours() >= 19 || new Date().getHours() < 6) {
+                document.body.classList.add('dark');
+                localStorage.setItem("pref-theme", 'dark');
+            } else {
+                document.body.classList.remove('dark');
+                localStorage.setItem("pref-theme", 'light');
+            }
+        }
+    })()
+
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://Bin-lin-rgb.github.io/" accesskey="h" title="Blaine&#39;s Blog (Alt + H)">
+            <img src="https://Bin-lin-rgb.github.io/img/icon.png" alt="logo" aria-label="logo"
+                 height="35">Blaine&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://Bin-lin-rgb.github.io/" title="🏠 主页">
+                <span>🏠 主页</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://Bin-lin-rgb.github.io/posts" title="📚 文章">
+                <span>📚 文章</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://Bin-lin-rgb.github.io/search" title="🔍 搜索 (Alt &#43; /)" accesskey=/>
+                <span>🔍 搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://Bin-lin-rgb.github.io/tags" title="🧩 标签">
+                <span>🧩 标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://Bin-lin-rgb.github.io/archives/" title="⏱️ 时间轴">
+                <span>⏱️ 时间轴</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://Bin-lin-rgb.github.io/about" title="🙋🏻‍♂️ 关于">
+                <span>🙋🏻‍♂️ 关于</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://Bin-lin-rgb.github.io/links" title="🤝 友链">
+                <span>🤝 友链</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main page">
+<style>
+    i[id*="post_meta_style"] {
+        display: flex;
+        align-items: center;
+        margin: 0 0 10px 0;
+    }
+</style>
+
+<article class="post-single">
+    <div id="single-content">
+        <header class="post-header">
+            <div class="breadcrumbs"><a href="https://Bin-lin-rgb.github.io/">🏠 主页</a>&nbsp;»&nbsp;<a href="https://Bin-lin-rgb.github.io/posts/">📚文章</a>&nbsp;»&nbsp;<a href="https://Bin-lin-rgb.github.io/posts/basics/">📖 基础</a></div>
+            <h1 class="post-title">
+                MySQL
+            </h1>
+            <div class="post-meta">
+
+<style>
+    i[id*="post_meta_style"] {
+        display: flex;
+        align-items: center;
+        margin: 0 0 10px 0;
+    }
+
+    .parent-post-meta {
+        display: flex;
+        flex-wrap: wrap;
+        opacity: 0.8;
+    }
+</style>
+
+<span class="parent-post-meta">
+    <span id="post_meta_style_1">
+        <span class="fa fa-calendar-check-o"></span>
+        <span>2023-11-08
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    
+    
+    
+    
+    
+    
+    
+    <span id="post_meta_style_3">
+        <span class="fa fa-file-word-o"></span>
+        <span>9427字
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_4">
+        <span class="fa fa-clock-o"></span>
+        <span>19分钟
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_5">
+        <span class="fa fa-user-o"></span>
+        <span>Blaine
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_6">
+        <span class="fa fa-tags" style="opacity: 0.8"></span>
+        <span>
+            <span class="post-tags-meta">
+            </span>
+        </span>
+    </span>
+</span>
+<span style="opacity: 0.8;">
+                    <span id="post_meta_style_7">
+                        &nbsp;&nbsp;
+                        <span class="fa fa-eye" ></span>
+                        <span>
+                            <span id="busuanzi_container_page_pv"><span id="busuanzi_value_page_pv"></span></span>
+                            &nbsp;&nbsp;
+                        </span>
+                    </span>
+                    <span id="post_meta_style_8">
+                        <span class="fa fa-commenting-o"></span>
+                        <span>
+                            <script src="https://cdn.staticfile.org/twikoo/1.5.8/twikoo.all.min.js"></script>
+                            <script>
+                                let url = document.documentURI
+                                
+                                let dnsUrl = "https://Bin-lin-rgb.github.io/"
+                                let urlSplit = url.split(dnsUrl)
+                                let finalUrl = urlSplit[1]
+                                if (finalUrl[0] !== '/') {
+                                    finalUrl = '/'+finalUrl
+                                }
+                                twikoo.getCommentsCount({
+                                    envId: "https://twikoo-api-nine-silk.vercel.app/", 
+                                region: "ap-guangzhou", 
+                                urls: [ 
+                                    
+                                    finalUrl,
+                                ],
+                                    includeReply: false 
+                                }).then(function (res) {
+                                    let count = res[0].count
+                                    const obj = document.getElementById("comment_count");
+                                    obj.innerText = count
+                                    
+                                    
+                                    
+                                }).catch(function (err) {
+                                    
+                                    console.error(err);
+                                });
+                            </script>
+                            <span id="comment_count"></span>
+                        </span>
+                    </span>
+                </span>
+
+</div>
+        </header> <aside id="toc-container" class="toc-container wide">
+    <div class="toc">
+        <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">目录</span>
+        </summary>
+
+        <div class="inner"><ul><ul>
+                <li>
+                    <a href="#basic" aria-label="Basic">Basic</a></li>
+                <li>
+                    <a href="#%e7%b4%a2%e5%bc%95" aria-label="索引">索引</a><ul>
+                        
+                <li>
+                    <a href="#btree-vs-b-tree" aria-label="B&#43;Tree vs B Tree"><em><strong>B+Tree vs B Tree</strong></em></a></li>
+                <li>
+                    <a href="#%e6%8c%89%e7%89%a9%e7%90%86%e5%ad%98%e5%82%a8%e5%88%86%e7%b1%bb" aria-label="按物理存储分类">按物理存储分类</a></li>
+                <li>
+                    <a href="#%e6%8c%89%e5%ad%97%e6%ae%b5%e4%b8%aa%e6%95%b0%e5%88%86%e7%b1%bb" aria-label="按字段个数分类">按字段个数分类</a><ul>
+                        
+                <li>
+                    <a href="#%e8%81%94%e5%90%88%e7%b4%a2%e5%bc%95" aria-label="联合索引">联合索引</a></li>
+                <li>
+                    <a href="#%e7%b4%a2%e5%bc%95%e4%b8%8b%e6%8e%a8" aria-label="索引下推">索引下推</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e4%bb%80%e4%b9%88%e6%97%b6%e5%80%99%e9%80%82%e7%94%a8%e7%b4%a2%e5%bc%95" aria-label="什么时候适用索引？">什么时候适用索引？</a></li>
+                <li>
+                    <a href="#%e4%bb%80%e4%b9%88%e6%97%b6%e5%80%99%e4%b8%8d%e9%9c%80%e8%a6%81%e5%88%9b%e5%bb%ba%e7%b4%a2%e5%bc%95" aria-label="什么时候不需要创建索引？">什么时候不需要创建索引？</a></li>
+                <li>
+                    <a href="#%e6%9c%89%e4%bb%80%e4%b9%88%e4%bc%98%e5%8c%96%e7%b4%a2%e5%bc%95%e7%9a%84%e6%96%b9%e6%b3%95" aria-label="有什么优化索引的方法？">有什么优化索引的方法？</a></li>
+                <li>
+                    <a href="#%e5%8d%95%e8%a1%a8%e6%95%b0%e6%8d%ae" aria-label="单表数据"><strong>单表数据</strong></a></li>
+                <li>
+                    <a href="#count" aria-label="count(*)">count(*)</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e4%ba%8b%e5%8a%a1" aria-label="事务">事务</a><ul>
+                        
+                <li>
+                    <a href="#%e5%b9%b6%e8%a1%8c%e4%ba%8b%e5%8a%a1%e4%bc%9a%e5%bc%95%e5%8f%91%e4%bb%80%e4%b9%88%e9%97%ae%e9%a2%98" aria-label="并行事务会引发什么问题？">并行事务会引发什么问题？</a><ul>
+                        
+                <li>
+                    <a href="#%e8%84%8f%e8%af%bb" aria-label="脏读">脏读</a></li>
+                <li>
+                    <a href="#%e4%b8%8d%e5%8f%af%e9%87%8d%e5%a4%8d%e8%af%bb" aria-label="不可重复读">不可重复读</a></li>
+                <li>
+                    <a href="#%e5%b9%bb%e8%af%bb" aria-label="幻读">幻读</a></li></ul>
+                </li></ul>
+                </li>
+                <li>
+                    <a href="#%e9%94%81" aria-label="锁">锁</a><ul>
+                        
+                <li>
+                    <a href="#%e8%a1%8c%e7%ba%a7%e9%94%81%e6%9c%89%e5%93%aa%e4%ba%9b%e7%a7%8d%e7%b1%bb" aria-label="行级锁有哪些种类？">行级锁有哪些种类？</a><ul>
+                        <ul>
+                        
+                <li>
+                    <a href="#record-lock" aria-label="Record Lock">Record Lock</a></li>
+                <li>
+                    <a href="#gap-lock" aria-label="Gap Lock">Gap Lock</a></li>
+                <li>
+                    <a href="#next-key-lock" aria-label="Next-Key Lock">Next-Key Lock</a></li></ul>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#mysql-%e8%a1%8c%e7%ba%a7%e9%94%81%e7%9a%84%e5%8a%a0%e9%94%81%e8%a7%84%e5%88%99" aria-label="MySQL 行级锁的加锁规则">MySQL 行级锁的加锁规则</a></li>
+                <li>
+                    <a href="#update" aria-label="update">update</a></li>
+                <li>
+                    <a href="#%e5%a6%82%e4%bd%95%e9%81%bf%e5%85%8d%e6%ad%bb%e9%94%81" aria-label="如何避免死锁？">如何避免死锁？</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e6%97%a5%e5%bf%97" aria-label="日志">日志</a><ul>
+                        
+                <li>
+                    <a href="#%e6%80%bb%e7%bb%93" aria-label="总结">总结</a></li></ul>
+                </li></ul>
+                    
+                <li>
+                    <a href="#%e5%85%b6%e4%bb%96" aria-label="其他">其他</a><ul>
+                        
+                <li>
+                    <a href="#having%e4%b8%8ewhere%e7%9a%84%e5%8c%ba%e5%88%ab" aria-label="having与where的区别">having与where的区别</a></li>
+                <li>
+                    <a href="#%e8%a1%8c%e8%bd%ac%e5%88%97" aria-label="行转列">行转列</a></li>
+                <li>
+                    <a href="#%e5%88%97%e8%bd%ac%e8%a1%8c" aria-label="列转行">列转行</a></li>
+                <li>
+                    <a href="#%e6%af%8f%e4%b8%aa%e6%97%a5%e6%9c%9f%e4%b8%ad%e7%9a%84%e7%ac%ac%e4%b8%80%e8%a1%8c" aria-label="每个日期中的第一行">每个日期中的第一行</a>
+                </li>
+            </ul>
+            </li>
+            </ul>
+        </div>
+        </details>
+    </div>
+</aside>
+<script>
+    let activeElement;
+    let elements;
+    window.addEventListener('DOMContentLoaded', function (event) {
+        checkTocPosition();
+
+        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+        
+        activeElement = elements[0];
+        const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
+        document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+    }, false);
+
+    window.addEventListener('resize', function(event) {
+        checkTocPosition();
+    }, false);
+
+    window.addEventListener('scroll', () => {
+        
+        if (elements) {
+            activeElement = Array.from(elements).find((element) => {
+                if ((getOffsetTop(element) - window.pageYOffset) > 0 &&
+                    (getOffsetTop(element) - window.pageYOffset) < window.innerHeight/2) {
+                    return element;
+                }
+            }) || activeElement
+
+            elements.forEach(element => {
+                const id = encodeURI(element.getAttribute('id')).toLowerCase();
+                if (element === activeElement){
+                    document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+                } else {
+                    document.querySelector(`.inner ul li a[href="#${id}"]`).classList.remove('active');
+                }
+            })
+        }
+    }, false);
+
+    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
+    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
+    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
+
+    function checkTocPosition() {
+        const width = document.body.scrollWidth;
+        if (width - main - (toc * 2) - (gap * 4) > 0) {
+            document.getElementById("toc-container").classList.add("wide");
+        } else {
+            document.getElementById("toc-container").classList.remove("wide");
+        }
+    }
+
+    function getOffsetTop(element) {
+        if (!element.getClientRects().length) {
+            return 0;
+        }
+        let rect = element.getBoundingClientRect();
+        let win = element.ownerDocument.defaultView;
+        return rect.top + win.pageYOffset;
+    }
+</script>
+        <div class="post-content"><h2 id="basic">Basic<a hidden class="anchor" aria-hidden="true" href="#basic">#</a></h2>
+<p>执行一条 SQL 查询语句，期间发生了什么？</p>
+<ul>
+<li>连接器：建立连接，管理连接、校验用户身份；</li>
+<li>查询缓存：查询语句如果命中查询缓存则直接返回，否则继续往下执行。MySQL 8.0 已删除该模块；</li>
+<li>解析 SQL，通过解析器对 SQL 查询语句进行词法分析、语法分析，然后构建语法树，方便后续模块读取表名、字段、语句类型；</li>
+<li>执行 SQL：执行 SQL 共有三个阶段：
+<ul>
+<li>预处理阶段：检查表或字段是否存在；将 <code>select *</code> 中的 <code>*</code> 符号扩展为表上的所有列。</li>
+<li>优化阶段：基于查询成本的考虑， 选择查询成本最小的执行计划；</li>
+<li>执行阶段：根据执行计划执行 SQL 查询语句，从存储引擎读取记录，返回给客户端；</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>MySQL 的 NULL 值是怎么存放的？</p>
+</blockquote>
+<p>MySQL 的 Compact 行格式中会用「NULL值列表」来标记值为 NULL 的列，NULL 值并不会存储在行格式中的真实数据部分。</p>
+<p>NULL值列表会占用 1 字节空间，当表中所有字段都定义成 NOT NULL，行格式中就不会有 NULL值列表，这样可节省 1 字节的空间。</p>
+<blockquote>
+<p>MySQL 怎么知道 varchar(n) 实际占用数据的大小？</p>
+</blockquote>
+<p>MySQL 的 Compact 行格式中会用「变长字段长度列表」存储变长字段实际占用的数据大小。</p>
+<blockquote>
+<p>varchar(n) 中 n 最大取值为多少？</p>
+</blockquote>
+<p>一行记录最大能存储 65535 字节的数据，但是这个是包含「变长字段字节数列表所占用的字节数」和「NULL值列表所占用的字节数」。所以， 我们在算 varchar(n) 中 n 最大值时，需要减去这两个列表所占用的字节数。</p>
+<p>如果一张表只有一个 varchar(n) 字段，且允许为 NULL，字符集为 ascii。varchar(n) 中 n 最大取值为 65532。</p>
+<p>计算公式：65535 - <strong>变长字段字节数列表</strong>所占用的字节数 - <strong>NULL值列表</strong>所占用的字节数 = 65535 - 2 - 1 = 65532。</p>
+<p>如果有多个字段的话，要保证所有字段的长度 + 变长字段字节数列表所占用的字节数 + NULL值列表所占用的字节数 &lt;= 65535。</p>
+<blockquote>
+<p>行溢出后，MySQL 是怎么处理的？</p>
+</blockquote>
+<p>如果一个数据页存不了一条记录，InnoDB 存储引擎会自动将溢出的数据存放到「溢出页」中。</p>
+<p>Compact 行格式针对行溢出的处理是这样的：当发生行溢出时，在记录的真实数据处只会保存该列的一部分数据，而把剩余的数据放在「溢出页」中，然后真实数据处用 20 字节存储指向溢出页的地址，从而可以找到剩余数据所在的页。</p>
+<p>Compressed 和 Dynamic 这两种格式采用完全的行溢出方式，记录的真实数据处不会存储该列的一部分数据，只存储 20 个字节的指针来指向溢出页。而实际的数据都存储在溢出页中。</p>
+<h2 id="索引">索引<a hidden class="anchor" aria-hidden="true" href="#索引">#</a></h2>
+<h3 id="btree-vs-b-tree"><em><strong>B+Tree vs B Tree</strong></em><a hidden class="anchor" aria-hidden="true" href="#btree-vs-b-tree">#</a></h3>
+<p>B+Tree 只在叶子节点存储数据，而 B 树 的非叶子节点也要存储数据，所以 B+Tree 的单个节点的数据量更小，在相同的磁盘 I/O 次数下，就能查询更多的节点。</p>
+<p>另外，B+Tree 叶子节点采用的是双链表连接，适合 MySQL 中常见的基于范围的顺序查找，而 B 树无法做到这一点。</p>
+<h3 id="按物理存储分类">按物理存储分类<a hidden class="anchor" aria-hidden="true" href="#按物理存储分类">#</a></h3>
+<p>从物理存储的角度来看，索引分为聚簇索引（主键索引）、二级索引（辅助索引）。</p>
+<p>这两个区别在前面也提到了：</p>
+<ul>
+<li>主键索引的 B+Tree 的叶子节点存放的是实际数据，所有完整的用户记录都存放在主键索引的 B+Tree 的叶子节点里；</li>
+<li>二级索引的 B+Tree 的叶子节点存放的是主键值，而不是实际数据。</li>
+</ul>
+<p>所以，在查询时使用了二级索引，如果查询的数据能在二级索引里查询的到，那么就不需要回表，这个过程就是覆盖索引。如果查询的数据不在二级索引里，就会先检索二级索引，找到对应的叶子节点，获取到主键值后，然后再检索主键索引，就能查询到数据了，这个过程就是回表。</p>
+<h3 id="按字段个数分类">按字段个数分类<a hidden class="anchor" aria-hidden="true" href="#按字段个数分类">#</a></h3>
+<p>从字段个数的角度来看，索引分为单列索引、联合索引（复合索引）。</p>
+<ul>
+<li>建立在单列上的索引称为单列索引，比如主键索引；</li>
+<li>建立在多列上的索引称为联合索引；</li>
+</ul>
+<h4 id="联合索引">联合索引<a hidden class="anchor" aria-hidden="true" href="#联合索引">#</a></h4>
+<p>使用联合索引时，存在<strong>最左匹配原则</strong>，也就是按照最左优先的方式进行索引的匹配。在使用联合索引进行查询的时候，如果不遵循「最左匹配原则」，联合索引会失效，这样就无法利用到索引快速查询的特性了。</p>
+<p>比如，如果创建了一个 <code>(a, b, c)</code> 联合索引，如果查询条件是以下这几种，就可以匹配上联合索引：</p>
+<ul>
+<li>where a=1；</li>
+<li>where a=1 and b=2 and c=3；</li>
+<li>where a=1 and b=2；</li>
+</ul>
+<p>需要注意的是，因为有查询优化器，所以 a 字段在 where 子句的顺序并不重要。</p>
+<p>但是，如果查询条件是以下这几种，因为不符合最左匹配原则，所以就无法匹配上联合索引，联合索引就会失效:</p>
+<ul>
+<li>where b=2；</li>
+<li>where c=3；</li>
+<li>where b=2 and c=3；</li>
+</ul>
+<p>上面这些查询条件之所以会失效，是因为<code>(a, b, c)</code> 联合索引，是<strong>先按 a 排序，在 a 相同的情况再按 b 排序</strong>，在 b 相同的情况再按 c 排序。所以，<strong>b 和 c 是全局无序，局部相对有序的</strong>，这样在没有遵循最左匹配原则的情况下，是无法利用到索引的。</p>
+<hr>
+<p>联合索引有一些特殊情况，<strong>并不是查询过程使用了联合索引查询，就代表联合索引中的所有字段都用到了联合索引进行索引查询</strong>，也就是可能存在部分字段用到联合索引的 B+Tree，部分字段没有用到联合索引的 B+Tree 的情况。</p>
+<blockquote>
+<p>Q1：<code>select * from t_table where a &gt; 1 and b = 2</code>，联合索引（a, b）哪一个字段用到了联合索引的 B+Tree？</p>
+</blockquote>
+<p><strong>Q1 这条查询语句只有 a 字段用到了联合索引进行索引查询，而 b 字段并没有使用到联合索引</strong></p>
+<blockquote>
+<p>Q2: <code>select * from t_table where a &gt;= 1 and b = 2</code>，联合索引（a, b）哪一个字段用到了联合索引的 B+Tree？</p>
+</blockquote>
+<p>Q2 和 Q1 的查询语句很像，唯一的区别就是 a 字段的查询条件「大于等于」。</p>
+<p>虽然在符合 a&gt;= 1 条件的二级索引记录的范围里，b 字段的值是「无序」的，<strong>但是对于符合 a = 1 的二级索引记录的范围里，b 字段的值是「有序」的</strong>（因为对于联合索引，是先按照 a 字段的值排序，然后在 a 字段的值相同的情况下，再按照 b 字段的值进行排序）。</p>
+<p>于是，在确定需要扫描的二级索引的范围时，当二级索引记录的 a 字段值为 1 时，可以通过 b = 2 条件减少需要扫描的二级索引记录范围（b 字段可以利用联合索引进行索引查询的意思）。也就是说，从符合 a = 1 and b = 2 条件的第一条记录开始扫描，而不需要从第一个 a 字段值为 1 的记录开始扫描。所以，<strong>Q2 这条查询语句 a 和 b 字段都用到了联合索引进行索引查询</strong>。</p>
+<blockquote>
+<p>Q3: <code>SELECT * FROM t_table WHERE a BETWEEN 2 AND 8 AND b = 2</code>，联合索引（a, b）哪一个字段用到了联合索引的 B+Tree？</p>
+</blockquote>
+<p>Q3 查询条件中 <code>a BETWEEN 2 AND 8</code> 的意思是查询 a 字段的值在 2 和 8 之间的记录。不同的数据库对 BETWEEN &hellip; AND 处理方式是有差异的。在 MySQL 中，BETWEEN 包含了 value1 和 value2 边界值，类似于 &gt;= and =&lt;。而有的数据库则不包含 value1 和 value2 边界值（类似于 &gt; and &lt;）。</p>
+<p>这里我们只讨论 MySQL。由于 MySQL 的 BETWEEN 包含 value1 和 value2 边界值，所以类似于 Q2 查询语句，因此 <strong>Q3 这条查询语句 a 和 b 字段都用到了联合索引进行索引查询</strong>。</p>
+<p>综上所示，<strong>联合索引的最左匹配原则，在遇到范围查询（如 &gt;、&lt;）的时候，就会停止匹配，也就是范围查询的字段可以用到联合索引，但是在范围查询字段的后面的字段无法用到联合索引。注意，对于 &gt;=、&lt;=、BETWEEN、like 前缀匹配的范围查询，并不会停止匹配</strong></p>
+<h4 id="索引下推">索引下推<a hidden class="anchor" aria-hidden="true" href="#索引下推">#</a></h4>
+<p>现在我们知道，对于联合索引（a, b），在执行 <code>select * from table where a &gt; 1 and b = 2</code> 语句的时候，只有 a 字段能用到索引，那在联合索引的 B+Tree 找到第一个满足条件的主键值（ID 为 2）后，还需要判断其他条件是否满足（看 b 是否等于 2），那是在联合索引里判断？还是回主键索引去判断呢？</p>
+<ul>
+<li>在 MySQL 5.6 之前，只能从 ID2 （主键值）开始一个个回表，到「主键索引」上找出数据行，再对比 b 字段值。</li>
+<li>而 MySQL 5.6 引入的<strong>索引下推优化</strong>（index condition pushdown)， <strong>可以在联合索引遍历过程中，对联合索引中包含的字段先做判断，直接过滤掉不满足条件的记录，减少回表次数</strong>。</li>
+</ul>
+<p>当你的查询语句的执行计划里，出现了 Extra 为 <code>Using index condition</code>，那么说明使用了索引下推的优化。</p>
+<h3 id="什么时候适用索引">什么时候适用索引？<a hidden class="anchor" aria-hidden="true" href="#什么时候适用索引">#</a></h3>
+<ul>
+<li>字段有<strong>唯一</strong>性限制的，比如商品编码；</li>
+<li>经常用于 <code>WHERE</code> 查询条件的字段，这样能够提高整个表的查询速度，如果查询条件不是一个字段，可以建立联合索引。</li>
+<li>经常用于 <code>GROUP BY</code> 和 <code>ORDER BY</code> 的字段，这样在查询的时候就不需要再去做一次排序了，因为我们都已经知道了建立索引之后在 B+Tree 中的记录都是排序好的。</li>
+</ul>
+<h3 id="什么时候不需要创建索引">什么时候不需要创建索引？<a hidden class="anchor" aria-hidden="true" href="#什么时候不需要创建索引">#</a></h3>
+<ul>
+<li><code>WHERE</code> 条件，<code>GROUP BY</code>，<code>ORDER BY</code> 里用不到的字段，索引的价值是快速定位，如果起不到定位的字段通常是不需要创建索引的，因为索引是会占用物理空间的。</li>
+<li>字段中存在<strong>大量重复数据</strong>，不需要创建索引，比如性别字段，只有男女，如果数据库表中，男女的记录分布均匀，那么无论搜索哪个值都可能得到一半的数据。在这些情况下，还不如不要索引，因为 MySQL 还有一个查询优化器，查询优化器发现某个值出现在表的数据行中的百分比很高的时候，它一般会忽略索引，进行全表扫描。</li>
+<li>表数据太少的时候，不需要创建索引；</li>
+<li><strong>经常更新的字段</strong>不用创建索引，比如不要对电商项目的用户余额建立索引，因为索引字段频繁修改，由于要维护 B+Tree的有序性，那么就需要频繁的重建索引，这个过程是会影响数据库性能的。</li>
+</ul>
+<h3 id="有什么优化索引的方法">有什么优化索引的方法？<a hidden class="anchor" aria-hidden="true" href="#有什么优化索引的方法">#</a></h3>
+<ul>
+<li>前缀索引优化；</li>
+<li>覆盖索引优化；</li>
+<li>主键索引最好是自增的；</li>
+<li>防止索引失效；</li>
+</ul>
+<p>发生索引失效的情况：</p>
+<ul>
+<li>当我们使用<strong>左或者左右模糊匹配</strong>的时候，也就是 <code>like %xx</code> 或者 <code>like %xx%</code>这两种方式都会造成索引失效；</li>
+<li>当我们在查询条件中<strong>对索引列做了计算、函数、类型转换操作</strong>，这些情况下都会造成索引失效；</li>
+<li>联合索引要能正确使用需要遵循最左匹配原则，也就是按照最左优先的方式进行索引的匹配，否则就会导致索引失效。</li>
+<li>在 WHERE 子句中，如果在 <strong>OR 前的条件列是索引列，而在 OR 后的条件列不是索引列</strong>，那么索引会失效。</li>
+</ul>
+<h3 id="单表数据"><strong>单表数据</strong><a hidden class="anchor" aria-hidden="true" href="#单表数据">#</a></h3>
+<ul>
+<li>MySQL 的表数据是以页的形式存放的，页在磁盘中不一定是连续的。</li>
+<li>页的空间是 16K, 并不是所有的空间都是用来存放数据的，会有一些固定的信息，如，页头，页尾，页码，校验码等等。</li>
+<li>在 B+ 树中，叶子节点和非叶子节点的数据结构是一样的，区别在于，叶子节点存放的是实际的行数据，而非叶子节点存放的是主键和页号。</li>
+<li>索引结构不会影响单表最大行数，2000W 也只是推荐值，超过了这个值可能会导致 B + 树层级更高，影响查询性能。</li>
+</ul>
+<h3 id="count">count(*)<a hidden class="anchor" aria-hidden="true" href="#count">#</a></h3>
+<p>count(1)、 count(*)、 count(主键字段)在执行的时候，如果表里存在二级索引，优化器就会选择二级索引进行扫描。</p>
+<p>所以，如果要执行 count(1)、 count(*)、 count(主键字段) 时，尽量在数据表上建立二级索引，这样<strong>优化器会自动采用 key_len 最小的二级索引进行扫描，相比于扫描主键索引效率会高一些。</strong></p>
+<p>再来，就是不要使用 count(字段) 来统计记录个数，因为它的效率是最差的，会采用全表扫描的方式来统计。如果你非要统计表中该字段不为 NULL 的记录个数，建议给这个字段建立一个二级索引。</p>
+<p>优化：使用 explain 近似计算 OR 使用格外的计数表。</p>
+<h2 id="事务">事务<a hidden class="anchor" aria-hidden="true" href="#事务">#</a></h2>
+<p>InnoDB 引擎通过什么技术来保证事务的这四个特性的呢？</p>
+<ul>
+<li>持久性是通过 redo log （重做日志）来保证的；</li>
+<li>原子性是通过 undo log（回滚日志） 来保证的；</li>
+<li>隔离性是通过 MVCC（多版本并发控制） 或锁机制来保证的；</li>
+<li>一致性则是通过持久性+原子性+隔离性来保证；</li>
+</ul>
+<h3 id="并行事务会引发什么问题">并行事务会引发什么问题？<a hidden class="anchor" aria-hidden="true" href="#并行事务会引发什么问题">#</a></h3>
+<p>MySQL 服务端是允许多个客户端连接的，这意味着 MySQL 会出现同时处理多个事务的情况。</p>
+<p>那么<strong>在同时处理多个事务的时候，就可能出现脏读（dirty read）、不可重复读（non-repeatable read）、幻读（phantom read）的问题</strong>。</p>
+<p>接下来，通过举例子给大家说明，这些问题是如何发生的。</p>
+<h4 id="脏读">脏读<a hidden class="anchor" aria-hidden="true" href="#脏读">#</a></h4>
+<p><strong>如果一个事务「读到」了另一个「未提交事务修改过的数据」，就意味着发生了「脏读」现象。</strong></p>
+<h4 id="不可重复读">不可重复读<a hidden class="anchor" aria-hidden="true" href="#不可重复读">#</a></h4>
+<p><strong>在一个事务内多次读取同一个数据，如果出现前后两次读到的数据不一样的情况，就意味着发生了「不可重复读」现象。</strong></p>
+<h4 id="幻读">幻读<a hidden class="anchor" aria-hidden="true" href="#幻读">#</a></h4>
+<p><strong>在一个事务内多次查询某个符合查询条件的「记录数量」，如果出现前后两次查询到的记录数量不一样的情况，就意味着发生了「幻读」现象。</strong></p>
+<p>SQL 标准提出了四种隔离级别来规避这些现象，隔离级别越高，性能效率就越低，这四个隔离级别如下：</p>
+<ul>
+<li><strong>读未提交（*read uncommitted*）</strong>，指一个事务还没提交时，它做的变更就能被其他事务看到；</li>
+<li><strong>读提交（*read committed*）</strong>，指一个事务提交之后，它做的变更才能被其他事务看到；</li>
+<li><strong>可重复读（*repeatable read*）</strong>，指一个事务执行过程中看到的数据，一直跟这个事务启动时看到的数据是一致的，<strong>MySQL InnoDB 引擎的默认隔离级别</strong>；</li>
+<li><strong>串行化（*serializable* ）</strong>；会对记录加上读写锁，在多个事务对这条记录进行读写操作时，如果发生了读写冲突的时候，后访问的事务必须等前一个事务执行完成，才能继续执行；</li>
+</ul>
+<h2 id="锁">锁<a hidden class="anchor" aria-hidden="true" href="#锁">#</a></h2>
+<h3 id="行级锁有哪些种类">行级锁有哪些种类？<a hidden class="anchor" aria-hidden="true" href="#行级锁有哪些种类">#</a></h3>
+<p>不同隔离级别下，行级锁的种类是不同的。</p>
+<p>在读已提交隔离级别下，行级锁的种类只有记录锁，也就是仅仅把一条记录锁上。</p>
+<p>在可重复读隔离级别下，行级锁的种类除了有记录锁，还有间隙锁（目的是为了避免幻读），所以行级锁的种类主要有三类：</p>
+<ul>
+<li>Record Lock，记录锁，也就是仅仅把一条记录锁上；</li>
+<li>Gap Lock，间隙锁，锁定一个范围，但是不包含记录本身；</li>
+<li>Next-Key Lock：Record Lock + Gap Lock 的组合，锁定一个范围，并且锁定记录本身。</li>
+</ul>
+<p>接下来，分别介绍这三种行级锁。</p>
+<h5 id="record-lock">Record Lock<a hidden class="anchor" aria-hidden="true" href="#record-lock">#</a></h5>
+<p>Record Lock 称为记录锁，锁住的是一条记录。而且记录锁是有 S 锁和 X 锁之分的：</p>
+<ul>
+<li>当一个事务对一条记录加了 S 型记录锁后，其他事务也可以继续对该记录加 S 型记录锁（S 型与 S 锁兼容），但是不可以对该记录加 X 型记录锁（S 型与 X 锁不兼容）;</li>
+<li>当一个事务对一条记录加了 X 型记录锁后，其他事务既不可以对该记录加 S 型记录锁（S 型与 X 锁不兼容），也不可以对该记录加 X 型记录锁（X 型与 X 锁不兼容）。</li>
+</ul>
+<p>举个例子，当一个事务执行了下面这条语句：</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span>mysql <span style="color:#ff6ac1">&gt;</span> <span style="color:#ff6ac1">begin</span>;
+</span></span><span style="display:flex;"><span>mysql <span style="color:#ff6ac1">&gt;</span> <span style="color:#ff6ac1">select</span> <span style="color:#ff6ac1">*</span> <span style="color:#ff6ac1">from</span> t_test <span style="color:#ff6ac1">where</span> id <span style="color:#ff6ac1">=</span> <span style="color:#ff9f43">1</span> <span style="color:#ff6ac1">for</span> <span style="color:#ff6ac1">update</span>;
+</span></span></code></pre></div><p>事务会对表中主键 id = 1 的这条记录加上 X 型的记录锁，如果这时候其他事务对这条记录进行删除或者更新操作，那么这些操作都会被阻塞。注意，其他事务插入一条 id = 1 的新记录并不会被阻塞，而是会报主键冲突的错误，这是因为主键有唯一性的约束。</p>
+<p>当事务执行 commit 后，事务过程中生成的锁都会被释放。</p>
+<h5 id="gap-lock">Gap Lock<a hidden class="anchor" aria-hidden="true" href="#gap-lock">#</a></h5>
+<p>Gap Lock 称为间隙锁，只存在于可重复读隔离级别，目的是为了解决可重复读隔离级别下幻读的现象。</p>
+<p>假设，表中有一个范围 id 为（3，5）间隙锁，那么其他事务就无法插入 id = 4 这条记录了，这样就有效的防止幻读现象的发生。</p>
+<p>间隙锁虽然存在 X 型间隙锁和 S 型间隙锁，但是并没有什么区别，<strong>间隙锁之间是兼容的，即两个事务可以同时持有包含共同间隙范围的间隙锁，并不存在互斥关系，因为间隙锁的目的是防止插入幻影记录而提出的</strong>。</p>
+<h5 id="next-key-lock">Next-Key Lock<a hidden class="anchor" aria-hidden="true" href="#next-key-lock">#</a></h5>
+<p>Next-Key Lock 称为临键锁，是 Record Lock + Gap Lock 的组合，锁定一个范围，并且锁定记录本身。</p>
+<p>假设，表中有一个范围 id 为（3，5] 的 next-key lock，那么其他事务即不能插入 id = 4 记录，也不能修改和删除 id = 5 这条记录。</p>
+<p>所以，next-key lock 即能保护该记录，又能阻止其他事务将新记录插入到被保护记录前面的间隙中。</p>
+<p><strong>next-key lock 是包含间隙锁+记录锁的，如果一个事务获取了 X 型的 next-key lock，那么另外一个事务在获取相同范围的 X 型的 next-key lock 时，是会被阻塞的</strong>。</p>
+<p>比如，一个事务持有了范围为 (1, 10] 的 X 型的 next-key lock，那么另外一个事务在获取相同范围的 X 型的 next-key lock 时，就会被阻塞。</p>
+<p>虽然相同范围的间隙锁是多个事务相互兼容的，但对于记录锁，我们是要考虑 X 型与 S 型关系，X 型的记录锁与 X 型的记录锁是冲突的。</p>
+<h3 id="mysql-行级锁的加锁规则">MySQL 行级锁的加锁规则<a hidden class="anchor" aria-hidden="true" href="#mysql-行级锁的加锁规则">#</a></h3>
+<p>唯一索引等值查询：</p>
+<ul>
+<li>当查询的记录是「存在」的，在索引树上定位到这一条记录后，将该记录的索引中的 next-key lock 会<strong>退化成「记录锁」</strong>。</li>
+<li>当查询的记录是「不存在」的，在索引树找到第一条大于该查询记录的记录后，将该记录的索引中的 next-key lock 会<strong>退化成「间隙锁」</strong>。</li>
+</ul>
+<p>非唯一索引等值查询：</p>
+<ul>
+<li>当查询的记录「存在」时，由于不是唯一索引，所以肯定存在索引值相同的记录，于是非唯一索引等值查询的过程是一个扫描的过程，直到扫描到第一个不符合条件的二级索引记录就停止扫描，然后<strong>在扫描的过程中，对扫描到的二级索引记录加的是 next-key 锁，而对于第一个不符合条件的二级索引记录，该二级索引的 next-key 锁会退化成间隙锁。同时，在符合查询条件的记录的主键索引上加记录锁</strong>。</li>
+<li>当查询的记录「不存在」时，<strong>扫描到第一条不符合条件的二级索引记录，该二级索引的 next-key 锁会退化成间隙锁。因为不存在满足查询条件的记录，所以不会对主键索引加锁</strong>。</li>
+</ul>
+<p>非唯一索引和主键索引的范围查询的加锁规则不同之处在于：</p>
+<ul>
+<li>唯一索引在满足一些条件的时候，索引的 next-key lock 退化为间隙锁或者记录锁。</li>
+<li>非唯一索引范围查询，索引的 next-key lock 不会退化为间隙锁和记录锁。</li>
+</ul>
+<p>其实理解 MySQL 为什么要这样加锁，主要要以避免幻读角度去分析，这样就很容易理解这些加锁的规则了。</p>
+<p>还有一件很重要的事情，在线上在执行 update、delete、select &hellip; for update 等具有加锁性质的语句，一定要检查语句是否走了索引，<strong>如果是全表扫描的话，会对每一个索引加 next-key 锁，相当于把整个表锁住了</strong>，这是挺严重的问题。</p>
+<h3 id="update">update<a hidden class="anchor" aria-hidden="true" href="#update">#</a></h3>
+<p>当 sql_safe_updates 设置为 1 时。</p>
+<p>update 语句必须满足如下条件之一才能执行成功：</p>
+<ul>
+<li>使用 where，并且 where 条件中必须有索引列；</li>
+<li>使用 limit；</li>
+<li>同时使用 where 和 limit，此时 where 条件中可以没有索引列；</li>
+</ul>
+<p>delete 语句必须满足以下条件能执行成功：</p>
+<ul>
+<li>同时使用 where 和 limit，此时 where 条件中可以没有索引列；</li>
+</ul>
+<p>如果 where 条件带上了索引列，但是优化器最终扫描选择的是全表，而不是索引的话，我们可以使用 <code>force index([index_name])</code> 可以告诉优化器使用哪个索引，以此避免有几率锁全表带来的隐患。</p>
+<h3 id="如何避免死锁">如何避免死锁？<a hidden class="anchor" aria-hidden="true" href="#如何避免死锁">#</a></h3>
+<p>死锁的四个必要条件：<strong>互斥、占有且等待、不可强占用、循环等待</strong>。只要系统发生死锁，这些条件必然成立，但是只要破坏任意一个条件就死锁就不会成立。</p>
+<p>在数据库层面，有两种策略通过「打破循环等待条件」来解除死锁状态：</p>
+<ul>
+<li>
+<p><strong>设置事务等待锁的超时时间</strong>。当一个事务的等待时间超过该值后，就对这个事务进行回滚，于是锁就释放了，另一个事务就可以继续执行了。在 InnoDB 中，参数 <code>innodb_lock_wait_timeout</code> 是用来设置超时时间的，默认值时 50 秒。</p>
+</li>
+<li>
+<p><strong>开启主动死锁检测</strong>。主动死锁检测在发现死锁后，主动回滚死锁链条中的某一个事务，让其他事务得以继续执行。将参数 <code>innodb_deadlock_detect</code> 设置为 on，表示开启这个逻辑，默认就开启。</p>
+</li>
+</ul>
+<p>上面这个两种策略是「当有死锁发生时」的避免方式。</p>
+<p>我们可以回归业务的角度来预防死锁，对订单做幂等性校验的目的是为了保证不会出现重复的订单，那我们可以直接将 order_no 字段设置为唯一索引列，利用它的唯一性来保证订单表不会出现重复的订单，不过有一点不好的地方就是在我们插入一个已经存在的订单记录时就会抛出异常。</p>
+<h2 id="日志">日志<a hidden class="anchor" aria-hidden="true" href="#日志">#</a></h2>
+<p>更新语句的流程会涉及到 undo log（回滚日志）、redo log（重做日志） 、binlog （归档日志）这三种日志：</p>
+<ul>
+<li><strong>undo log（回滚日志）</strong>：是 Innodb 存储引擎层生成的日志，实现了事务中的<strong>原子性</strong>，主要<strong>用于事务回滚和 MVCC</strong>。</li>
+<li><strong>redo log（重做日志）</strong>：是 Innodb 存储引擎层生成的日志，实现了事务中的<strong>持久性</strong>，主要<strong>用于掉电等故障恢复</strong>；</li>
+<li><strong>binlog （归档日志）</strong>：是 Server 层生成的日志，主要<strong>用于数据备份和主从复制</strong>；</li>
+</ul>
+<blockquote>
+<p>redo log 和 undo log 区别在哪？</p>
+</blockquote>
+<p>这两种日志是属于 InnoDB 存储引擎的日志，它们的区别在于：</p>
+<ul>
+<li>redo log 记录了此次事务「<strong>完成后</strong>」的数据状态，记录的是更新<strong>之后</strong>的值；</li>
+<li>undo log 记录了此次事务「<strong>开始前</strong>」的数据状态，记录的是更新<strong>之前</strong>的值；</li>
+</ul>
+<h3 id="总结">总结<a hidden class="anchor" aria-hidden="true" href="#总结">#</a></h3>
+<p>具体更新一条记录 <code>UPDATE t_user SET name = 'xiaolin' WHERE id = 1;</code> 的流程如下:</p>
+<ol>
+<li>执行器负责具体执行，会调用存储引擎的接口，通过主键索引树搜索获取 id = 1 这一行记录：
+<ul>
+<li>如果 id=1 这一行所在的数据页本来就在 buffer pool 中，就直接返回给执行器更新；</li>
+<li>如果记录不在 buffer pool，将数据页从磁盘读入到 buffer pool，返回记录给执行器。</li>
+</ul>
+</li>
+<li>执行器得到聚簇索引记录后，会看一下更新前的记录和更新后的记录是否一样：
+<ul>
+<li>如果一样的话就不进行后续更新流程；</li>
+<li>如果不一样的话就把更新前的记录和更新后的记录都当作参数传给 InnoDB 层，让 InnoDB 真正的执行更新记录的操作；</li>
+</ul>
+</li>
+<li>开启事务， InnoDB 层更新记录前，首先要记录相应的 undo log，因为这是更新操作，需要把被更新的列的旧值记下来，也就是要生成一条 undo log，undo log 会写入 Buffer Pool 中的 Undo 页面，不过在内存修改该 Undo 页面后，需要记录对应的 redo log。</li>
+<li>InnoDB 层开始更新记录，会先更新内存（同时标记为脏页），然后将记录写到 redo log 里面，这个时候更新就算完成了。为了减少磁盘I/O，不会立即将脏页写入磁盘，后续由后台线程选择一个合适的时机将脏页写入到磁盘。这就是 <strong>WAL 技术</strong>，MySQL 的写操作并不是立刻写到磁盘上，而是先写 redo 日志，然后在合适的时间再将修改的行数据写到磁盘上。</li>
+<li>至此，一条记录更新完了。</li>
+<li>在一条更新语句执行完成后，然后开始记录该语句对应的 binlog，此时记录的 binlog 会被保存到 binlog cache，并没有刷新到硬盘上的 binlog 文件，在事务提交时才会统一将该事务运行过程中的所有 binlog 刷新到硬盘。</li>
+<li>事务提交（为了方便说明，这里不说组提交的过程，只说两阶段提交）：
+<ul>
+<li><strong>prepare 阶段</strong>：将 redo log 对应的事务状态设置为 prepare，然后将 redo log 刷新到硬盘；</li>
+<li><strong>commit 阶段</strong>：将 binlog 刷新到磁盘，接着调用引擎的提交事务接口，将 redo log 状态设置为 commit（将事务设置为 commit 状态后，刷入到磁盘 redo log 文件）；</li>
+</ul>
+</li>
+<li>至此，一条更新语句执行完成。</li>
+</ol>
+<h1 id="其他">其他<a hidden class="anchor" aria-hidden="true" href="#其他">#</a></h1>
+<h2 id="having与where的区别">having与where的区别<a hidden class="anchor" aria-hidden="true" href="#having与where的区别">#</a></h2>
+<ul>
+<li>having是在分组后对数据进行过滤，where是在分组前对数据进行过滤</li>
+<li>having后面可以使用聚合函数，where后面不可以使用聚合</li>
+</ul>
+<p>在查询过程中执行顺序：from&gt;where&gt;group（含聚合）&gt;having&gt;order&gt;select。</p>
+<p>聚合语句(sum,min,max,avg,count)要比having子句优先执行，所有having后面可以使用聚合函数。而where子句在查询过程中执行优先级别优先于聚合语句(sum,min,max,avg,count)，所有where条件中不能使用聚合函数。</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#ff6ac1">select</span> <span style="color:#ff6ac1">sum</span>(num) <span style="color:#ff6ac1">as</span> rmb <span style="color:#ff6ac1">from</span> <span style="color:#ff6ac1">order</span> <span style="color:#ff6ac1">where</span> id<span style="color:#ff6ac1">&gt;</span><span style="color:#ff9f43">10</span>;
+</span></span><span style="display:flex;"><span><span style="color:#ff6ac1">//</span><span style="color:#ff5c57">先查询出</span>id大于10的数据<span style="color:#ff5c57">，再执行聚合语句</span><span style="color:#ff6ac1">sum</span>(num)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff6ac1">//</span><span style="color:#ff5c57">执行以下语句会报错，因为</span>where子句先于sum(num)<span style="color:#ff5c57">执行，执行</span>where子句的时候还没有sum(num)<span style="color:#ff5c57">，所以会报错。</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff6ac1">select</span> <span style="color:#ff6ac1">sum</span>(num) <span style="color:#ff6ac1">as</span> rmb <span style="color:#ff6ac1">from</span> <span style="color:#ff6ac1">order</span> <span style="color:#ff6ac1">where</span> <span style="color:#ff6ac1">sum</span>(num)<span style="color:#ff6ac1">&gt;</span><span style="color:#ff9f43">10</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff5c57">对分组数据再次判断时要用</span><span style="color:#ff6ac1">having</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff6ac1">select</span> reports<span style="color:#ff5c57">，</span><span style="color:#ff6ac1">count</span>(<span style="color:#ff6ac1">*</span>) <span style="color:#ff6ac1">from</span> employees <span style="color:#ff6ac1">group</span> <span style="color:#ff6ac1">by</span> reports <span style="color:#ff6ac1">having</span> <span style="color:#ff6ac1">count</span>(<span style="color:#ff6ac1">*</span>) <span style="color:#ff6ac1">&gt;</span> <span style="color:#ff9f43">4</span>;
+</span></span><span style="display:flex;"><span><span style="color:#ff6ac1">//</span><span style="color:#ff5c57">首先查询了</span><span style="color:#ff6ac1">select</span> reports<span style="color:#ff5c57">，</span><span style="color:#ff6ac1">count</span>() <span style="color:#ff6ac1">from</span> employees <span style="color:#ff6ac1">group</span> <span style="color:#ff6ac1">by</span> reports<span style="color:#ff5c57">，在此基础上查找</span><span style="color:#ff6ac1">count</span>() <span style="color:#ff6ac1">&gt;</span> <span style="color:#ff9f43">4</span><span style="color:#ff5c57">的数据。</span>
+</span></span></code></pre></div><h2 id="行转列">行转列<a hidden class="anchor" aria-hidden="true" href="#行转列">#</a></h2>
+<p>先执行以下SQL获得基础数据：</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff6ac1">CREATE</span> <span style="color:#ff6ac1">TABLE</span> Student (
+</span></span><span style="display:flex;"><span>	<span style="color:#ff6ac1">`</span>id<span style="color:#ff6ac1">`</span> <span style="color:#ff5c57">INT</span> <span style="color:#ff6ac1">PRIMARY</span> <span style="color:#ff6ac1">KEY</span> AUTO_INCREMENT,
+</span></span><span style="display:flex;"><span>	<span style="color:#ff6ac1">`</span>name<span style="color:#ff6ac1">`</span> <span style="color:#ff5c57">VARCHAR</span> ( <span style="color:#ff9f43">255</span> ) <span style="color:#ff6ac1">DEFAULT</span> <span style="color:#ff6ac1">NULL</span>,
+</span></span><span style="display:flex;"><span>	<span style="color:#ff6ac1">`</span><span style="color:#ff6ac1">class</span><span style="color:#ff6ac1">`</span> <span style="color:#ff5c57">VARCHAR</span> ( <span style="color:#ff9f43">255</span> ) <span style="color:#ff6ac1">DEFAULT</span> <span style="color:#ff6ac1">NULL</span>,
+</span></span><span style="display:flex;"><span>	<span style="color:#ff6ac1">`</span>score<span style="color:#ff6ac1">`</span> <span style="color:#ff5c57">INT</span> ( <span style="color:#ff9f43">255</span> ) <span style="color:#ff6ac1">DEFAULT</span> <span style="color:#ff6ac1">NULL</span> 
+</span></span><span style="display:flex;"><span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff6ac1">INSERT</span> <span style="color:#ff6ac1">INTO</span> Student ( id, NAME, <span style="color:#ff6ac1">class</span>, score )
+</span></span><span style="display:flex;"><span><span style="color:#ff6ac1">VALUES</span>
+</span></span><span style="display:flex;"><span>	( <span style="color:#ff9f43">1</span>, <span style="color:#5af78e">&#39;张三&#39;</span>, <span style="color:#5af78e">&#39;数学&#39;</span>, <span style="color:#ff9f43">78</span> ),
+</span></span><span style="display:flex;"><span>	( <span style="color:#ff9f43">2</span>, <span style="color:#5af78e">&#39;张三&#39;</span>, <span style="color:#5af78e">&#39;英语&#39;</span>, <span style="color:#ff9f43">93</span> ),
+</span></span><span style="display:flex;"><span>	( <span style="color:#ff9f43">3</span>, <span style="color:#5af78e">&#39;张三&#39;</span>, <span style="color:#5af78e">&#39;语文&#39;</span>, <span style="color:#ff9f43">65</span> ),
+</span></span><span style="display:flex;"><span>	( <span style="color:#ff9f43">4</span>, <span style="color:#5af78e">&#39;李四&#39;</span>, <span style="color:#5af78e">&#39;数学&#39;</span>, <span style="color:#ff9f43">87</span> ),
+</span></span><span style="display:flex;"><span>	( <span style="color:#ff9f43">5</span>, <span style="color:#5af78e">&#39;李四&#39;</span>, <span style="color:#5af78e">&#39;英语&#39;</span>, <span style="color:#ff9f43">90</span> ),
+</span></span><span style="display:flex;"><span>	( <span style="color:#ff9f43">6</span>, <span style="color:#5af78e">&#39;李四&#39;</span>, <span style="color:#5af78e">&#39;语文&#39;</span>, <span style="color:#ff9f43">76</span> ),
+</span></span><span style="display:flex;"><span>	( <span style="color:#ff9f43">7</span>, <span style="color:#5af78e">&#39;李四&#39;</span>, <span style="color:#5af78e">&#39;历史&#39;</span>, <span style="color:#ff9f43">69</span> );
+</span></span></code></pre></div><p>使用 max 和 case when ：</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#ff6ac1">select</span> name,
+</span></span><span style="display:flex;"><span>	<span style="color:#ff6ac1">max</span>(<span style="color:#ff6ac1">case</span> <span style="color:#ff6ac1">when</span> <span style="color:#ff6ac1">class</span> <span style="color:#ff6ac1">=</span> <span style="color:#5af78e">&#39;数学&#39;</span> <span style="color:#ff6ac1">then</span> score <span style="color:#ff6ac1">else</span> <span style="color:#ff6ac1">null</span> <span style="color:#ff6ac1">end</span>) <span style="color:#ff6ac1">as</span> math_score,
+</span></span><span style="display:flex;"><span>	<span style="color:#ff6ac1">max</span>(<span style="color:#ff6ac1">case</span> <span style="color:#ff6ac1">when</span> <span style="color:#ff6ac1">class</span> <span style="color:#ff6ac1">=</span> <span style="color:#5af78e">&#39;英语&#39;</span> <span style="color:#ff6ac1">then</span> score <span style="color:#ff6ac1">else</span> <span style="color:#ff6ac1">null</span> <span style="color:#ff6ac1">end</span>) <span style="color:#ff6ac1">as</span> engilsh_score,
+</span></span><span style="display:flex;"><span>	<span style="color:#ff6ac1">max</span>(<span style="color:#ff6ac1">case</span> <span style="color:#ff6ac1">when</span> <span style="color:#ff6ac1">class</span> <span style="color:#ff6ac1">=</span> <span style="color:#5af78e">&#39;语文&#39;</span> <span style="color:#ff6ac1">then</span> score <span style="color:#ff6ac1">else</span> <span style="color:#ff6ac1">null</span> <span style="color:#ff6ac1">end</span>) <span style="color:#ff6ac1">as</span> chinese_score,
+</span></span><span style="display:flex;"><span>	<span style="color:#ff6ac1">max</span>(<span style="color:#ff6ac1">case</span> <span style="color:#ff6ac1">when</span> <span style="color:#ff6ac1">class</span> <span style="color:#ff6ac1">=</span> <span style="color:#5af78e">&#39;历史&#39;</span> <span style="color:#ff6ac1">then</span> score <span style="color:#ff6ac1">else</span> <span style="color:#ff6ac1">null</span> <span style="color:#ff6ac1">end</span>) <span style="color:#ff6ac1">as</span> history_score
+</span></span><span style="display:flex;"><span><span style="color:#ff6ac1">from</span> Student
+</span></span><span style="display:flex;"><span><span style="color:#ff6ac1">group</span> <span style="color:#ff6ac1">by</span> name;
+</span></span></code></pre></div><p>结果：</p>
+<table>
+<thead>
+<tr>
+<th>name</th>
+<th>math_score</th>
+<th>engilsh_score</th>
+<th>chinese_score</th>
+<th>history_score</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>张三</td>
+<td>78</td>
+<td>93</td>
+<td>65</td>
+<td></td>
+</tr>
+<tr>
+<td>李四</td>
+<td>87</td>
+<td>90</td>
+<td>76</td>
+<td>69</td>
+</tr>
+</tbody>
+</table>
+<p>或者使用 group_concat</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#ff6ac1">select</span> name,
+</span></span><span style="display:flex;"><span>	group_concat(score separator <span style="color:#5af78e">&#39;,&#39;</span>) <span style="color:#ff6ac1">as</span> <span style="color:#5af78e">&#39;scores&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff6ac1">from</span> student_x
+</span></span><span style="display:flex;"><span><span style="color:#ff6ac1">group</span> <span style="color:#ff6ac1">by</span> name;
+</span></span></code></pre></div><h2 id="列转行">列转行<a hidden class="anchor" aria-hidden="true" href="#列转行">#</a></h2>
+<ul>
+<li>准备初始化表结构和数据</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff6ac1">CREATE</span> <span style="color:#ff6ac1">TABLE</span> <span style="color:#ff6ac1">`</span>student_2<span style="color:#ff6ac1">`</span> (
+</span></span><span style="display:flex;"><span>	<span style="color:#ff6ac1">`</span>id<span style="color:#ff6ac1">`</span> <span style="color:#ff5c57">INT</span> ( <span style="color:#ff9f43">11</span> ) <span style="color:#ff6ac1">DEFAULT</span> <span style="color:#ff6ac1">NULL</span>,
+</span></span><span style="display:flex;"><span>	<span style="color:#ff6ac1">`</span>name<span style="color:#ff6ac1">`</span> <span style="color:#ff5c57">VARCHAR</span> ( <span style="color:#ff9f43">255</span> ) <span style="color:#ff6ac1">DEFAULT</span> <span style="color:#ff6ac1">NULL</span>,
+</span></span><span style="display:flex;"><span>	<span style="color:#ff6ac1">`</span>math_score<span style="color:#ff6ac1">`</span> <span style="color:#ff5c57">BIGINT</span> ( <span style="color:#ff9f43">255</span> ) <span style="color:#ff6ac1">DEFAULT</span> <span style="color:#ff6ac1">NULL</span>,
+</span></span><span style="display:flex;"><span>	<span style="color:#ff6ac1">`</span>engilsh_score<span style="color:#ff6ac1">`</span> <span style="color:#ff5c57">BIGINT</span> ( <span style="color:#ff9f43">255</span> ) <span style="color:#ff6ac1">DEFAULT</span> <span style="color:#ff6ac1">NULL</span>,
+</span></span><span style="display:flex;"><span>	<span style="color:#ff6ac1">`</span>chinese_score<span style="color:#ff6ac1">`</span> <span style="color:#ff5c57">BIGINT</span> ( <span style="color:#ff9f43">255</span> ) <span style="color:#ff6ac1">DEFAULT</span> <span style="color:#ff6ac1">NULL</span>,
+</span></span><span style="display:flex;"><span>	<span style="color:#ff6ac1">`</span>history_score<span style="color:#ff6ac1">`</span> <span style="color:#ff5c57">BIGINT</span> ( <span style="color:#ff9f43">255</span> ) <span style="color:#ff6ac1">DEFAULT</span> <span style="color:#ff6ac1">NULL</span> 
+</span></span><span style="display:flex;"><span>) ENGINE <span style="color:#ff6ac1">=</span> INNODB <span style="color:#ff6ac1">DEFAULT</span> CHARSET <span style="color:#ff6ac1">=</span> utf8mb4;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff6ac1">INSERT</span> <span style="color:#ff6ac1">INTO</span> <span style="color:#ff6ac1">`</span>student_2<span style="color:#ff6ac1">`</span> ( <span style="color:#ff6ac1">`</span>id<span style="color:#ff6ac1">`</span>, <span style="color:#ff6ac1">`</span>name<span style="color:#ff6ac1">`</span>, <span style="color:#ff6ac1">`</span>math_score<span style="color:#ff6ac1">`</span>, <span style="color:#ff6ac1">`</span>engilsh_score<span style="color:#ff6ac1">`</span>, <span style="color:#ff6ac1">`</span>chinese_score<span style="color:#ff6ac1">`</span>, <span style="color:#ff6ac1">`</span>history_score<span style="color:#ff6ac1">`</span> )
+</span></span><span style="display:flex;"><span><span style="color:#ff6ac1">VALUES</span>
+</span></span><span style="display:flex;"><span>	( <span style="color:#ff9f43">1</span>, <span style="color:#5af78e">&#39;张三&#39;</span>, <span style="color:#ff9f43">78</span>, <span style="color:#ff9f43">93</span>, <span style="color:#ff9f43">65</span>, <span style="color:#ff6ac1">NULL</span> ),
+</span></span><span style="display:flex;"><span>	( <span style="color:#ff9f43">2</span>, <span style="color:#5af78e">&#39;李四&#39;</span>, <span style="color:#ff9f43">87</span>, <span style="color:#ff9f43">90</span>, <span style="color:#ff9f43">76</span>, <span style="color:#ff9f43">69</span> );
+</span></span></code></pre></div><p>使用 union all</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#ff6ac1">select</span> <span style="color:#ff6ac1">*</span> <span style="color:#ff6ac1">from</span> (
+</span></span><span style="display:flex;"><span>	<span style="color:#ff6ac1">select</span> name, math_score <span style="color:#ff6ac1">as</span> score <span style="color:#ff6ac1">from</span> student_2
+</span></span><span style="display:flex;"><span>	<span style="color:#ff6ac1">union</span> <span style="color:#ff6ac1">all</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff6ac1">select</span> name, engilsh_score <span style="color:#ff6ac1">as</span> score <span style="color:#ff6ac1">from</span> student_2
+</span></span><span style="display:flex;"><span>	<span style="color:#ff6ac1">union</span> <span style="color:#ff6ac1">all</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff6ac1">select</span> name, chinese_score <span style="color:#ff6ac1">as</span> score <span style="color:#ff6ac1">from</span> student_2
+</span></span><span style="display:flex;"><span>	<span style="color:#ff6ac1">union</span> <span style="color:#ff6ac1">all</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff6ac1">select</span> name, history_score <span style="color:#ff6ac1">as</span> score <span style="color:#ff6ac1">from</span> student_2
+</span></span><span style="display:flex;"><span>) <span style="color:#ff6ac1">as</span> x <span style="color:#ff6ac1">order</span> <span style="color:#ff6ac1">by</span> name;
+</span></span></code></pre></div><h2 id="每个日期中的第一行">每个日期中的第一行<a hidden class="anchor" aria-hidden="true" href="#每个日期中的第一行">#</a></h2>
+<p>现在有一张 orders 表，编写SQL查询每日中的第一条语句。</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#ff6ac1">CREATE</span> <span style="color:#ff6ac1">TABLE</span> orders (
+</span></span><span style="display:flex;"><span>    order_id <span style="color:#ff5c57">INT</span> <span style="color:#ff6ac1">PRIMARY</span> <span style="color:#ff6ac1">KEY</span> AUTO_INCREMENT,
+</span></span><span style="display:flex;"><span>    customer_id <span style="color:#ff5c57">INT</span>,
+</span></span><span style="display:flex;"><span>    order_date <span style="color:#ff5c57">DATE</span>,
+</span></span><span style="display:flex;"><span>    total_amount <span style="color:#ff5c57">DECIMAL</span>(<span style="color:#ff9f43">10</span>, <span style="color:#ff9f43">2</span>),
+</span></span><span style="display:flex;"><span>    status <span style="color:#ff5c57">VARCHAR</span>(<span style="color:#ff9f43">20</span>),
+</span></span><span style="display:flex;"><span>    shipping_address <span style="color:#ff5c57">VARCHAR</span>(<span style="color:#ff9f43">255</span>)
+</span></span><span style="display:flex;"><span>);
+</span></span></code></pre></div><p>使用 窗口函数 <code>ROW_NUMBER() OVER (PARTITION BY order_date ORDER BY order_date)</code>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#e2e4e5;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff6ac1">SELECT</span> order_id, total_amount, order_date
+</span></span><span style="display:flex;"><span><span style="color:#ff6ac1">FROM</span> (
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">SELECT</span> order_id, total_amount, order_date,
+</span></span><span style="display:flex;"><span>           ROW_NUMBER() OVER (PARTITION <span style="color:#ff6ac1">BY</span> order_date <span style="color:#ff6ac1">ORDER</span> <span style="color:#ff6ac1">BY</span> order_date) <span style="color:#ff6ac1">AS</span> row_num
+</span></span><span style="display:flex;"><span>    <span style="color:#ff6ac1">FROM</span> orders
+</span></span><span style="display:flex;"><span>) <span style="color:#ff6ac1">AS</span> ranked
+</span></span><span style="display:flex;"><span><span style="color:#ff6ac1">WHERE</span> row_num <span style="color:#ff6ac1">=</span> <span style="color:#ff9f43">1</span>;
+</span></span></code></pre></div><p>结果如下：</p>
+<table>
+<thead>
+<tr>
+<th>order_id</th>
+<th>total_amount</th>
+<th>order_date</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>14</td>
+<td>600.11</td>
+<td>2023-11-06</td>
+</tr>
+<tr>
+<td>3</td>
+<td>327.30</td>
+<td>2023-11-07</td>
+</tr>
+<tr>
+<td>13</td>
+<td>723.60</td>
+<td>2023-11-08</td>
+</tr>
+<tr>
+<td>71</td>
+<td>334.39</td>
+<td>2023-11-09</td>
+</tr>
+<tr>
+<td>115</td>
+<td>515.49</td>
+<td>2023-11-10</td>
+</tr>
+<tr>
+<td>2</td>
+<td>440.92</td>
+<td>2023-11-11</td>
+</tr>
+<tr>
+<td>85</td>
+<td>4.07</td>
+<td>2023-11-12</td>
+</tr>
+<tr>
+<td>27</td>
+<td>150.63</td>
+<td>2023-11-13</td>
+</tr>
+</tbody>
+</table>
+
+
+        </div>
+        <div class="post-reward">
+            <div style="padding: 0 0 0 0; margin: 0 0 0 0; width: 100%; font-size:16px; text-align: center;">
+                <div id="QR" style="opacity: 0;">
+                    <div id="wechat" style="display: inline-block">
+                        <a class="fancybox" rel="group">
+                            <img id="wechat_qr" src="https://Bin-lin-rgb.github.io/img/wechat_pay.png" alt="wechat_pay"></a>
+                        <p>微信</p>
+                    </div>
+                    <div id="alipay" style="display: inline-block">
+                        <a class="fancybox" rel="group">
+                            <img id="alipay_qr" src="https://Bin-lin-rgb.github.io/img/alipay.png" alt="alipay"></a>
+                        <p>支付宝</p>
+                    </div>
+                </div>
+                <button id="rewardButton"
+                        onclick="
+                    var qr = document.getElementById('QR');
+                    if (qr.style.opacity === '0') {
+                        qr.style.opacity='1';
+                    } else {
+                        qr.style.opacity='0'
+                    }"
+                >
+                    <span>🧧 鼓励</span>
+                </button>
+            </div>
+        </div>
+
+        <footer class="post-footer">
+            
+<nav class="paginav">
+  <a class="prev" href="https://Bin-lin-rgb.github.io/posts/basics/redis/">
+    <span class="title">« 上一页</span>
+    <br>
+    <span>Redis</span>
+  </a>
+  <a class="next" href="https://Bin-lin-rgb.github.io/posts/basics/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">
+    <span class="title">下一页 »</span>
+    <br>
+    <span>操作系统</span>
+  </a>
+</nav>
+
+        </footer>
+    </div>
+
+<style>
+    .comments_details summary::marker {
+        font-size: 20px;
+        content: '👉展开评论';
+        color: var(--content);
+    }
+    .comments_details[open] summary::marker{
+        font-size: 20px;
+        content: '👇关闭评论';
+        color: var(--content);
+    }
+</style>
+
+
+<div>
+    <details class="comments_details">
+        <summary style="cursor: pointer; margin: 50px 0 20px 0;width: 130px;">
+            <span style="font-size: 20px;color: var(--content);">...</span>
+        </summary>
+        <div id="tcomment"></div>
+    </details>
+    <script src="https://cdn.staticfile.org/twikoo/1.5.8/twikoo.all.min.js">
+    </script>
+    <script>
+        twikoo.init({
+            envId: 'https://twikoo-api-nine-silk.vercel.app/',
+            el: "#tcomment",
+            lang: 'zh-CN',
+            region: 'ap-guangzhou',
+            path: window.TWIKOO_MAGIC_PATH||window.location.pathname,
+        })
+    
+    
+    
+    
+    
+    
+    
+    </script>
+</div>
+</article>
+</main>
+
+<footer class="footer">
+    <span>
+        Copyright
+        &copy;
+        2021-2023
+        <a href="https://Bin-lin-rgb.github.io/" style="color:#939393;">Blaine&#39;s Blog</a>
+        All Rights Reserved
+    </span>
+    <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;">备案号</a>&nbsp;
+    <span>
+        <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=null"
+           style="display:inline-block;text-decoration:none;height:20px;color:#939393;">
+            <img src="%e5%85%ac%e5%ae%89%e5%9b%be%e6%a0%87%e9%93%be%e6%8e%a5" style="float:left;margin: 0px 5px 0px 0px;"/>
+            公网安备
+        </a>
+    </span>
+    <span id="busuanzi_container">
+        <span class="fa fa-user"></span> <span id="busuanzi_value_site_uv"></span>
+        <span class="fa fa-eye"></span> <span id="busuanzi_value_site_pv"></span>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <span class="topInner">
+        <svg class="topSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z"/>
+        </svg>
+        <span id="read_progress"></span>
+    </span>
+</a>
+
+<script>
+    document.addEventListener('scroll', function (e) {
+        const readProgress = document.getElementById("read_progress");
+        const scrollHeight = document.documentElement.scrollHeight;
+        const clientHeight = document.documentElement.clientHeight;
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        readProgress.innerText = ((scrollTop / (scrollHeight - clientHeight)).toFixed(2) * 100).toFixed(0);
+    })
+</script>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+</script>
+<script>
+    let mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        (function() {
+            document.cookie = "change-themes" + "="+ escape ("false");
+        })()
+
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    });
+</script>
+
+<script>
+    document.body.addEventListener('copy', function (e) {
+        if (window.getSelection().toString() && window.getSelection().toString().length > 50) {
+            let clipboardData = e.clipboardData || window.clipboardData;
+            if (clipboardData) {
+                e.preventDefault();
+                let htmlData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Blaine's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                let textData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Blaine's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                clipboardData.setData('text/html', htmlData);
+                clipboardData.setData('text/plain', textData);
+            }
+        }
+    });
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerText = '复制';
+
+        function copyingDone() {
+            copybutton.innerText = '已复制！';
+            setTimeout(() => {
+                copybutton.innerText = '复制';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                let text = codeblock.textContent +
+                    '\r\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Blaine's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                navigator.clipboard.writeText(text);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) {}
+            selection.removeRange(range);
+        });
+
+        let language = codeblock.className.replaceAll("language-", "")
+        let macTool = document.createElement("div")
+        let macTool1 = document.createElement("div")
+        let macTool2 = document.createElement("div")
+        let macTool3 = document.createElement("div")
+        let languageType = document.createElement("div")
+        languageType.innerText = language
+        macTool.setAttribute('class', 'mac-tool')
+        macTool1.setAttribute('class', 'mac bb1')
+        macTool2.setAttribute('class', 'mac bb2')
+        macTool3.setAttribute('class', 'mac bb3')
+        languageType.setAttribute('class', 'language-type')
+        macTool.appendChild(macTool1)
+        macTool.appendChild(macTool2)
+        macTool.appendChild(macTool3)
+        macTool.appendChild(languageType)
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        }
+    });
+</script>
+</body>
+
+</html>
